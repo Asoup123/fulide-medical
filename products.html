@@ -645,6 +645,20 @@
             background: #087ead;
         }
 
+        /* 商品卡片按鈕固定於底部，所有卡片保持同高 */
+        .product-actions {
+            margin-top: auto;
+        }
+
+        .product-actions .detail-button,
+        .product-actions .ask-button {
+            width: 100%;
+        }
+
+        .product-actions .ask-button {
+            margin-top: 10px;
+        }
+
         .modal {
             position: fixed;
             inset: 0;
@@ -1475,18 +1489,19 @@ function renderProducts(products) {
                         ""
                     }
 
-                    <button
-                        class="detail-button"
-                        data-product-id="${product.id}">
-                        查看詳細資料
-                    </button>
+                    <div class="product-actions">
+                        <button
+                            class="detail-button"
+                            data-product-id="${product.id}">
+                            查看詳細資料
+                        </button>
 
-                    <a
-                        href="index.html#contact"
-                        class="ask-button"
-                        style="margin-top:10px;">
-                        洽詢此產品
-                    </a>
+                        <a
+                            href="index.html#contact"
+                            class="ask-button">
+                            洽詢此產品
+                        </a>
+                    </div>
 
                 </div>
 
