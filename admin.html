@@ -1,334 +1,1544 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>富致康醫療器材｜管理後台</title>
-<style>
-*{box-sizing:border-box}body{margin:0;font-family:"Microsoft JhengHei",Arial,sans-serif;background:#f5f8fa;color:#263238}button,input,textarea,select{font:inherit}button{cursor:pointer}
-.hidden{display:none!important}.login{min-height:100vh;display:grid;place-items:center;background:linear-gradient(135deg,#075b82,#079bd8);padding:24px}
-.card{background:#fff;border-radius:16px;box-shadow:0 10px 35px rgba(0,0,0,.12)}.login-box{width:min(430px,100%);padding:36px}h1,h2,h3{color:#164c65}
-.field{margin:14px 0}label{display:block;font-weight:700;margin-bottom:6px}input,textarea,select{width:100%;padding:11px 12px;border:1px solid #d6e1e6;border-radius:8px}textarea{min-height:100px;resize:vertical}
-.primary{border:0;background:#0797d3;color:#fff;border-radius:8px;padding:11px 18px;font-weight:700}.full{width:100%}.error{color:#bd2d2d;margin-top:12px}
-header{display:flex;justify-content:space-between;align-items:center;padding:14px 5%;background:#fff;box-shadow:0 2px 12px rgba(0,0,0,.06);gap:12px}header strong{color:#0797d3;font-size:20px}
-.header-actions{display:flex;gap:8px}.header-actions a,.header-actions button{padding:9px 13px;border:1px solid #d9e3e7;border-radius:7px;background:#fff;text-decoration:none;color:#333}
-main{width:92%;max-width:1280px;margin:32px auto 70px}.top{display:flex;justify-content:space-between;align-items:center;gap:16px;margin-bottom:18px}
-.table-wrap{overflow:auto;background:#fff;border-radius:14px;box-shadow:0 4px 18px rgba(0,0,0,.05)}table{width:100%;border-collapse:collapse}th,td{padding:13px;border-bottom:1px solid #edf1f3;text-align:left}th{background:#f8fafb;color:#607d8b}
-.thumb{width:64px;height:64px;object-fit:contain;background:#f7f9fa;border-radius:7px}.actions{display:flex;gap:6px;flex-wrap:wrap}.actions button{padding:6px 9px;border:1px solid #d9e3e7;background:#fff;border-radius:6px}
-.editor{margin-top:24px;padding:26px}.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}.span2{grid-column:1/-1}.checks{display:flex;gap:22px;flex-wrap:wrap;margin:18px 0}.checks label{display:flex;gap:7px;align-items:center;font-weight:400}.checks input{width:auto}
-.section{border-top:1px solid #e8edef;margin-top:24px;padding-top:20px}.section-head{display:flex;justify-content:space-between;align-items:center;gap:10px}.soft{border:0;background:#e8f7fc;color:#0797d3;border-radius:7px;padding:8px 12px;font-weight:700}
-.row2{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;margin:8px 0}.row1{display:grid;grid-template-columns:1fr auto;gap:8px;margin:8px 0}.remove{border:0;background:#fff0ee;color:#b32a1f;border-radius:7px;padding:8px 10px}
-.previews{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px}.preview{width:110px;height:110px;position:relative;border:1px solid #dfe7ea;border-radius:8px;overflow:hidden;background:#f8fafb}.preview img{width:100%;height:100%;object-fit:contain}.preview button{position:absolute;top:4px;right:4px;border:0;border-radius:50%;width:25px;height:25px;background:#0009;color:white}
-.status{font-size:12px;padding:4px 8px;border-radius:999px;background:#eee}.on{background:#e5f6ec;color:#19734a}.hot{color:#d35400;font-weight:700}
-.msg{margin-top:12px;color:#176182}
-.variant-card{margin:14px 0;padding:18px;border:1px solid #dce7eb;border-radius:12px;background:#f8fbfc}
-.variant-top{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end;margin-bottom:12px}
-.variant-specs{margin-top:8px}
-.variant-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.copy-variant{border:0;background:#eef7fb;color:#176182;border-radius:7px;padding:8px 12px;font-weight:700}
-.copy-variant:hover{background:#dff1f8}
-@media(max-width:760px){.grid{grid-template-columns:1fr}.span2{grid-column:auto}.row2,.row1{grid-template-columns:1fr}header,.top{align-items:flex-start;flex-direction:column}}
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>富立德有限公司｜商品管理後台</title>
+
+  <style>
+    :root{
+      --green:#0f6b48;
+      --green-dark:#0a5238;
+      --green-soft:#e9f4ee;
+      --cream:#fbfaf6;
+      --text:#26342e;
+      --muted:#758079;
+      --line:#dfe7e1;
+      --danger:#c94b4b;
+      --warning:#a76a16;
+      --white:#fff;
+      --shadow:0 14px 35px rgba(27,72,54,.10);
+    }
+
+    *{box-sizing:border-box;margin:0;padding:0}
+
+    body{
+      font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;
+      background:#f5f7f4;
+      color:var(--text);
+      line-height:1.6;
+    }
+
+    button,input,textarea,select{
+      font:inherit;
+    }
+
+    button{
+      cursor:pointer;
+      border:0;
+    }
+
+    .hidden{display:none!important}
+
+    /* LOGIN */
+    .login-page{
+      min-height:100vh;
+      display:grid;
+      place-items:center;
+      padding:24px;
+      background:
+        radial-gradient(circle at top left,rgba(15,107,72,.10),transparent 32%),
+        #f7f8f4;
+    }
+
+    .login-card{
+      width:min(440px,100%);
+      background:white;
+      border-radius:26px;
+      padding:38px;
+      box-shadow:var(--shadow);
+      border:1px solid var(--line);
+    }
+
+    .login-brand{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    .login-brand img{
+      width:100px;
+      height:78px;
+      object-fit:contain;
+      margin:0 auto 10px;
+    }
+
+    .login-brand h1{
+      font-size:25px;
+      color:var(--green-dark);
+    }
+
+    .login-brand p{
+      color:var(--muted);
+      font-size:14px;
+      margin-top:4px;
+    }
+
+    .field{
+      margin-bottom:18px;
+    }
+
+    .field label{
+      display:block;
+      margin-bottom:7px;
+      font-size:14px;
+      font-weight:800;
+    }
+
+    .field input,
+    .field textarea,
+    .field select{
+      width:100%;
+      border:1px solid #cfdad3;
+      border-radius:12px;
+      background:#fff;
+      padding:12px 14px;
+      outline:none;
+      transition:.2s;
+    }
+
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus{
+      border-color:var(--green);
+      box-shadow:0 0 0 3px rgba(15,107,72,.09);
+    }
+
+    .field textarea{
+      min-height:110px;
+      resize:vertical;
+    }
+
+    .login-btn,
+    .primary-btn{
+      width:100%;
+      padding:13px 18px;
+      border-radius:999px;
+      color:white;
+      background:var(--green);
+      font-weight:900;
+    }
+
+    .login-btn:hover,
+    .primary-btn:hover{
+      background:var(--green-dark);
+    }
+
+    .login-msg{
+      min-height:24px;
+      color:var(--danger);
+      font-size:13px;
+      margin-top:12px;
+      text-align:center;
+    }
+
+    /* ADMIN SHELL */
+    .admin-page{
+      min-height:100vh;
+    }
+
+    .topbar{
+      position:sticky;
+      top:0;
+      z-index:100;
+      min-height:72px;
+      background:white;
+      border-bottom:1px solid var(--line);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      padding:10px 4%;
+    }
+
+    .top-brand{
+      display:flex;
+      align-items:center;
+      gap:12px;
+    }
+
+    .top-brand img{
+      width:60px;
+      height:45px;
+      object-fit:contain;
+    }
+
+    .top-brand strong{
+      display:block;
+      color:var(--green-dark);
+      font-size:18px;
+    }
+
+    .top-brand span{
+      color:var(--muted);
+      font-size:12px;
+    }
+
+    .top-actions{
+      display:flex;
+      gap:10px;
+      align-items:center;
+    }
+
+    .outline-btn{
+      padding:9px 16px;
+      border-radius:999px;
+      border:1px solid var(--green);
+      color:var(--green);
+      background:white;
+      font-weight:800;
+    }
+
+    .outline-btn:hover{
+      background:var(--green-soft);
+    }
+
+    .danger-outline{
+      border-color:#e7bcbc;
+      color:var(--danger);
+    }
+
+    .container{
+      width:min(1380px,94%);
+      margin:30px auto 60px;
+    }
+
+    .heading-row{
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      align-items:flex-end;
+      margin-bottom:22px;
+    }
+
+    .heading-row h2{
+      font-size:30px;
+      color:var(--green-dark);
+    }
+
+    .heading-row p{
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .add-btn{
+      padding:11px 20px;
+      border-radius:999px;
+      background:var(--green);
+      color:white;
+      font-weight:900;
+      white-space:nowrap;
+    }
+
+    .stats{
+      display:grid;
+      grid-template-columns:repeat(3,1fr);
+      gap:16px;
+      margin-bottom:22px;
+    }
+
+    .stat-card{
+      background:white;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:20px;
+    }
+
+    .stat-card span{
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .stat-card strong{
+      display:block;
+      margin-top:4px;
+      font-size:28px;
+      color:var(--green-dark);
+    }
+
+    .toolbar{
+      display:flex;
+      gap:12px;
+      flex-wrap:wrap;
+      align-items:center;
+      margin-bottom:18px;
+    }
+
+    .toolbar input,
+    .toolbar select{
+      border:1px solid var(--line);
+      background:white;
+      border-radius:12px;
+      padding:10px 12px;
+      outline:none;
+    }
+
+    .toolbar input{
+      flex:1;
+      min-width:230px;
+    }
+
+    .product-list{
+      display:grid;
+      gap:14px;
+    }
+
+    .product-row{
+      background:white;
+      border:1px solid var(--line);
+      border-radius:18px;
+      padding:16px;
+      display:grid;
+      grid-template-columns:92px 1.4fr .85fr .75fr auto;
+      gap:18px;
+      align-items:center;
+    }
+
+    .thumb{
+      width:92px;
+      height:92px;
+      border-radius:14px;
+      background:#f1f4f1;
+      overflow:hidden;
+      display:grid;
+      place-items:center;
+      color:#9aa39e;
+      font-size:12px;
+    }
+
+    .thumb img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+
+    .product-name{
+      font-size:18px;
+      font-weight:900;
+      margin-bottom:4px;
+    }
+
+    .product-desc{
+      color:var(--muted);
+      font-size:13px;
+      display:-webkit-box;
+      -webkit-line-clamp:2;
+      -webkit-box-orient:vertical;
+      overflow:hidden;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:6px 11px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:900;
+      width:max-content;
+    }
+
+    .pill.active{
+      background:#e5f5eb;
+      color:#167445;
+    }
+
+    .pill.inactive{
+      background:#f3efef;
+      color:#8b5a5a;
+    }
+
+    .pill.featured{
+      background:#fff4d9;
+      color:#8a6410;
+      margin-top:7px;
+    }
+
+    .row-actions{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+      justify-content:flex-end;
+    }
+
+    .small-btn{
+      padding:8px 12px;
+      border-radius:10px;
+      font-size:13px;
+      font-weight:800;
+      background:#eef4f0;
+      color:var(--green-dark);
+    }
+
+    .small-btn:hover{
+      background:#e0ece5;
+    }
+
+    .small-btn.warn{
+      background:#fff2df;
+      color:var(--warning);
+    }
+
+    .small-btn.danger{
+      background:#fff0f0;
+      color:var(--danger);
+    }
+
+    .empty-box{
+      padding:55px 20px;
+      text-align:center;
+      background:white;
+      color:var(--muted);
+      border:1px dashed #cdd9d2;
+      border-radius:18px;
+    }
+
+    /* MODAL */
+    .modal{
+      position:fixed;
+      inset:0;
+      z-index:500;
+      background:rgba(22,35,29,.55);
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+      padding:24px;
+      overflow:auto;
+    }
+
+    .modal-card{
+      width:min(1000px,100%);
+      background:white;
+      border-radius:24px;
+      box-shadow:0 25px 70px rgba(0,0,0,.22);
+      margin:20px 0;
+      overflow:hidden;
+    }
+
+    .modal-head{
+      position:sticky;
+      top:0;
+      z-index:5;
+      padding:18px 24px;
+      border-bottom:1px solid var(--line);
+      background:white;
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:15px;
+    }
+
+    .modal-head h3{
+      color:var(--green-dark);
+      font-size:23px;
+    }
+
+    .close-btn{
+      width:38px;
+      height:38px;
+      border-radius:50%;
+      background:#f0f3f1;
+      font-size:20px;
+    }
+
+    .form-body{
+      padding:24px;
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:16px 18px;
+    }
+
+    .full{
+      grid-column:1/-1;
+    }
+
+    .checkbox-row{
+      display:flex;
+      gap:24px;
+      align-items:center;
+      flex-wrap:wrap;
+      padding:8px 0;
+    }
+
+    .check-label{
+      display:flex;
+      gap:8px;
+      align-items:center;
+      cursor:pointer;
+      font-weight:800;
+    }
+
+    .check-label input{
+      width:18px;
+      height:18px;
+      accent-color:var(--green);
+    }
+
+    .section-box{
+      border:1px solid var(--line);
+      border-radius:16px;
+      padding:18px;
+      background:#fbfcfb;
+    }
+
+    .section-box h4{
+      margin-bottom:12px;
+      color:var(--green-dark);
+    }
+
+    .hint{
+      color:var(--muted);
+      font-size:12px;
+      margin-bottom:10px;
+    }
+
+    .image-upload{
+      border:2px dashed #c7d7cd;
+      border-radius:16px;
+      background:#f8fbf9;
+      padding:22px;
+      text-align:center;
+    }
+
+    .image-upload input{
+      margin-top:10px;
+    }
+
+    .image-preview{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-top:15px;
+    }
+
+    .preview-item{
+      position:relative;
+      border:1px solid var(--line);
+      border-radius:12px;
+      overflow:hidden;
+      background:white;
+      aspect-ratio:1/1;
+    }
+
+    .preview-item img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+
+    .preview-remove{
+      position:absolute;
+      top:6px;
+      right:6px;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      background:rgba(201,75,75,.92);
+      color:white;
+      font-weight:900;
+    }
+
+    .dynamic-list{
+      display:grid;
+      gap:10px;
+    }
+
+    .dynamic-row{
+      display:grid;
+      grid-template-columns:1fr 1fr auto;
+      gap:8px;
+    }
+
+    .dynamic-row input{
+      width:100%;
+      border:1px solid #d2dcd5;
+      border-radius:10px;
+      padding:10px;
+    }
+
+    .remove-row{
+      padding:0 12px;
+      border-radius:10px;
+      background:#fff0f0;
+      color:var(--danger);
+      font-weight:900;
+    }
+
+    .add-row-btn{
+      margin-top:10px;
+      padding:8px 13px;
+      border-radius:10px;
+      background:var(--green-soft);
+      color:var(--green-dark);
+      font-weight:800;
+    }
+
+    .save-bar{
+      position:sticky;
+      bottom:0;
+      z-index:5;
+      display:flex;
+      justify-content:flex-end;
+      gap:10px;
+      padding:16px 24px;
+      border-top:1px solid var(--line);
+      background:white;
+    }
+
+    .cancel-btn{
+      padding:11px 20px;
+      border-radius:999px;
+      background:#eef1ef;
+      color:#4d5953;
+      font-weight:800;
+    }
+
+    .save-btn{
+      min-width:150px;
+      padding:11px 22px;
+      border-radius:999px;
+      background:var(--green);
+      color:white;
+      font-weight:900;
+    }
+
+    .save-btn:disabled{
+      opacity:.55;
+      cursor:not-allowed;
+    }
+
+    .toast{
+      position:fixed;
+      right:22px;
+      bottom:22px;
+      z-index:1000;
+      max-width:380px;
+      padding:14px 18px;
+      border-radius:14px;
+      color:white;
+      background:#253c32;
+      box-shadow:var(--shadow);
+      font-size:14px;
+    }
+
+    @media(max-width:950px){
+      .product-row{
+        grid-template-columns:78px 1fr;
+      }
+      .product-row > :nth-child(3),
+      .product-row > :nth-child(4),
+      .row-actions{
+        grid-column:2;
+      }
+      .row-actions{
+        justify-content:flex-start;
+      }
+      .form-grid{
+        grid-template-columns:1fr;
+      }
+      .full{
+        grid-column:auto;
+      }
+      .image-preview{
+        grid-template-columns:repeat(3,1fr);
+      }
+    }
+
+    @media(max-width:650px){
+      .topbar{
+        align-items:flex-start;
+      }
+      .top-actions{
+        flex-direction:column;
+        align-items:flex-end;
+      }
+      .heading-row{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+      .stats{
+        grid-template-columns:1fr;
+      }
+      .product-row{
+        grid-template-columns:1fr;
+      }
+      .thumb{
+        width:100%;
+        height:180px;
+      }
+      .product-row > *{
+        grid-column:1!important;
+      }
+      .image-preview{
+        grid-template-columns:repeat(2,1fr);
+      }
+      .dynamic-row{
+        grid-template-columns:1fr;
+      }
+    }
+  </style>
 </head>
+
 <body>
 
-<section id="loginPage" class="login">
-  <div class="card login-box">
-    <h1>富致康管理後台</h1>
-    <p>商品管理系統</p>
-    <div class="field"><label>管理員 Email</label><input id="email" type="email"></div>
-    <div class="field"><label>密碼</label><input id="password" type="password"></div>
-    <button id="loginBtn" class="primary full">登入</button>
-    <div id="loginMsg" class="error"></div>
+<!-- LOGIN -->
+<section id="loginPage" class="login-page">
+  <div class="login-card">
+    <div class="login-brand">
+      <img src="fulide-logo.png" alt="富立德有限公司 Logo">
+      <h1>商品管理後台</h1>
+      <p>富立德有限公司</p>
+    </div>
+
+    <form id="loginForm">
+      <div class="field">
+        <label for="loginEmail">Email</label>
+        <input id="loginEmail" type="email" autocomplete="username" required>
+      </div>
+
+      <div class="field">
+        <label for="loginPassword">密碼</label>
+        <input id="loginPassword" type="password" autocomplete="current-password" required>
+      </div>
+
+      <button class="login-btn" type="submit">登入管理後台</button>
+      <div id="loginMsg" class="login-msg"></div>
+    </form>
   </div>
 </section>
 
-<div id="adminPage" class="hidden">
-<header>
-  <strong>富致康醫療器材｜商品管理</strong>
-  <div class="header-actions">
-    <a href="index.html" target="_blank">查看網站</a>
-    <button id="logoutBtn">登出</button>
-  </div>
-</header>
-
-<main>
-  <div class="top">
-    <div><h1>商品管理</h1><p>新增、修改、上架與管理商品</p></div>
-    <button id="newBtn" class="primary">＋ 新增商品</button>
-  </div>
-
-  <div class="table-wrap">
-    <table>
-      <thead><tr><th>圖片</th><th>商品</th><th>分類</th><th>熱賣</th><th>狀態</th><th>操作</th></tr></thead>
-      <tbody id="tbody"></tbody>
-    </table>
-  </div>
-
-  <section id="editor" class="card editor hidden">
-    <div class="top"><h2 id="editorTitle">新增商品</h2><button id="closeBtn">關閉</button></div>
-    <input id="id" type="hidden">
-
-    <div class="grid">
-      <div class="field"><label>商品名稱</label><input id="name" placeholder="例如：FZK-AB 躺舒芙"></div>
-      <div class="field"><label>商品分類</label>
-        <select id="category">
-          <option value="aluminum-wheelchair">鋁製輪椅</option>
-          <option value="steel-wheelchair">鐵製輪椅</option>
-          <option value="rollator">助步車</option>
-          <option value="commode-chair">便椅</option>
-          <option value="shower-chair">洗澡椅</option>
-          <option value="walker">助行器</option>
-          <option value="cane-crutch">手／拐杖</option>
-          <option value="quad-cane">四腳拐</option>
-          <option value="accessories">輔助用品</option>
-        </select>
+<!-- ADMIN -->
+<section id="adminPage" class="admin-page hidden">
+  <header class="topbar">
+    <div class="top-brand">
+      <img src="fulide-logo.png" alt="富立德有限公司 Logo">
+      <div>
+        <strong>富立德有限公司</strong>
+        <span>商品管理後台</span>
       </div>
-      <div class="field span2"><label>商品簡介</label><textarea id="short"></textarea></div>
-      <div class="field span2"><label>詳細介紹</label><textarea id="desc"></textarea></div>
-      <div class="field"><label>補助項目</label><input id="subsidy" placeholder="例如：輪椅-B款・附加A"></div>
-      <div class="field"><label>排序</label><input id="sort" type="number" value="0"></div>
     </div>
 
-    <div class="checks">
-      <label><input id="featured" type="checkbox"> 設為熱賣商品</label>
-      <label><input id="active" type="checkbox" checked> 商品上架</label>
+    <div class="top-actions">
+      <a class="outline-btn" href="index.html" target="_blank">查看網站</a>
+      <button id="logoutBtn" class="outline-btn danger-outline">登出</button>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="heading-row">
+      <div>
+        <h2>商品管理</h2>
+        <p>新增、編輯、上架、下架與管理商品圖片。</p>
+      </div>
+      <button id="newProductBtn" class="add-btn">＋ 新增商品</button>
     </div>
 
-    <div class="section">
-      <div class="section-head"><h3>商品特色</h3><button id="addFeature" class="soft">＋ 新增特色</button></div>
-      <div id="features"></div>
+    <section class="stats">
+      <div class="stat-card">
+        <span>全部商品</span>
+        <strong id="statAll">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>上架中</span>
+        <strong id="statActive">0</strong>
+      </div>
+      <div class="stat-card">
+        <span>已下架</span>
+        <strong id="statInactive">0</strong>
+      </div>
+    </section>
+
+    <div class="toolbar">
+      <input id="searchInput" type="search" placeholder="搜尋商品名稱、描述...">
+
+      <select id="statusFilter">
+        <option value="all">全部狀態</option>
+        <option value="active">上架中</option>
+        <option value="inactive">已下架</option>
+      </select>
+
+      <select id="categoryFilter">
+        <option value="all">全部分類</option>
+        <option value="aluminum-wheelchair">鋁製輪椅</option>
+        <option value="steel-wheelchair">鐵製輪椅</option>
+        <option value="rollator">助步車</option>
+        <option value="commode-chair">便椅</option>
+        <option value="shower-chair">洗澡椅</option>
+        <option value="walker">助行器</option>
+        <option value="cane-crutch">手／拐杖</option>
+        <option value="quad-cane">四腳拐</option>
+        <option value="accessories">輔助用品</option>
+      </select>
     </div>
 
-    <div class="section">
-      <div class="section-head"><h3>產品規格</h3><button id="addSpec" class="soft">＋ 新增規格</button></div>
-      <div id="specs"></div>
+    <div id="productList" class="product-list">
+      <div class="empty-box">商品載入中...</div>
+    </div>
+  </main>
+</section>
+
+<!-- PRODUCT MODAL -->
+<div id="productModal" class="modal hidden">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="modalTitle">新增商品</h3>
+      <button id="closeModalBtn" class="close-btn" type="button">×</button>
     </div>
 
-    <div class="section">
-      <div class="section-head">
-        <div>
-          <h3>型號／尺寸規格</h3>
-          <div style="color:#78909c;font-size:14px">同一商品若有不同型號或尺寸，可在這裡分別建立規格。</div>
-        </div>
-        <div style="display:flex;gap:8px;flex-wrap:wrap">
-          <button id="addVariant" class="soft">＋ 新增空白型號</button>
-          <button id="addVariantLikeFirst" class="soft">＋ 比照第一個新增</button>
+    <form id="productForm">
+      <div class="form-body">
+        <input id="productId" type="hidden">
+
+        <div class="form-grid">
+          <div class="field">
+            <label for="productName">商品名稱 *</label>
+            <input id="productName" type="text" required>
+          </div>
+
+          <div class="field">
+            <label for="productCategory">產品分類 *</label>
+            <select id="productCategory" required>
+              <option value="aluminum-wheelchair">鋁製輪椅</option>
+              <option value="steel-wheelchair">鐵製輪椅</option>
+              <option value="rollator">助步車</option>
+              <option value="commode-chair">便椅</option>
+              <option value="shower-chair">洗澡椅</option>
+              <option value="walker">助行器</option>
+              <option value="cane-crutch">手／拐杖</option>
+              <option value="quad-cane">四腳拐</option>
+              <option value="accessories">輔助用品</option>
+            </select>
+          </div>
+
+          <div class="field full">
+            <label for="shortDescription">簡短介紹</label>
+            <input id="shortDescription" type="text" placeholder="顯示在商品卡片上的簡短描述">
+          </div>
+
+          <div class="field full">
+            <label for="description">完整商品說明</label>
+            <textarea id="description" placeholder="輸入完整商品介紹"></textarea>
+          </div>
+
+          <div class="field">
+            <label for="subsidy">補助資訊</label>
+            <input id="subsidy" type="text" placeholder="例如：符合補助項目...">
+          </div>
+
+          <div class="field">
+            <label for="sortOrder">排序</label>
+            <input id="sortOrder" type="number" value="0">
+          </div>
+
+          <div class="full checkbox-row">
+            <label class="check-label">
+              <input id="isActive" type="checkbox" checked>
+              商品上架
+            </label>
+
+            <label class="check-label">
+              <input id="featured" type="checkbox">
+              首頁推薦
+            </label>
+          </div>
+
+          <div class="full section-box">
+            <h4>商品圖片</h4>
+            <div class="hint">可一次選擇多張圖片。圖片會上傳到富立德自己的 Supabase Storage。</div>
+
+            <div class="image-upload">
+              <div>選擇商品圖片</div>
+              <input id="imageFiles" type="file" accept="image/*" multiple>
+            </div>
+
+            <div id="imagePreview" class="image-preview"></div>
+          </div>
+
+          <div class="full section-box">
+            <h4>商品特色</h4>
+            <div class="hint">例如：輕量化鋁合金／扶手可掀／可折疊</div>
+            <div id="featuresList" class="dynamic-list"></div>
+            <button type="button" class="add-row-btn" data-add="feature">＋ 新增特色</button>
+          </div>
+
+          <div class="full section-box">
+            <h4>產品規格</h4>
+            <div class="hint">左邊填規格名稱，右邊填數值，例如「座寬 / 42 cm」。</div>
+            <div id="specsList" class="dynamic-list"></div>
+            <button type="button" class="add-row-btn" data-add="spec">＋ 新增規格</button>
+          </div>
+
+          <div class="full section-box">
+            <h4>型號 / 尺寸</h4>
+            <div class="hint">可建立多組型號。左邊為型號名稱，右邊可填尺寸或備註。</div>
+            <div id="variantsList" class="dynamic-list"></div>
+            <button type="button" class="add-row-btn" data-add="variant">＋ 新增型號</button>
+          </div>
         </div>
       </div>
-      <div id="variants"></div>
-    </div>
 
-    <div class="section">
-      <h3>商品圖片</h3>
-      <div class="field"><input id="files" type="file" accept="image/*" multiple></div>
-      <div id="previews" class="previews"></div>
-    </div>
-
-    <div style="margin-top:24px;text-align:right"><button id="saveBtn" class="primary">儲存商品</button></div>
-    <div id="saveMsg" class="msg"></div>
-  </section>
-</main>
+      <div class="save-bar">
+        <button id="cancelModalBtn" type="button" class="cancel-btn">取消</button>
+        <button id="saveProductBtn" type="submit" class="save-btn">儲存商品</button>
+      </div>
+    </form>
+  </div>
 </div>
 
+<div id="toast" class="toast hidden"></div>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-const SUPABASE_URL="https://sdkgiedglmhmchiietru.supabase.co";
-const SUPABASE_KEY="sb_publishable_ofwe1YigppMHJjcWu_VjUA_XF7wNzEm";
-const db=supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
+const ADMIN_UID = "4fdfcde5-cbb0-4616-8237-b3dec68bd99d";
+const STORAGE_BUCKET = "product-images";
 
-const $=id=>document.getElementById(id);
-let images=[];
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-async function isAdmin(){
-  const {data,error}=await db.rpc("is_admin");
-  return !error && data===true;
-}
-async function boot(){
-  const {data}=await db.auth.getSession();
-  if(data.session && await isAdmin()) showAdmin(); else showLogin();
-}
-function showLogin(msg=""){$("loginPage").classList.remove("hidden");$("adminPage").classList.add("hidden");$("loginMsg").textContent=msg}
-function showAdmin(){$("loginPage").classList.add("hidden");$("adminPage").classList.remove("hidden");load()}
+let products = [];
+let editingImages = [];
+let newImageFiles = [];
 
-$("loginBtn").onclick=async()=>{
-  $("loginMsg").textContent="登入中...";
-  const {error}=await db.auth.signInWithPassword({email:$("email").value.trim(),password:$("password").value});
-  if(error) return showLogin("登入失敗："+error.message);
-  if(!(await isAdmin())){await db.auth.signOut();return showLogin("此帳號沒有管理員權限")}
-  showAdmin();
+const categoryNames = {
+  "aluminum-wheelchair":"鋁製輪椅",
+  "steel-wheelchair":"鐵製輪椅",
+  "rollator":"助步車",
+  "commode-chair":"便椅",
+  "shower-chair":"洗澡椅",
+  "walker":"助行器",
+  "cane-crutch":"手／拐杖",
+  "quad-cane":"四腳拐",
+  "accessories":"輔助用品"
 };
-$("password").addEventListener("keydown",e=>{if(e.key==="Enter")$("loginBtn").click()});
-$("logoutBtn").onclick=async()=>{await db.auth.signOut();showLogin()};
 
-const cname=c=>({"aluminum-wheelchair":"鋁製輪椅","steel-wheelchair":"鐵製輪椅","rollator":"助步車","commode-chair":"便椅","shower-chair":"洗澡椅","walker":"助行器","cane-crutch":"手／拐杖","quad-cane":"四腳拐","accessories":"輔助用品"}[c]||c);
-const esc=s=>String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+const $ = id => document.getElementById(id);
 
-async function load(){
-  $("tbody").innerHTML='<tr><td colspan="6">載入中...</td></tr>';
-  const {data,error}=await db.from("products").select("*").order("sort_order",{ascending:true}).order("created_at",{ascending:false});
-  if(error) return $("tbody").innerHTML='<tr><td colspan="6">讀取失敗：'+esc(error.message)+'</td></tr>';
-  $("tbody").innerHTML=data.length?"":'<tr><td colspan="6">目前沒有商品</td></tr>';
-  data.forEach(p=>{
-    const tr=document.createElement("tr"), img=p.image_urls?.[0]||"";
-    tr.innerHTML=`<td>${img?`<img class="thumb" src="${esc(img)}">`:"無圖片"}</td><td>${esc(p.name)}</td><td>${cname(p.category)}</td><td>${p.featured?'<span class="hot">熱賣</span>':"-"}</td><td><span class="status ${p.is_active?"on":""}">${p.is_active?"上架":"下架"}</span></td><td><div class="actions"><button data-e="${p.id}">編輯</button><button data-d="${p.id}">刪除</button></div></td>`;
-    $("tbody").appendChild(tr);
-  });
-  document.querySelectorAll("[data-e]").forEach(b=>b.onclick=()=>edit(b.dataset.e));
-  document.querySelectorAll("[data-d]").forEach(b=>b.onclick=()=>del(b.dataset.d));
+function esc(value){
+  const div = document.createElement("div");
+  div.textContent = value ?? "";
+  return div.innerHTML;
 }
 
-function addFeature(v=""){
-  const r=document.createElement("div");r.className="row1";
-  r.innerHTML='<input class="fv" placeholder="例如：鋁合金材質"><button class="remove">刪除</button>';
-  r.querySelector("input").value=v;r.querySelector("button").onclick=()=>r.remove();$("features").appendChild(r);
-}
-function addSpec(n="",v=""){
-  const r=document.createElement("div");r.className="row2";
-  r.innerHTML='<input class="sn" placeholder="規格名稱，例如：座寬"><input class="sv" placeholder="例如：45 cm"><button class="remove">刪除</button>';
-  r.querySelector(".sn").value=n;r.querySelector(".sv").value=v;r.querySelector("button").onclick=()=>r.remove();$("specs").appendChild(r);
+function escAttr(value){
+  return String(value ?? "")
+    .replace(/&/g,"&amp;")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
 }
 
-function addVariantSpec(container,n="",v=""){
-  const r=document.createElement("div");r.className="row2 variant-spec-row";
-  r.innerHTML='<input class="vsn" placeholder="規格名稱，例如：座寬"><input class="vsv" placeholder="例如：42cm"><button type="button" class="remove">刪除</button>';
-  r.querySelector(".vsn").value=n;
-  r.querySelector(".vsv").value=v;
-  r.querySelector(".remove").onclick=()=>r.remove();
-  container.appendChild(r);
+function showToast(message){
+  const el = $("toast");
+  el.textContent = message;
+  el.classList.remove("hidden");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => el.classList.add("hidden"), 2600);
 }
 
-function addVariant(model="",specs=null){
-  const card=document.createElement("div");
-  card.className="variant-card";
-  card.innerHTML=`
-    <div class="variant-top">
-      <div class="field" style="margin:0">
-        <label>型號／尺寸名稱</label>
-        <input class="variant-model" placeholder="例如：AC1616">
-      </div>
-      <button type="button" class="remove remove-variant">刪除此型號</button>
-    </div>
-    <div><strong style="color:#164c65">此型號規格</strong></div>
-    <div class="variant-specs"></div>
-    <div class="variant-actions">
-      <button type="button" class="soft add-variant-spec">＋ 新增規格</button>
-      <button type="button" class="copy-variant duplicate-variant">複製此型號</button>
-    </div>`;
-  card.querySelector(".variant-model").value=model;
-  const box=card.querySelector(".variant-specs");
-  card.querySelector(".add-variant-spec").onclick=()=>addVariantSpec(box);
-  card.querySelector(".remove-variant").onclick=()=>card.remove();
-  card.querySelector(".duplicate-variant").onclick=()=>{
-    const currentModel=card.querySelector(".variant-model").value.trim();
-    const currentSpecs=[...card.querySelectorAll(".variant-spec-row")].map(r=>({
-      name:r.querySelector(".vsn").value.trim(),
-      value:r.querySelector(".vsv").value.trim()
-    }));
-    addVariant(currentModel ? currentModel + "-copy" : "", currentSpecs);
-  };
-  $("variants").appendChild(card);
+function slugify(name){
+  const base = String(name || "")
+    .toLowerCase()
+    .trim()
+    .replace(/\s+/g,"-")
+    .replace(/[^\w\u4e00-\u9fff-]/g,"")
+    .replace(/-+/g,"-");
 
-  if(Array.isArray(specs) && specs.length){
-    specs.forEach(s=>addVariantSpec(box,s.name||"",s.value||""));
-  }else{
-    ["座寬","座深","座高","總寬","總高","總長","承重","淨重"].forEach(n=>addVariantSpec(box,n,""));
+  return (base || "product") + "-" + Date.now();
+}
+
+async function ensureAdmin(session){
+  if(!session?.user){
+    showLogin();
+    return false;
   }
+
+  if(session.user.id !== ADMIN_UID){
+    await db.auth.signOut();
+    $("loginMsg").textContent = "此帳號沒有管理權限。";
+    showLogin();
+    return false;
+  }
+
+  showAdmin();
+  await loadProducts();
+  return true;
 }
 
-function getVariants(){
-  return [...document.querySelectorAll(".variant-card")].map(card=>{
-    const model=card.querySelector(".variant-model").value.trim();
-    const specs=[...card.querySelectorAll(".variant-spec-row")].map(r=>({
-      name:r.querySelector(".vsn").value.trim(),
-      value:r.querySelector(".vsv").value.trim()
-    })).filter(s=>s.name&&s.value);
-    return {model,specs};
-  }).filter(v=>v.model || v.specs.length);
+function showLogin(){
+  $("loginPage").classList.remove("hidden");
+  $("adminPage").classList.add("hidden");
 }
 
-function addVariantLikeFirst(){
-  const first=$("variants").querySelector(".variant-card");
-  if(!first){
-    addVariant();
+function showAdmin(){
+  $("loginPage").classList.add("hidden");
+  $("adminPage").classList.remove("hidden");
+}
+
+$("loginForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  $("loginMsg").textContent = "登入中...";
+
+  const email = $("loginEmail").value.trim();
+  const password = $("loginPassword").value;
+
+  const { data, error } = await db.auth.signInWithPassword({
+    email,
+    password
+  });
+
+  if(error){
+    $("loginMsg").textContent = "登入失敗：" + error.message;
     return;
   }
 
-  const specs=[...first.querySelectorAll(".variant-spec-row")].map(r=>({
-    name:r.querySelector(".vsn").value.trim(),
-    value:r.querySelector(".vsv").value.trim()
-  }));
+  $("loginMsg").textContent = "";
+  await ensureAdmin(data.session);
+});
 
-  addVariant("",specs);
-}
-$("addFeature").onclick=()=>addFeature();
-$("addSpec").onclick=()=>addSpec();
-$("addVariant").onclick=()=>addVariant();
-$("addVariantLikeFirst").onclick=()=>addVariantLikeFirst();
+$("logoutBtn").addEventListener("click", async () => {
+  await db.auth.signOut();
+  showLogin();
+});
 
-function defaults(){
-  ["座寬","座深","座高","總寬","總高","總長","承重","淨重","前輪尺寸","後輪尺寸","材質"].forEach(n=>addSpec(n,""));
+async function loadProducts(){
+  $("productList").innerHTML =
+    '<div class="empty-box">商品載入中...</div>';
+
+  const { data, error } = await db
+    .from("products")
+    .select("*")
+    .order("sort_order", { ascending:true })
+    .order("created_at", { ascending:false });
+
+  if(error){
+    $("productList").innerHTML =
+      '<div class="empty-box">商品讀取失敗：' + esc(error.message) + '</div>';
+    return;
+  }
+
+  products = data || [];
+  updateStats();
+  renderProducts();
 }
-function renderImages(){
-  $("previews").innerHTML="";
-  images.forEach((u,i)=>{
-    const d=document.createElement("div");d.className="preview";
-    d.innerHTML=`<img src="${esc(u)}"><button>×</button>`;
-    d.querySelector("button").onclick=()=>{images.splice(i,1);renderImages()};
-    $("previews").appendChild(d);
+
+function updateStats(){
+  $("statAll").textContent = products.length;
+  $("statActive").textContent =
+    products.filter(p => p.is_active).length;
+  $("statInactive").textContent =
+    products.filter(p => !p.is_active).length;
+}
+
+function filteredProducts(){
+  const keyword = $("searchInput").value.trim().toLowerCase();
+  const status = $("statusFilter").value;
+  const category = $("categoryFilter").value;
+
+  return products.filter(p => {
+    const haystack = [
+      p.name,
+      p.short_description,
+      p.description,
+      p.category
+    ].join(" ").toLowerCase();
+
+    const matchKeyword = !keyword || haystack.includes(keyword);
+    const matchCategory = category === "all" || p.category === category;
+    const matchStatus =
+      status === "all" ||
+      (status === "active" && p.is_active) ||
+      (status === "inactive" && !p.is_active);
+
+    return matchKeyword && matchCategory && matchStatus;
   });
 }
-async function upload(){
-  for(const f of Array.from($("files").files)){
-    const ext=(f.name.split(".").pop()||"jpg").toLowerCase();
-    const path="products/"+crypto.randomUUID()+"."+ext;
-    const {error}=await db.storage.from("product-images").upload(path,f);
-    if(error) throw error;
-    images.push(db.storage.from("product-images").getPublicUrl(path).data.publicUrl);
+
+function renderProducts(){
+  const rows = filteredProducts();
+
+  if(!rows.length){
+    $("productList").innerHTML =
+      '<div class="empty-box">目前沒有符合條件的商品。</div>';
+    return;
   }
-  $("files").value="";
+
+  $("productList").innerHTML = rows.map(p => {
+    const image =
+      Array.isArray(p.image_urls) && p.image_urls.length
+        ? p.image_urls[0]
+        : "";
+
+    return `
+      <article class="product-row">
+        <div class="thumb">
+          ${
+            image
+              ? `<img src="${escAttr(image)}" alt="${escAttr(p.name)}">`
+              : "尚無圖片"
+          }
+        </div>
+
+        <div>
+          <div class="product-name">${esc(p.name)}</div>
+          <div class="product-desc">
+            ${esc(p.short_description || p.description || "尚未填寫商品介紹")}
+          </div>
+        </div>
+
+        <div>
+          <strong>${esc(categoryNames[p.category] || p.category || "未分類")}</strong>
+        </div>
+
+        <div>
+          <span class="pill ${p.is_active ? "active" : "inactive"}">
+            ${p.is_active ? "● 上架中" : "● 已下架"}
+          </span>
+
+          ${
+            p.featured
+              ? '<span class="pill featured">★ 首頁推薦</span>'
+              : ""
+          }
+        </div>
+
+        <div class="row-actions">
+          <button class="small-btn" onclick="editProduct('${p.id}')">編輯</button>
+
+          <button
+            class="small-btn warn"
+            onclick="toggleStatus('${p.id}', ${p.is_active})">
+            ${p.is_active ? "下架" : "重新上架"}
+          </button>
+
+          <button
+            class="small-btn"
+            onclick="duplicateProduct('${p.id}')">
+            複製
+          </button>
+
+          <button
+            class="small-btn danger"
+            onclick="deleteProduct('${p.id}')">
+            刪除
+          </button>
+        </div>
+      </article>
+    `;
+  }).join("");
 }
 
-function reset(useDefaults=true){
-  ["id","name","short","desc","subsidy"].forEach(x=>$(x).value="");
-  $("category").value="aluminum-wheelchair";$("sort").value=0;$("featured").checked=false;$("active").checked=true;
-  $("features").innerHTML="";$("specs").innerHTML="";$("variants").innerHTML="";images=[];renderImages();$("saveMsg").textContent="";
-  addFeature();if(useDefaults)defaults();
-}
-$("newBtn").onclick=()=>{reset();$("editorTitle").textContent="新增商品";$("editor").classList.remove("hidden");$("editor").scrollIntoView({behavior:"smooth"})};
-$("closeBtn").onclick=()=>$("editor").classList.add("hidden");
+$("searchInput").addEventListener("input", renderProducts);
+$("statusFilter").addEventListener("change", renderProducts);
+$("categoryFilter").addEventListener("change", renderProducts);
 
-$("saveBtn").onclick=async()=>{
-  const btn=$("saveBtn");btn.disabled=true;btn.textContent="儲存中...";$("saveMsg").textContent="";
-  try{
-    await upload();
-    const name=$("name").value.trim();if(!name) throw new Error("請輸入商品名稱");
-    const features=[...document.querySelectorAll(".fv")].map(x=>x.value.trim()).filter(Boolean);
-    const specs=[...$("specs").querySelectorAll(".row2")].map(r=>({name:r.querySelector(".sn").value.trim(),value:r.querySelector(".sv").value.trim()})).filter(x=>x.name&&x.value);
-    const variants=getVariants();
-    const item={name,category:$("category").value,short_description:$("short").value.trim(),description:$("desc").value.trim(),subsidy:$("subsidy").value.trim(),sort_order:Number($("sort").value)||0,featured:$("featured").checked,is_active:$("active").checked,features,specs,variants,image_urls:images};
-    let q;
-    if($("id").value) q=await db.from("products").update(item).eq("id",$("id").value);
-    else{item.slug=(name.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/^-|-$/g,"")||"product")+"-"+Date.now();q=await db.from("products").insert(item)}
-    if(q.error) throw q.error;
-    $("saveMsg").textContent="商品已成功儲存";await load();setTimeout(()=>$("editor").classList.add("hidden"),600);
-  }catch(e){$("saveMsg").textContent="儲存失敗："+e.message}
-  finally{btn.disabled=false;btn.textContent="儲存商品"}
+function clearDynamicLists(){
+  $("featuresList").innerHTML = "";
+  $("specsList").innerHTML = "";
+  $("variantsList").innerHTML = "";
+}
+
+function addDynamicRow(type, key="", value=""){
+  const map = {
+    feature: $("featuresList"),
+    spec: $("specsList"),
+    variant: $("variantsList")
+  };
+
+  const host = map[type];
+  const row = document.createElement("div");
+  row.className = "dynamic-row";
+  row.dataset.type = type;
+
+  if(type === "feature"){
+    row.innerHTML = `
+      <input class="row-key" type="text"
+             placeholder="商品特色"
+             value="${escAttr(key || value)}">
+      <input class="row-value" type="hidden" value="">
+      <button type="button" class="remove-row">刪除</button>
+    `;
+  }else{
+    row.innerHTML = `
+      <input class="row-key" type="text"
+             placeholder="${type === "spec" ? "名稱" : "型號"}"
+             value="${escAttr(key)}">
+      <input class="row-value" type="text"
+             placeholder="${type === "spec" ? "數值" : "尺寸 / 備註"}"
+             value="${escAttr(value)}">
+      <button type="button" class="remove-row">刪除</button>
+    `;
+  }
+
+  row.querySelector(".remove-row")
+    .addEventListener("click", () => row.remove());
+
+  host.appendChild(row);
+}
+
+document.querySelectorAll("[data-add]").forEach(btn => {
+  btn.addEventListener("click", () => {
+    addDynamicRow(btn.dataset.add);
+  });
+});
+
+function collectFeatures(){
+  return [...$("featuresList").querySelectorAll(".dynamic-row")]
+    .map(row => row.querySelector(".row-key").value.trim())
+    .filter(Boolean);
+}
+
+function collectPairs(hostId){
+  return [...$(hostId).querySelectorAll(".dynamic-row")]
+    .map(row => ({
+      name: row.querySelector(".row-key").value.trim(),
+      value: row.querySelector(".row-value").value.trim()
+    }))
+    .filter(item => item.name || item.value);
+}
+
+function normalizePairs(input){
+  if(!Array.isArray(input)) return [];
+
+  return input.map(item => {
+    if(typeof item === "string"){
+      return { name:item, value:"" };
+    }
+
+    return {
+      name: item?.name ?? item?.label ?? item?.key ?? "",
+      value: item?.value ?? item?.text ?? item?.size ?? ""
+    };
+  });
+}
+
+function openModal(product=null){
+  $("productForm").reset();
+  $("productId").value = "";
+  $("sortOrder").value = "0";
+  $("isActive").checked = true;
+  $("featured").checked = false;
+  clearDynamicLists();
+
+  editingImages = [];
+  newImageFiles = [];
+  $("imageFiles").value = "";
+
+  if(product){
+    $("modalTitle").textContent = "編輯商品";
+    $("productId").value = product.id;
+    $("productName").value = product.name || "";
+    $("productCategory").value =
+      product.category || "aluminum-wheelchair";
+    $("shortDescription").value =
+      product.short_description || "";
+    $("description").value = product.description || "";
+    $("subsidy").value = product.subsidy || "";
+    $("sortOrder").value = product.sort_order ?? 0;
+    $("isActive").checked = product.is_active !== false;
+    $("featured").checked = product.featured === true;
+
+    editingImages =
+      Array.isArray(product.image_urls)
+        ? [...product.image_urls]
+        : [];
+
+    (Array.isArray(product.features) ? product.features : [])
+      .forEach(item => {
+        if(typeof item === "string"){
+          addDynamicRow("feature", item);
+        }else{
+          addDynamicRow("feature",
+            item?.text ?? item?.name ?? item?.value ?? "");
+        }
+      });
+
+    normalizePairs(product.specs)
+      .forEach(item => addDynamicRow("spec", item.name, item.value));
+
+    normalizePairs(product.variants)
+      .forEach(item => addDynamicRow("variant", item.name, item.value));
+
+  }else{
+    $("modalTitle").textContent = "新增商品";
+    addDynamicRow("feature");
+    addDynamicRow("spec");
+    addDynamicRow("variant");
+  }
+
+  renderImagePreview();
+  $("productModal").classList.remove("hidden");
+}
+
+function closeModal(){
+  $("productModal").classList.add("hidden");
+}
+
+$("newProductBtn").addEventListener("click", () => openModal());
+$("closeModalBtn").addEventListener("click", closeModal);
+$("cancelModalBtn").addEventListener("click", closeModal);
+
+$("productModal").addEventListener("click", e => {
+  if(e.target === $("productModal")){
+    closeModal();
+  }
+});
+
+window.editProduct = function(id){
+  const product = products.find(p => p.id === id);
+  if(product) openModal(product);
 };
 
-async function edit(id){
-  const {data,error}=await db.from("products").select("*").eq("id",id).single();
-  if(error)return alert("讀取商品失敗："+error.message);
-  reset(false);$("id").value=data.id;$("name").value=data.name||"";$("category").value=data.category||"aluminum-wheelchair";$("short").value=data.short_description||"";$("desc").value=data.description||"";$("subsidy").value=data.subsidy||"";$("sort").value=data.sort_order||0;$("featured").checked=!!data.featured;$("active").checked=!!data.is_active;images=data.image_urls||[];renderImages();
-  (data.features||[]).forEach(addFeature);(data.specs||[]).forEach(s=>addSpec(s.name,s.value));(data.variants||[]).forEach(v=>addVariant(v.model||"",v.specs||[]));
-  $("editorTitle").textContent="編輯商品";$("editor").classList.remove("hidden");$("editor").scrollIntoView({behavior:"smooth"});
+$("imageFiles").addEventListener("change", e => {
+  newImageFiles.push(...Array.from(e.target.files || []));
+  renderImagePreview();
+  e.target.value = "";
+});
+
+function renderImagePreview(){
+  const host = $("imagePreview");
+  host.innerHTML = "";
+
+  editingImages.forEach((url,index) => {
+    const item = document.createElement("div");
+    item.className = "preview-item";
+    item.innerHTML = `
+      <img src="${escAttr(url)}" alt="商品圖片">
+      <button type="button" class="preview-remove">×</button>
+    `;
+    item.querySelector("button").addEventListener("click", () => {
+      editingImages.splice(index,1);
+      renderImagePreview();
+    });
+    host.appendChild(item);
+  });
+
+  newImageFiles.forEach((file,index) => {
+    const item = document.createElement("div");
+    item.className = "preview-item";
+    const objectUrl = URL.createObjectURL(file);
+
+    item.innerHTML = `
+      <img src="${escAttr(objectUrl)}" alt="待上傳圖片">
+      <button type="button" class="preview-remove">×</button>
+    `;
+
+    item.querySelector("button").addEventListener("click", () => {
+      URL.revokeObjectURL(objectUrl);
+      newImageFiles.splice(index,1);
+      renderImagePreview();
+    });
+
+    host.appendChild(item);
+  });
 }
-async function del(id){
-  if(!confirm("確定要刪除這件商品嗎？"))return;
-  const {error}=await db.from("products").delete().eq("id",id);
-  if(error)return alert("刪除失敗："+error.message);load();
+
+async function uploadNewImages(){
+  const urls = [];
+
+  for(const file of newImageFiles){
+    const ext =
+      (file.name.split(".").pop() || "jpg")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g,"");
+
+    const path =
+      `${Date.now()}-${Math.random().toString(36).slice(2,10)}.${ext}`;
+
+    const { error } = await db.storage
+      .from(STORAGE_BUCKET)
+      .upload(path, file, {
+        cacheControl:"3600",
+        upsert:false,
+        contentType:file.type || undefined
+      });
+
+    if(error){
+      throw new Error("圖片上傳失敗：" + error.message);
+    }
+
+    const { data } = db.storage
+      .from(STORAGE_BUCKET)
+      .getPublicUrl(path);
+
+    urls.push(data.publicUrl);
+  }
+
+  return urls;
 }
-boot();
+
+$("productForm").addEventListener("submit", async e => {
+  e.preventDefault();
+
+  const btn = $("saveProductBtn");
+  btn.disabled = true;
+  btn.textContent = "儲存中...";
+
+  try{
+    const name = $("productName").value.trim();
+
+    if(!name){
+      throw new Error("請輸入商品名稱");
+    }
+
+    const uploadedUrls = await uploadNewImages();
+    const allImages = [...editingImages, ...uploadedUrls];
+
+    const payload = {
+      name,
+      category: $("productCategory").value,
+      short_description: $("shortDescription").value.trim() || null,
+      description: $("description").value.trim() || null,
+      subsidy: $("subsidy").value.trim() || null,
+      sort_order: Number($("sortOrder").value || 0),
+      is_active: $("isActive").checked,
+      featured: $("featured").checked,
+      image_urls: allImages,
+      features: collectFeatures(),
+      specs: collectPairs("specsList"),
+      variants: collectPairs("variantsList")
+    };
+
+    const id = $("productId").value;
+
+    let result;
+
+    if(id){
+      result = await db
+        .from("products")
+        .update(payload)
+        .eq("id", id);
+    }else{
+      payload.slug = slugify(name);
+
+      result = await db
+        .from("products")
+        .insert(payload);
+    }
+
+    if(result.error){
+      throw new Error(result.error.message);
+    }
+
+    closeModal();
+    showToast(id ? "商品已更新" : "商品已新增");
+    await loadProducts();
+
+  }catch(err){
+    alert(err.message || String(err));
+  }finally{
+    btn.disabled = false;
+    btn.textContent = "儲存商品";
+  }
+});
+
+window.toggleStatus = async function(id,current){
+  const action = current ? "下架" : "重新上架";
+
+  if(!confirm(`確定要${action}這項商品嗎？`)){
+    return;
+  }
+
+  const { error } = await db
+    .from("products")
+    .update({ is_active: !current })
+    .eq("id", id);
+
+  if(error){
+    alert("狀態更新失敗：" + error.message);
+    return;
+  }
+
+  showToast(`商品已${action}`);
+  await loadProducts();
+};
+
+window.duplicateProduct = async function(id){
+  const original = products.find(p => p.id === id);
+  if(!original) return;
+
+  if(!confirm(`要複製「${original.name}」嗎？`)){
+    return;
+  }
+
+  const copy = {
+    name: original.name + " - 複製",
+    slug: slugify(original.name + "-copy"),
+    category: original.category,
+    short_description: original.short_description,
+    description: original.description,
+    features: original.features || [],
+    specs: original.specs || [],
+    variants: original.variants || [],
+    subsidy: original.subsidy,
+    image_urls: original.image_urls || [],
+    featured: false,
+    is_active: false,
+    sort_order: original.sort_order ?? 0
+  };
+
+  const { error } = await db
+    .from("products")
+    .insert(copy);
+
+  if(error){
+    alert("複製失敗：" + error.message);
+    return;
+  }
+
+  showToast("商品已複製，預設為下架");
+  await loadProducts();
+};
+
+window.deleteProduct = async function(id){
+  const product = products.find(p => p.id === id);
+  if(!product) return;
+
+  if(!confirm(
+    `確定要刪除「${product.name}」嗎？\n\n刪除後商品資料無法復原。`
+  )){
+    return;
+  }
+
+  const { error } = await db
+    .from("products")
+    .delete()
+    .eq("id", id);
+
+  if(error){
+    alert("刪除失敗：" + error.message);
+    return;
+  }
+
+  showToast("商品已刪除");
+  await loadProducts();
+};
+
+(async function init(){
+  const { data } = await db.auth.getSession();
+  await ensureAdmin(data.session);
+
+  db.auth.onAuthStateChange((_event, session) => {
+    if(!session){
+      showLogin();
+    }
+  });
+})();
 </script>
+
 </body>
 </html>
