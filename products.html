@@ -1111,6 +1111,80 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
             }
         }
 
+
+        /* ===== 商品卡真正等高修正 =====
+           product-grid 的直接子元素其實是 .product-item，
+           因此必須讓 wrapper 與 card 都撐滿同一列高度。 */
+        .product-grid {
+            align-items: stretch !important;
+        }
+
+        .product-item {
+            display: flex !important;
+            height: 100%;
+            align-self: stretch;
+        }
+
+        .product-item > .product-card,
+        .product-item .product-card {
+            width: 100%;
+            height: 100% !important;
+            flex: 1 1 auto;
+        }
+
+        .product-card .product-content {
+            display: flex !important;
+            flex-direction: column !important;
+            flex: 1 1 auto;
+            height: auto !important;
+        }
+
+        /* 特色區固定空間 */
+        .product-card .product-features {
+            height: 120px !important;
+            min-height: 120px !important;
+            flex: 0 0 120px !important;
+            margin: 17px 0 !important;
+            overflow: hidden;
+        }
+
+        /* 補助區固定空間 */
+        .product-card .subsidy-slot {
+            height: 72px !important;
+            min-height: 72px !important;
+            flex: 0 0 72px !important;
+        }
+
+        /* 按鈕永遠貼齊卡片底部 */
+        .product-card .product-actions {
+            margin-top: auto !important;
+            width: 100%;
+            flex-shrink: 0;
+        }
+
+        @media (max-width: 600px) {
+            .product-item {
+                height: auto;
+            }
+
+            .product-item > .product-card,
+            .product-item .product-card {
+                height: auto !important;
+            }
+
+            .product-card .product-features,
+            .product-card .subsidy-slot {
+                height: auto !important;
+                min-height: 0 !important;
+                flex-basis: auto !important;
+            }
+
+            .product-card .product-features.empty-features,
+            .product-card .subsidy-empty {
+                display: none;
+            }
+        }
+
 </style>
 
 </head>
