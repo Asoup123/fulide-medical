@@ -522,17 +522,7 @@
 
             font-size: 14px;
         }
-
-        .product-item {
-            display: flex;
-        }
-
-        .product-item.hidden {
-            display: none;
-        }
-
-
-        /* =========================
+/* =========================
            RWD
         ========================= */
 
@@ -624,7 +614,7 @@
         }
 
         .product-card .subsidy {
-            margin-top: auto;
+            margin-top: 0;
         }
 
         .detail-button {
@@ -957,7 +947,12 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
 @media(max-width:600px){.logo img{height:46px;max-width:68px}.home-button{padding:8px 12px;font-size:13px}.category-section,.products-section{padding-left:5%;padding-right:5%}.product-image{height:310px}}
 
 
-        /* ===== 商品卡片按鈕真正固定對齊 ===== */
+
+        /* ==================================================
+           商品卡片統一版面
+           只保留這一組規則，避免前後 CSS 互相覆蓋
+        ================================================== */
+
         .product-grid {
             align-items: stretch;
         }
@@ -969,20 +964,76 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
         }
 
         .product-content {
+            padding: 24px;
             display: flex;
             flex-direction: column;
             flex: 1;
         }
 
-        /* 不讓補助區塊搶走 auto 空間 */
-        .product-card .subsidy {
-            margin-top: 18px;
-            margin-bottom: 18px;
+        /* 分類 */
+        .product-type {
+            align-self: flex-start;
+            margin-bottom: 8px;
         }
 
-        /* 按鈕區永遠推到卡片最底部 */
+        /* 商品名稱：預留兩行高度 */
+        .product-content h3 {
+            min-height: 72px;
+            margin-bottom: 9px;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        /* 商品簡介：固定三行區域 */
+        .product-intro {
+            height: 84px;
+            min-height: 84px;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
+        /* 商品特色：每張卡固定相同高度 */
+        .product-features {
+            height: 120px;
+            min-height: 120px;
+            margin: 17px 0;
+            padding-top: 13px;
+            overflow: hidden;
+            box-sizing: border-box;
+            list-style: none;
+            border-top: 1px solid var(--line);
+        }
+
+        .product-features.empty-features {
+            visibility: hidden;
+        }
+
+        /* 補助資訊：有或沒有都保留相同高度 */
+        .subsidy-slot {
+            height: 72px;
+            min-height: 72px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .product-card .subsidy {
+            width: 100%;
+            margin: 0;
+        }
+
+        .subsidy-empty {
+            visibility: hidden;
+        }
+
+        /* 按鈕固定在卡片底部 */
         .product-actions {
             margin-top: auto;
+            width: 100%;
+            flex-shrink: 0;
         }
 
         .product-actions .detail-button {
@@ -993,196 +1044,23 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
             margin-top: 10px;
         }
 
-
-        /* ===== 最終商品卡固定版面：每個區塊都有固定高度 ===== */
-        .product-grid {
-            align-items: stretch;
-        }
-
-        .product-card {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-content {
-            display: grid !important;
-            grid-template-rows:
-                32px   /* 分類 */
-                72px   /* 商品名稱 */
-                84px   /* 商品簡介 */
-                120px  /* 商品特色 */
-                72px   /* 補助區 */
-                auto;  /* 按鈕區 */
-            gap: 0;
-            flex: 1;
-            height: 100%;
-        }
-
-        .product-type {
-            align-self: start;
-            margin-bottom: 0 !important;
-        }
-
-        .product-content h3 {
-            height: 72px;
-            margin: 0 !important;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-intro {
-            height: 84px !important;
-            min-height: 84px !important;
-            margin: 0 !important;
-            overflow: hidden;
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-        }
-
-        .product-features {
-            height: 120px !important;
-            min-height: 120px !important;
-            margin: 0 !important;
-            padding-top: 13px;
-            overflow: hidden;
-            box-sizing: border-box;
-        }
-
-        .product-features.empty-features {
-            visibility: hidden;
-        }
-
-        .subsidy-slot {
-            height: 72px;
-            min-height: 72px;
-            display: flex;
-            align-items: flex-start;
-        }
-
-        .product-card .subsidy {
-            width: 100%;
-            margin: 0 !important;
-        }
-
-        .subsidy-empty {
-            visibility: hidden;
-        }
-
-        .product-actions {
-            margin-top: 0 !important;
-            align-self: end;
-            width: 100%;
-        }
-
-        .product-actions .detail-button {
-            margin-top: 0 !important;
-        }
-
-        .product-actions .ask-button {
-            margin-top: 10px !important;
-        }
-
+        /* 手機版改回自然高度，避免卡片太長 */
         @media (max-width: 600px) {
-            .product-content {
-                grid-template-rows:
-                    32px
-                    auto
-                    auto
-                    auto
-                    auto
-                    auto;
-            }
-
             .product-content h3,
             .product-intro,
             .product-features,
             .subsidy-slot {
-                height: auto !important;
-                min-height: 0 !important;
+                height: auto;
+                min-height: 0;
             }
 
             .product-features.empty-features,
             .subsidy-empty {
                 display: none;
             }
-        }
-
-
-        /* ===== 最終版：按鈕直接固定在每張卡片底部 =====
-           不再依賴商品特色、簡介、補助區塊的高度。 */
-        .product-card {
-            position: relative !important;
-            height: 100% !important;
-        }
-
-        .product-content {
-            display: block !important;
-            height: auto !important;
-            min-height: 0 !important;
-
-            /* 預留按鈕區空間，避免內容蓋到按鈕 */
-            padding-bottom: 175px !important;
-        }
-
-        .product-actions {
-            position: absolute !important;
-            left: 24px !important;
-            right: 24px !important;
-            bottom: 30px !important;
-
-            width: auto !important;
-            margin: 0 !important;
-        }
-
-        .product-actions .detail-button,
-        .product-actions .ask-button {
-            width: 100% !important;
-        }
-
-        .product-actions .detail-button {
-            margin-top: 0 !important;
-        }
-
-        .product-actions .ask-button {
-            margin-top: 10px !important;
-        }
-
-        /* 特色區保留固定空間，畫面更整齊 */
-        .product-features {
-            min-height: 120px !important;
-            height: 120px !important;
-            overflow: hidden;
-        }
-
-        /* 手機版恢復自然流動，避免卡片過高 */
-        @media (max-width: 600px) {
-            .product-card {
-                position: static !important;
-                height: auto !important;
-            }
-
-            .product-content {
-                padding-bottom: 24px !important;
-            }
 
             .product-actions {
-                position: static !important;
-                width: 100% !important;
-                margin-top: 18px !important;
-            }
-
-            .product-features {
-                min-height: 0 !important;
-                height: auto !important;
-            }
-
-            .product-features.empty-features,
-            .subsidy-empty {
-                display: none !important;
+                margin-top: 18px;
             }
         }
 
