@@ -1,1795 +1,1263 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
-
 <head>
-    <meta charset="UTF-8">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="viewport" 
-          content="width=device-width, initial-scale=1.0">
+  <title>富立德有限公司｜醫療器材・輔具用品・居家照護</title>
+  <meta name="description" content="富立德有限公司成立於2023年，提供輪椅、助行器、便椅、洗澡椅、拐杖、氣墊床及各式醫療與居家照護用品。">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://asoup123.github.io/fulide-medical/">
 
-    <title>富立德有限公司｜醫療器材・輔具用品・專業維修</title>
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="zh_TW">
+  <meta property="og:site_name" content="富立德有限公司">
+  <meta property="og:title" content="富立德有限公司｜醫療器材・輔具用品・居家照護">
+  <meta property="og:description" content="從日常移動到居家照護，富立德提供實用的醫療器材與輔具用品，協助找到更適合生活需求的選擇。">
+  <meta property="og:url" content="https://asoup123.github.io/fulide-medical/">
 
-    <meta name="description"
-          content="富立德有限公司成立於2023年，專營醫療器材、醫療儀器設備、輪椅、助行器、柺杖、馬桶椅、氣墊床、醫療耗材、保健食品及各式輔具維修。">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "LocalBusiness",
+    "name": "富立德有限公司",
+    "url": "https://asoup123.github.io/fulide-medical/",
+    "telephone": "03-439-2068",
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "北富里大勇街2巷7弄10號1樓",
+      "addressLocality": "平鎮區",
+      "addressRegion": "桃園市",
+      "addressCountry": "TW"
+    },
+    "description": "富立德有限公司提供輪椅、助行器、便椅、洗澡椅、拐杖與居家照護相關用品。"
+  }
+  </script>
 
-     <!-- SEO -->
-    <link rel="canonical" href="https://asoup123.github.io/fulide-medical/">
-
-    <meta name="robots" content="index, follow">
-
-    <!-- Open Graph -->
-    <meta property="og:type" content="website">
-    <meta property="og:locale" content="zh_TW">
-    <meta property="og:site_name" content="富立德有限公司">
-    <meta property="og:title" content="富立德有限公司｜醫療器材・輔具用品・專業維修">
-    <meta property="og:description" content="富立德有限公司成立於2023年，專營醫療器材、醫療儀器設備、輪椅、助行器、柺杖、馬桶椅、氣墊床、醫療耗材、保健食品及各式輔具維修。">
-    <meta property="og:url" content="https://asoup123.github.io/fulide-medical/">
-
-    <!-- 結構化資料：公司資訊 -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "LocalBusiness",
-      "name": "富立德有限公司",
-      "url": "https://asoup123.github.io/fulide-medical/",
-      "telephone": "03-439-2068",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "北富里大勇街2巷7弄10號1樓",
-        "addressLocality": "平鎮區",
-        "addressRegion": "桃園市",
-        "addressCountry": "TW"
-      },
-      "description": "富立德有限公司專營醫療器材、輪椅、助行器、拐杖及各式輔具，並提供專業維修服務。",
-      "areaServed": {
-        "@type": "Country",
-        "name": "Taiwan"
-      }
+  <style>
+    :root{
+      --green:#0f6b48;
+      --green-dark:#0a5238;
+      --green-soft:#e9f4ee;
+      --mint:#f4faf6;
+      --cream:#fbfaf6;
+      --text:#24342d;
+      --muted:#6c7771;
+      --line:#dfe8e2;
+      --white:#ffffff;
+      --shadow:0 14px 34px rgba(26,72,52,.10);
     }
-    </script>
 
-    <style>
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        html {
-            scroll-behavior: smooth;
-        }
-
-        body {
-            font-family:
-                "Microsoft JhengHei",
-                "Noto Sans TC",
-                Arial,
-                sans-serif;
-
-            background: #ffffff;
-            color: #333;
-            line-height: 1.7;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        /* =========================
-           HEADER
-        ========================= */
-
-        header {
-            min-height: 82px;
-            padding: 12px 7%;
-
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-
-            background: rgba(255,255,255,0.97);
-
-            box-shadow:
-                0 3px 18px rgba(0,0,0,0.06);
-        }
-
-        .logo {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-
-            color: #0797d3;
-
-            font-size: 22px;
-            font-weight: 800;
-
-            white-space: nowrap;
-        }
-
-        .logo img {
-            height: 54px;
-            width: auto;
-            display: block;
-        }
-
-        nav {
-            display: flex;
-            align-items: center;
-            gap: 26px;
-        }
-
-        nav a {
-            color: #333;
-
-            font-size: 15px;
-            font-weight: 600;
-
-            transition: 0.25s;
-        }
-
-        nav a:hover {
-            color: #0797d3;
-        }
-
-        .nav-product {
-            padding: 9px 18px;
-
-            color: white !important;
-            background: #0797d3;
-
-            border-radius: 7px;
-        }
-
-        .nav-product:hover {
-            background: #087ead;
-        }
-
-        /* =========================
-           HERO
-        ========================= */
-
-        .hero {
-            min-height: 610px;
-
-            padding: 70px 8%;
-
-            display: flex;
-            align-items: center;
-
-            color: white;
-
-            background:
-                linear-gradient(
-                    90deg,
-                    rgba(5,57,83,0.94) 0%,
-                    rgba(4,92,132,0.82) 48%,
-                    rgba(4,94,133,0.42) 100%
-                ),
-                url("https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=1800&q=85");
-
-            background-size: cover;
-            background-position: center;
-        }
-
-        .hero-content {
-            max-width: 760px;
-        }
-
-        .hero-small {
-            display: inline-block;
-
-            padding: 7px 16px;
-            margin-bottom: 20px;
-
-            border:
-                1px solid rgba(255,255,255,0.55);
-
-            border-radius: 30px;
-
-            background:
-                rgba(255,255,255,0.08);
-
-            font-size: 14px;
-
-            letter-spacing: 1px;
-        }
-
-        .hero h1 {
-            font-size: 54px;
-            line-height: 1.2;
-
-            margin-bottom: 15px;
-        }
-
-        .hero h2 {
-            font-size: 26px;
-            font-weight: 500;
-
-            margin-bottom: 18px;
-        }
-
-        .hero p {
-            max-width: 680px;
-
-            margin-bottom: 32px;
-
-            color:
-                rgba(255,255,255,0.92);
-
-            font-size: 18px;
-        }
-
-        .hero-buttons {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-        }
-
-        .btn-white {
-            display: inline-block;
-
-            padding: 13px 28px;
-
-            color: #087ead;
-            background: white;
-
-            border-radius: 7px;
-
-            font-weight: 700;
-
-            transition: 0.25s;
-        }
-
-        .btn-white:hover {
-            transform: translateY(-2px);
-        }
-
-        .btn-outline {
-            display: inline-block;
-
-            padding: 12px 27px;
-
-            color: white;
-
-            border: 1px solid white;
-
-            border-radius: 7px;
-
-            font-weight: 700;
-
-            transition: 0.25s;
-        }
-
-        .btn-outline:hover {
-            color: #087ead;
-            background: white;
-        }
-
-        /* =========================
-           GENERAL
-        ========================= */
-
-        section {
-            padding: 90px 8%;
-        }
-
-        .section-title {
-            max-width: 750px;
-
-            margin: 0 auto 48px;
-
-            text-align: center;
-        }
-
-        .section-title span {
-            display: block;
-
-            margin-bottom: 5px;
-
-            color: #0797d3;
-
-            font-size: 13px;
-            font-weight: 800;
-
-            letter-spacing: 2px;
-        }
-
-        .section-title h2 {
-            margin-bottom: 9px;
-
-            color: #164c65;
-
-            font-size: 36px;
-        }
-
-        .section-title p {
-            color: #777;
-        }
-
-        /* =========================
-           ABOUT
-        ========================= */
-
-        .about {
-            background: white;
-        }
-
-        .about-container {
-            max-width: 1100px;
-
-            margin: auto;
-
-            display: grid;
-
-            grid-template-columns: 1.15fr 0.85fr;
-
-            gap: 65px;
-
-            align-items: center;
-        }
-
-        .about-text h2 {
-            margin-bottom: 20px;
-
-            color: #164c65;
-
-            font-size: 36px;
-        }
-
-        .about-text p {
-            margin-bottom: 16px;
-
-            color: #606060;
-
-            font-size: 17px;
-        }
-
-        .about-year {
-            min-height: 330px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            text-align: center;
-
-            color: white;
-
-            border-radius: 24px;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #079bd8,
-                    #066e9c
-                );
-
-            box-shadow:
-                0 18px 45px rgba(7,155,216,0.22);
-        }
-
-        .year-number {
-            font-size: 72px;
-            font-weight: 900;
-            line-height: 1;
-        }
-
-        .year-text {
-            margin-top: 12px;
-
-            font-size: 18px;
-        }
-
-        /* =========================
-           SERVICES
-        ========================= */
-
-        .services {
-            background: #f5f9fb;
-        }
-
-        .service-grid {
-            max-width: 1200px;
-
-            margin: auto;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(5, 1fr);
-
-            gap: 18px;
-        }
-
-        .service-card {
-            padding: 30px 17px;
-
-            background: white;
-
-            border:
-                1px solid #e8eef1;
-
-            border-radius: 15px;
-
-            text-align: center;
-
-            transition: 0.25s;
-        }
-
-        .service-card:hover {
-            transform: translateY(-6px);
-
-            border-color: #bfe5f5;
-
-            box-shadow:
-                0 12px 30px rgba(0,0,0,0.08);
-        }
-
-        .service-card h3 {
-            margin-bottom: 5px;
-
-            color: #176182;
-
-            font-size: 18px;
-        }
-
-        .service-card p {
-            color: #777;
-
-            font-size: 14px;
-        }
-
-        /* =========================
-           PRODUCT CATEGORY
-        ========================= */
-
-        .categories {
-            background: white;
-        }
-
-        .category-grid {
-            max-width: 1100px;
-
-            margin: auto;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 20px;
-        }
-
-        .category-card {
-            min-height: 190px;
-
-            padding: 28px;
-
-            position: relative;
-            overflow: hidden;
-
-            display: flex;
-            flex-direction: column;
-            justify-content: flex-end;
-
-            color: #333;
-
-            border:
-                1px solid #e4edf1;
-
-            border-radius: 17px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #f1f8fb,
-                    #ffffff
-                );
-
-            transition: 0.3s;
-        }
-
-        .category-card::before {
-            content: "";
-
-            position: absolute;
-
-            width: 130px;
-            height: 130px;
-
-            right: -45px;
-            top: -45px;
-
-            border-radius: 50%;
-
-            background:
-                rgba(7,151,211,0.11);
-        }
-
-        .category-card:hover {
-            transform: translateY(-6px);
-
-            box-shadow:
-                0 15px 35px rgba(0,0,0,0.08);
-        }
-
-        .category-card h3 {
-            position: relative;
-
-            margin-bottom: 3px;
-
-            color: #164c65;
-
-            font-size: 23px;
-        }
-
-        .category-card p {
-            position: relative;
-
-            color: #777;
-
-            font-size: 14px;
-        }
-
-        /* =========================
-           FEATURED PRODUCTS
-        ========================= */
-
-        .featured {
-            background: #f5f9fb;
-        }
-
-        .featured-grid {
-            max-width: 1200px;
-
-            margin: auto;
-
-            display: grid;
-
-            grid-template-columns:
-                repeat(3, 1fr);
-
-            gap: 25px;
-        }
-
-        .featured-card {
-            overflow: hidden;
-
-            background: white;
-
-            border:
-                1px solid #e4eaed;
-
-            border-radius: 17px;
-
-            box-shadow:
-                0 4px 18px rgba(0,0,0,0.04);
-
-            transition: 0.3s;
-        }
-
-        .featured-card:hover {
-            transform: translateY(-7px);
-
-            box-shadow:
-                0 17px 38px rgba(0,0,0,0.09);
-        }
-
-        .featured-image {
-            height: 350px;
-
-            padding: 24px;
-
-            display: flex;
-            align-items: center;
-            justify-content: center;
-
-            background: #f8fafb;
-        }
-
-        .featured-image img {
-            width: 100%;
-            height: 100%;
-
-            object-fit: contain;
-        }
-
-        .featured-content {
-            padding: 24px;
-        }
-
-        .product-label {
-            display: inline-block;
-
-            padding: 5px 12px;
-            margin-bottom: 8px;
-
-            color: #0797d3;
-            background: #e8f7fc;
-
-            border-radius: 20px;
-
-            font-size: 12px;
-            font-weight: 800;
-        }
-
-        .featured-content h3 {
-            margin-bottom: 8px;
-
-            color: #222;
-
-            font-size: 23px;
-        }
-
-        .featured-content p {
-            min-height: 72px;
-
-            color: #707070;
-
-            font-size: 14px;
-        }
-
-        .featured-info {
-            margin: 15px 0 20px;
-
-            padding: 12px 14px;
-
-            color: #176182;
-            background: #f0f8fb;
-
-            border-radius: 7px;
-
-            font-size: 13px;
-            font-weight: 700;
-        }
-
-        .featured-button {
-            display: block;
-
-            padding: 11px;
-
-            color: white;
-            background: #0797d3;
-
-            border-radius: 7px;
-
-            text-align: center;
-
-            font-weight: 700;
-
-            transition: 0.25s;
-        }
-
-        .featured-button:hover {
-            background: #087ead;
-        }
-
-
-        .featured-loading {
-            grid-column: 1 / -1;
-            padding: 55px 20px;
-            background: white;
-            border: 1px solid #e4eaed;
-            border-radius: 17px;
-            color: #777;
-            text-align: center;
-        }
-
-        .all-product-button {
-            margin-top: 42px;
-
-            text-align: center;
-        }
-
-        .all-product-button a {
-            display: inline-block;
-
-            padding: 13px 30px;
-
-            color: white;
-            background: #0797d3;
-
-            border-radius: 7px;
-
-            font-weight: 700;
-        }
-
-        /* =========================
-           REPAIR
-        ========================= */
-
-        .repair {
-            color: white;
-
-            background:
-                linear-gradient(
-                    135deg,
-                    #164c65,
-                    #086f9c
-                );
-        }
-
-        .repair-container {
-            max-width: 1000px;
-
-            margin: auto;
-
-            display: grid;
-
-            grid-template-columns:
-                1fr auto;
-
-            gap: 45px;
-
-            align-items: center;
-        }
-
-        .repair h2 {
-            margin-bottom: 10px;
-
-            font-size: 34px;
-        }
-
-        .repair p {
-            max-width: 650px;
-
-            color:
-                rgba(255,255,255,0.85);
-
-            font-size: 17px;
-        }
-
-        .repair a {
-            display: inline-block;
-
-            padding: 13px 25px;
-
-            color: #087ead;
-            background: white;
-
-            border-radius: 7px;
-
-            font-weight: 700;
-        }
-
-        /* =========================
-           CONTACT
-        ========================= */
-
-        .contact {
-            background: white;
-        }
-
-        .contact-container {
-            max-width: 1200px;
-
-            margin: auto;
-
-            display: grid;
-
-            grid-template-columns:
-                0.9fr 1.1fr;
-
-            gap: 35px;
-        }
-
-        .contact-info {
-            padding: 38px;
-
-            color: white;
-
-            border-radius: 18px;
-
-            background:
-                linear-gradient(
-                    145deg,
-                    #075c83,
-                    #079bd8
-                );
-        }
-
-        .contact-info h3 {
-            margin-bottom: 8px;
-
-            font-size: 28px;
-        }
-
-        .contact-intro {
-            margin-bottom: 27px;
-
-            color:
-                rgba(255,255,255,0.85);
-        }
-
-        .contact-item {
-            margin-bottom: 20px;
-        }
-
-        .contact-label {
-            display: block;
-
-            color:
-                rgba(255,255,255,0.7);
-
-            font-size: 13px;
-        }
-
-        .contact-value {
-            color: white;
-
-            font-size: 17px;
-            font-weight: 600;
-        }
-
-        .contact-value a {
-            color: white;
-        }
-
-        .contact-buttons {
-            display: flex;
-
-            gap: 10px;
-
-            flex-wrap: wrap;
-
-            margin-top: 27px;
-        }
-
-        .contact-buttons a {
-            padding: 10px 16px;
-
-            color: #087ead;
-            background: white;
-
-            border-radius: 6px;
-
-            font-size: 14px;
-            font-weight: 700;
-        }
-
-        .map-box {
-            min-height: 510px;
-
-            overflow: hidden;
-
-            border:
-                1px solid #e1e7ea;
-
-            border-radius: 18px;
-        }
-
-        .map-box iframe {
-            width: 100%;
-            height: 100%;
-            min-height: 510px;
-
-            border: 0;
-        }
-
-        /* =========================
-           FOOTER
-        ========================= */
-
-        footer {
-            padding: 32px 8%;
-
-            color:
-                rgba(255,255,255,0.82);
-
-            background: #103b4f;
-
-            text-align: center;
-
-            font-size: 14px;
-        }
-
-        /* =========================
-           RWD
-        ========================= */
-
-        @media (max-width: 1100px) {
-
-            .service-grid {
-                grid-template-columns:
-                    repeat(3, 1fr);
-            }
-
-            .category-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .featured-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-        }
-
-        @media (max-width: 850px) {
-
-            header {
-                flex-direction: column;
-
-                gap: 12px;
-            }
-
-            nav {
-                justify-content: center;
-
-                flex-wrap: wrap;
-
-                gap: 14px;
-            }
-
-            .hero h1 {
-                font-size: 42px;
-            }
-
-            .about-container {
-                grid-template-columns: 1fr;
-            }
-
-            .about-year {
-                min-height: 240px;
-            }
-
-            .repair-container {
-                grid-template-columns: 1fr;
-            }
-
-            .contact-container {
-                grid-template-columns: 1fr;
-            }
-
-        }
-
-        @media (max-width: 600px) {
-
-            .logo {
-                font-size: 19px;
-            }
-
-            .logo img {
-                height: 44px;
-            }
-
-            nav a {
-                font-size: 13px;
-            }
-
-            .hero {
-                min-height: 540px;
-
-                padding:
-                    65px 6%;
-            }
-
-            .hero h1 {
-                font-size: 35px;
-            }
-
-            .hero h2 {
-                font-size: 21px;
-            }
-
-            section {
-                padding:
-                    70px 6%;
-            }
-
-            .section-title h2 {
-                font-size: 30px;
-            }
-
-            .service-grid {
-                grid-template-columns:
-                    repeat(2, 1fr);
-            }
-
-            .category-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .featured-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .featured-image {
-                height: 320px;
-            }
-
-        }
-
-    
-        /* 導覽列藍色滑動選取框 */
-        nav {
-            position: relative;
-        }
-
-        nav a {
-            position: relative;
-            z-index: 2;
-            transition: color 0.25s ease;
-        }
-
-        .nav-indicator {
-            position: absolute;
-            z-index: 1;
-            top: 50%;
-            left: 0;
-            height: 54px;
-            border-radius: 10px;
-            background: #0797d3;
-            transform: translateY(-50%);
-            transition: left 0.32s ease, width 0.32s ease;
-            pointer-events: none;
-        }
-
-        nav a.nav-current {
-            color: #ffffff !important;
-        }
-
-        @media (max-width: 750px) {
-            .nav-indicator {
-                display: none;
-            }
-
-            nav a.nav-current {
-                color: #0797d3 !important;
-            }
-        }
-
-    
-        .admin-login-link {
-            margin-left: 10px;
-            color: rgba(255,255,255,0.34);
-            font-size: 11px;
-            font-weight: 400;
-            transition: 0.25s;
-        }
-
-        .admin-login-link:hover {
-            color: rgba(255,255,255,0.72);
-        }
-
-    </style>
-
+    *{
+      box-sizing:border-box;
+      margin:0;
+      padding:0;
+    }
+
+    html{
+      scroll-behavior:smooth;
+    }
+
+    body{
+      font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;
+      color:var(--text);
+      background:var(--white);
+      line-height:1.7;
+    }
+
+    a{
+      color:inherit;
+      text-decoration:none;
+    }
+
+    img{
+      display:block;
+      max-width:100%;
+    }
+
+    .container{
+      width:min(1180px,88%);
+      margin:auto;
+    }
+
+    /* HEADER */
+    header{
+      position:sticky;
+      top:0;
+      z-index:1000;
+      background:rgba(255,255,255,.97);
+      border-bottom:1px solid rgba(15,107,72,.08);
+      backdrop-filter:blur(12px);
+    }
+
+    .header-inner{
+      min-height:76px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:28px;
+    }
+
+    .brand{
+      display:flex;
+      align-items:center;
+      gap:13px;
+      flex-shrink:0;
+    }
+
+    .brand img{
+      width:64px;
+      height:48px;
+      object-fit:contain;
+    }
+
+    .brand-text strong{
+      display:block;
+      font-size:20px;
+      letter-spacing:.5px;
+      color:#222;
+    }
+
+    .brand-text span{
+      display:block;
+      margin-top:1px;
+      font-size:11px;
+      letter-spacing:1.5px;
+      color:#6d756f;
+    }
+
+    nav{
+      display:flex;
+      align-items:center;
+      gap:26px;
+      margin-left:auto;
+    }
+
+    nav a{
+      position:relative;
+      font-size:14px;
+      font-weight:700;
+      color:#424d47;
+      padding:8px 0;
+    }
+
+    nav a::after{
+      content:"";
+      position:absolute;
+      left:50%;
+      bottom:0;
+      width:0;
+      height:2px;
+      background:var(--green);
+      transform:translateX(-50%);
+      transition:.25s;
+    }
+
+    nav a:hover::after,
+    nav a.active::after{
+      width:100%;
+    }
+
+    .phone-pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:11px 20px;
+      border-radius:999px;
+      background:var(--green);
+      color:white;
+      font-size:14px;
+      font-weight:800;
+      box-shadow:0 8px 20px rgba(15,107,72,.18);
+    }
+
+    /* HERO */
+    .hero{
+      background:linear-gradient(90deg,#f5f7f4 0%,#f7f7f4 52%,#f2efe7 100%);
+      overflow:hidden;
+    }
+
+    .hero-grid{
+      min-height:590px;
+      display:grid;
+      grid-template-columns:1.02fr .98fr;
+      align-items:stretch;
+    }
+
+    .hero-copy{
+      padding:78px 5% 72px 0;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+    }
+
+    .eyebrow{
+      color:var(--green);
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:2px;
+      margin-bottom:18px;
+    }
+
+    .hero h1{
+      font-size:58px;
+      line-height:1.18;
+      letter-spacing:1px;
+      margin-bottom:10px;
+      color:#26312c;
+    }
+
+    .hero h1 .accent{
+      display:block;
+      color:var(--green);
+    }
+
+    .hero-line{
+      width:56px;
+      height:3px;
+      background:var(--green);
+      margin:24px 0 20px;
+    }
+
+    .hero-sub{
+      font-size:18px;
+      font-weight:700;
+      color:#3e4c45;
+      margin-bottom:26px;
+    }
+
+    .hero-desc{
+      max-width:600px;
+      color:var(--muted);
+      font-size:16px;
+      margin-bottom:30px;
+    }
+
+    .trust-row{
+      display:flex;
+      gap:30px;
+      flex-wrap:wrap;
+    }
+
+    .trust-item{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      font-size:14px;
+      color:#46554d;
+      font-weight:700;
+    }
+
+    .trust-icon{
+      width:38px;
+      height:38px;
+      border:1px solid #b9d3c5;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      color:var(--green);
+      font-size:17px;
+      background:white;
+    }
+
+    .hero-visual{
+      position:relative;
+      min-height:590px;
+      background:
+        linear-gradient(rgba(255,255,255,.05),rgba(255,255,255,.05)),
+        url("https://images.unsplash.com/photo-1584515933487-779824d29309?auto=format&fit=crop&w=1400&q=88");
+      background-size:cover;
+      background-position:center;
+    }
+
+    .hero-visual::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background:linear-gradient(90deg,rgba(245,247,244,.85) 0%,rgba(245,247,244,.15) 24%,rgba(0,0,0,.02) 100%);
+    }
+
+    /* ABOUT */
+    .about{
+      padding:90px 0;
+      background:var(--white);
+    }
+
+    .about-grid{
+      display:grid;
+      grid-template-columns:1.1fr .9fr;
+      gap:60px;
+      align-items:center;
+    }
+
+    .section-kicker{
+      color:var(--green);
+      font-size:13px;
+      font-weight:900;
+      letter-spacing:1.8px;
+      margin-bottom:10px;
+    }
+
+    .section-title{
+      font-size:38px;
+      line-height:1.3;
+      margin-bottom:24px;
+      color:#28332e;
+    }
+
+    .about p{
+      color:var(--muted);
+      font-size:16px;
+      margin-bottom:14px;
+      max-width:680px;
+    }
+
+    .about-card{
+      background:var(--white);
+      border:1px solid var(--line);
+      border-radius:22px;
+      padding:30px;
+      box-shadow:var(--shadow);
+    }
+
+    .about-stat{
+      display:flex;
+      align-items:center;
+      gap:18px;
+      padding:18px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .about-stat:last-child{
+      border-bottom:none;
+    }
+
+    .about-stat .icon{
+      width:46px;
+      height:46px;
+      border-radius:14px;
+      display:grid;
+      place-items:center;
+      background:var(--green-soft);
+      color:var(--green);
+      font-size:20px;
+      flex-shrink:0;
+    }
+
+    .about-stat span{
+      display:block;
+      font-size:12px;
+      color:#7a857f;
+      margin-bottom:3px;
+    }
+
+    .about-stat strong{
+      font-size:18px;
+      color:#25352d;
+    }
+
+    /* CATEGORIES */
+    .categories{
+      padding:84px 0 90px;
+      background:var(--cream);
+    }
+
+    .section-head{
+      text-align:center;
+      margin-bottom:42px;
+    }
+
+    .section-head .section-title{
+      margin-bottom:8px;
+    }
+
+    .section-head p{
+      color:var(--muted);
+    }
+
+    .category-grid{
+      display:grid;
+      grid-template-columns:repeat(5,1fr);
+      gap:18px;
+    }
+
+    .category-card{
+      min-height:190px;
+      padding:24px 18px;
+      background:white;
+      border:1px solid #e6ece8;
+      border-radius:18px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      transition:.25s;
+      box-shadow:0 6px 18px rgba(0,0,0,.035);
+    }
+
+    .category-card:hover{
+      transform:translateY(-5px);
+      border-color:#bfd7ca;
+      box-shadow:var(--shadow);
+    }
+
+    .category-icon{
+      width:58px;
+      height:58px;
+      border-radius:16px;
+      background:var(--green-soft);
+      color:var(--green);
+      display:grid;
+      place-items:center;
+      font-size:24px;
+    }
+
+    .category-card h3{
+      font-size:18px;
+      color:#253a30;
+      margin-top:20px;
+    }
+
+    .category-card p{
+      color:#7a847f;
+      font-size:13px;
+      margin-top:4px;
+    }
+
+    .category-arrow{
+      align-self:flex-end;
+      width:28px;
+      height:28px;
+      border-radius:50%;
+      display:grid;
+      place-items:center;
+      background:var(--green);
+      color:white;
+      margin-top:12px;
+    }
+
+    /* FEATURED */
+    .featured{
+      padding:90px 0;
+      background:white;
+    }
+
+    .featured-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:20px;
+    }
+
+    .product-card{
+      border:1px solid #e8ece9;
+      border-radius:18px;
+      overflow:hidden;
+      background:white;
+      transition:.25s;
+      box-shadow:0 6px 18px rgba(0,0,0,.035);
+    }
+
+    .product-card:hover{
+      transform:translateY(-5px);
+      box-shadow:var(--shadow);
+    }
+
+    .product-image{
+      height:240px;
+      background:#f7f8f6;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      padding:22px;
+    }
+
+    .product-image img{
+      width:100%;
+      height:100%;
+      object-fit:contain;
+    }
+
+    .product-content{
+      padding:20px;
+    }
+
+    .product-tag{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      background:var(--green-soft);
+      color:var(--green);
+      font-size:11px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .product-content h3{
+      font-size:18px;
+      margin-bottom:7px;
+    }
+
+    .product-content p{
+      color:var(--muted);
+      font-size:13px;
+      min-height:44px;
+    }
+
+    .product-btn{
+      display:inline-flex;
+      margin-top:15px;
+      padding:9px 16px;
+      border:1px solid var(--green);
+      color:var(--green);
+      border-radius:999px;
+      font-size:13px;
+      font-weight:800;
+    }
+
+    .featured-loading{
+      grid-column:1/-1;
+      padding:48px 20px;
+      text-align:center;
+      background:#f8faf8;
+      color:#7a837e;
+      border-radius:18px;
+    }
+
+    .all-products{
+      text-align:center;
+      margin-top:36px;
+    }
+
+    .all-products a{
+      display:inline-block;
+      padding:12px 24px;
+      border-radius:999px;
+      background:var(--green);
+      color:white;
+      font-weight:800;
+    }
+
+    /* SERVICE STRIP */
+    .service-strip{
+      padding:26px 0 36px;
+      background:white;
+    }
+
+    .service-box{
+      background:linear-gradient(90deg,#0b6243,#0f7a52);
+      color:white;
+      border-radius:18px;
+      padding:26px 34px;
+      display:grid;
+      grid-template-columns:1.25fr repeat(3,.72fr) .75fr;
+      gap:22px;
+      align-items:center;
+    }
+
+    .service-main h3{
+      font-size:24px;
+      margin-bottom:4px;
+    }
+
+    .service-main p{
+      color:rgba(255,255,255,.78);
+      font-size:13px;
+    }
+
+    .service-mini{
+      border-left:1px solid rgba(255,255,255,.18);
+      padding-left:20px;
+    }
+
+    .service-mini strong{
+      display:block;
+      margin-bottom:3px;
+    }
+
+    .service-mini span{
+      font-size:12px;
+      color:rgba(255,255,255,.72);
+    }
+
+    .service-contact{
+      text-align:right;
+    }
+
+    .service-contact a{
+      display:inline-block;
+      padding:11px 24px;
+      border:1px solid white;
+      border-radius:999px;
+      font-weight:800;
+    }
+
+    /* CONTACT */
+    .contact{
+      padding:88px 0;
+      background:var(--mint);
+    }
+
+    .contact-grid{
+      display:grid;
+      grid-template-columns:.92fr 1.08fr;
+      gap:34px;
+      align-items:stretch;
+    }
+
+    .contact-info{
+      background:white;
+      border-radius:22px;
+      padding:34px;
+      box-shadow:var(--shadow);
+    }
+
+    .contact-info h3{
+      font-size:28px;
+      margin-bottom:8px;
+    }
+
+    .contact-info > p{
+      color:var(--muted);
+      margin-bottom:24px;
+    }
+
+    .contact-item{
+      padding:14px 0;
+      border-bottom:1px solid var(--line);
+    }
+
+    .contact-item:last-child{
+      border-bottom:none;
+    }
+
+    .contact-item span{
+      display:block;
+      font-size:12px;
+      color:#7d8882;
+      margin-bottom:3px;
+    }
+
+    .contact-item strong,
+    .contact-item a{
+      font-size:16px;
+      color:#283831;
+      font-weight:800;
+    }
+
+    .map-box{
+      min-height:430px;
+      border-radius:22px;
+      overflow:hidden;
+      border:1px solid var(--line);
+      box-shadow:var(--shadow);
+      background:white;
+    }
+
+    .map-box iframe{
+      width:100%;
+      height:100%;
+      min-height:430px;
+      border:0;
+    }
+
+    /* FOOTER */
+    footer{
+      background:#f7f8f6;
+      border-top:1px solid #e6ebe7;
+      padding:44px 0;
+    }
+
+    .footer-grid{
+      display:grid;
+      grid-template-columns:1.2fr .8fr .9fr;
+      gap:50px;
+    }
+
+    .footer-brand{
+      display:flex;
+      gap:14px;
+      align-items:flex-start;
+    }
+
+    .footer-brand img{
+      width:62px;
+      height:48px;
+      object-fit:contain;
+    }
+
+    .footer-brand strong{
+      font-size:18px;
+      display:block;
+    }
+
+    .footer-brand span{
+      color:#737d77;
+      font-size:12px;
+    }
+
+    .footer-title{
+      font-size:14px;
+      font-weight:900;
+      margin-bottom:12px;
+    }
+
+    .footer-links a,
+    .footer-info div{
+      display:block;
+      color:#6e7872;
+      font-size:13px;
+      margin-bottom:7px;
+    }
+
+    .footer-bottom{
+      margin-top:30px;
+      padding-top:20px;
+      border-top:1px solid #e1e6e2;
+      display:flex;
+      justify-content:space-between;
+      gap:20px;
+      color:#7b847f;
+      font-size:12px;
+    }
+
+    .admin-login-link{
+      color:#a5ada8;
+    }
+
+    /* RWD */
+    @media(max-width:1050px){
+      nav{display:none;}
+      .hero-grid{grid-template-columns:1fr;}
+      .hero-copy{padding:70px 0;}
+      .hero-visual{min-height:390px;}
+      .about-grid{grid-template-columns:1fr;}
+      .category-grid{grid-template-columns:repeat(3,1fr);}
+      .featured-grid{grid-template-columns:repeat(2,1fr);}
+      .service-box{grid-template-columns:1fr 1fr 1fr;}
+      .service-main{grid-column:1/-1;}
+      .service-contact{text-align:left;}
+    }
+
+    @media(max-width:720px){
+      .header-inner{min-height:68px;}
+      .brand-text strong{font-size:17px;}
+      .phone-pill{padding:9px 14px;font-size:12px;}
+      .hero h1{font-size:42px;}
+      .hero-grid{min-height:auto;}
+      .hero-visual{min-height:300px;}
+      .section-title{font-size:31px;}
+      .category-grid{grid-template-columns:repeat(2,1fr);}
+      .featured-grid{grid-template-columns:1fr;}
+      .service-box{grid-template-columns:1fr;}
+      .service-mini{border-left:none;border-top:1px solid rgba(255,255,255,.16);padding:14px 0 0;}
+      .contact-grid{grid-template-columns:1fr;}
+      .footer-grid{grid-template-columns:1fr;}
+      .footer-bottom{flex-direction:column;}
+    }
+
+    @media(max-width:480px){
+      .container{width:min(92%,1180px);}
+      .brand img{width:54px;}
+      .brand-text span{display:none;}
+      .hero-copy{padding:56px 0;}
+      .hero h1{font-size:35px;}
+      .hero-sub{font-size:16px;}
+      .trust-row{gap:14px;}
+      .category-grid{grid-template-columns:1fr;}
+    }
+  </style>
 </head>
 
 <body>
 
 <header>
-
-    <a href="index.html" class="logo">
-
-        <img
-            src="fulide-logo.png"
-            alt="富立德有限公司 Logo">
-
-        <span>
-            富立德有限公司
-        </span>
-
+  <div class="container header-inner">
+    <a class="brand" href="index.html">
+      <img src="fulide-logo.png" alt="富立德有限公司 Logo">
+      <div class="brand-text">
+        <strong>富立德有限公司</strong>
+        <span>FULIDE CO., LTD.</span>
+      </div>
     </a>
 
     <nav>
-
-        <div class="nav-indicator"></div>
-
-        <a href="#home">
-            首頁
-        </a>
-
-        <a href="#about">
-            關於我們
-        </a>
-
-        <a href="#categories">
-            產品分類
-        </a>
-
-        <a href="#products">
-            熱賣商品
-        </a>
-
-        <a href="#contact">
-            聯絡我們
-        </a>
-
+      <a href="#home" class="active">首頁</a>
+      <a href="#about">關於我們</a>
+      <a href="#categories">產品專區</a>
+      <a href="#featured">推薦選品</a>
+      <a href="#service">使用諮詢</a>
+      <a href="#contact">聯絡我們</a>
     </nav>
 
+    <a class="phone-pill" href="tel:034392068">☎ 03-439-2068</a>
+  </div>
 </header>
 
-
-<!-- HERO -->
-
 <section class="hero" id="home">
+  <div class="container hero-grid">
+    <div class="hero-copy">
+      <div class="eyebrow">FULIDE MEDICAL & DAILY CARE</div>
 
-    <div class="hero-content">
+      <h1>
+        用心守護每一步
+        <span class="accent">讓生活更有品質</span>
+      </h1>
 
-        <div class="hero-small">
-            MEDICAL EQUIPMENT & MOBILITY AIDS
+      <div class="hero-line"></div>
+
+      <div class="hero-sub">醫療器材・輔具用品・日常照護</div>
+
+      <p class="hero-desc">
+        從移動輔具到居家照護用品，富立德依照不同生活需求，
+        提供實用、清楚且容易理解的產品選擇。
+      </p>
+
+      <div class="trust-row">
+        <div class="trust-item">
+          <span class="trust-icon">✓</span>
+          專業安心
         </div>
-
-        <h1>
-            富立德有限公司
-        </h1>
-
-        <h2>
-            專業醫療器材・輔具用品・維修服務
-        </h2>
-
-        <p>
-            成立於2023年，
-            專營各式醫療器材、醫療儀器設備、
-            輔具用品、醫療耗材及保健相關產品，
-            提供批發、零售與專業維修服務。
-        </p>
-
-        <div class="hero-buttons">
-
-            <a
-                href="products.html"
-                class="btn-white">
-                瀏覽產品
-            </a>
-
-            <a
-                href="#contact"
-                class="btn-outline">
-                聯絡我們
-            </a>
-
+        <div class="trust-item">
+          <span class="trust-icon">♡</span>
+          貼心服務
         </div>
-
+        <div class="trust-item">
+          <span class="trust-icon">⌁</span>
+          售後支援
+        </div>
+      </div>
     </div>
 
+    <div class="hero-visual" aria-label="醫療與輔具照護情境"></div>
+  </div>
 </section>
-
-
-<!-- ABOUT -->
 
 <section class="about" id="about">
+  <div class="container about-grid">
+    <div>
+      <div class="section-kicker">關於富立德</div>
+      <h2 class="section-title">專業、誠信、關懷<br>是我們重視的服務理念</h2>
 
-    <div class="about-container">
+      <p>
+        富立德有限公司成立於2023年，提供各式醫療器材、
+        行動輔具與居家照護相關用品。
+      </p>
 
-        <div class="about-text">
+      <p>
+        從輪椅、助行器、便椅、洗澡椅，到手杖及各式輔助用品，
+        我們希望讓產品資訊更清楚，也讓選購過程更加簡單。
+      </p>
 
-            <h2>
-                關於富立德
-            </h2>
-
-            <p>
-                富立德有限公司成立於2023年，
-                專營各式醫療器材、醫療儀器設備、
-                輔具用品、醫療耗材及保健相關產品，
-                提供產品批發、零售與維修服務。
-            </p>
-
-            <p>
-                我們提供輪椅、四輪椅、助行器、柺杖、
-                馬桶椅、氣墊床及各式醫療器材與相關配件，
-                依照不同使用需求協助顧客選擇合適的產品。
-            </p>
-
-            <p>
-                除了醫療器材與輔具銷售外，
-                富立德亦提供各式輔具維修服務，
-                從產品選購、配件到後續維修，
-                提供完整且專業的服務。
-            </p>
-
-        </div>
-
-        <div class="about-year">
-
-            <div>
-
-                <div class="year-number">
-                    2023
-                </div>
-
-                <div class="year-text">
-                    富立德有限公司成立經營
-                </div>
-
-            </div>
-
-        </div>
-
+      <p>
+        每個人的生活情境都不同，因此我們重視實際使用需求，
+        協助了解產品功能與適用方式，找到更合適的選擇。
+      </p>
     </div>
 
+    <div class="about-card">
+      <div class="about-stat">
+        <div class="icon">▣</div>
+        <div>
+          <span>成立年份</span>
+          <strong>2023</strong>
+        </div>
+      </div>
+
+      <div class="about-stat">
+        <div class="icon">☎</div>
+        <div>
+          <span>電話</span>
+          <strong>03-439-2068</strong>
+        </div>
+      </div>
+
+      <div class="about-stat">
+        <div class="icon">⌖</div>
+        <div>
+          <span>地址</span>
+          <strong>桃園市平鎮區北富里大勇街2巷7弄10號1樓</strong>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
 
-
-<!-- CATEGORIES -->
-
 <section class="categories" id="categories">
-
-    <div class="section-title">
-        <span>PRODUCT CATEGORIES</span>
-        <h2>產品分類</h2>
-        <p>依照不同需求選擇合適的醫療器材與輔具</p>
+  <div class="container">
+    <div class="section-head">
+      <div class="section-kicker">產品分類</div>
+      <h2 class="section-title">多元產品，滿足不同生活需求</h2>
+      <p>依照移動、沐浴與日常照護情境快速找到合適用品</p>
     </div>
 
     <div class="category-grid">
-
-        <a href="products.html?category=aluminum-wheelchair" class="category-card">
-            <h3>鋁製輪椅</h3>
-            <p>輕量化鋁合金輪椅系列</p>
-        </a>
-
-        <a href="products.html?category=steel-wheelchair" class="category-card">
-            <h3>鐵製輪椅</h3>
-            <p>耐用穩固鐵製輪椅系列</p>
-        </a>
-
-        <a href="products.html?category=rollator" class="category-card">
-            <h3>助步車</h3>
-            <p>行走輔助與移動支撐用品</p>
-        </a>
-
-        <a href="products.html?category=commode-chair" class="category-card">
-            <h3>便椅</h3>
-            <p>如廁輔助相關用品</p>
-        </a>
-
-        <a href="products.html?category=shower-chair" class="category-card">
-            <h3>洗澡椅</h3>
-            <p>沐浴使用安全輔助用品</p>
-        </a>
-
-        <a href="products.html?category=walker" class="category-card">
-            <h3>助行器</h3>
-            <p>提升行走穩定與安全</p>
-        </a>
-
-        <a href="products.html?category=cane-crutch" class="category-card">
-            <h3>手／拐杖</h3>
-            <p>各式手杖與拐杖用品</p>
-        </a>
-
-        <a href="products.html?category=quad-cane" class="category-card">
-            <h3>四腳拐</h3>
-            <p>四點支撐型行走輔具</p>
-        </a>
-
-        <a href="products.html?category=accessories" class="category-card">
-            <h3>輔助用品</h3>
-            <p>各式醫療與生活輔助用品</p>
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- FEATURED PRODUCTS -->
-
-<section class="featured" id="products">
-
-    <div class="section-title">
-
-        <span>
-            FEATURED PRODUCTS
-        </span>
-
-        <h2>
-            熱賣商品
-        </h2>
-
-        <p>
-            精選人氣商品，提供您安心實用的輔具選擇
-        </p>
-
-    </div>
-
-    <div
-        id="featuredProductGrid"
-        class="featured-grid">
-
-        <div class="featured-loading">
-            熱賣商品載入中...
-        </div>
-
-    </div>
-
-    <div class="all-product-button">
-
-        <a href="products.html">
-            查看全部產品
-        </a>
-
-    </div>
-
-</section>
-
-
-<!-- REPAIR -->
-
-<section class="repair">
-
-    <div class="repair-container">
-
+      <a class="category-card" href="products.html?category=aluminum-wheelchair">
+        <div class="category-icon">♿</div>
         <div>
-
-            <h2>
-                輔具維修服務
-            </h2>
-
-            <p>
-                富立德提供各式醫療輔具與相關設備之檢查及維修服務。
-                如有輪椅、助行輔具或其他產品維修需求，
-                歡迎來電洽詢。
-            </p>
-
+          <h3>鋁製輪椅</h3>
+          <p>輕量化鋁合金輪椅系列</p>
         </div>
+        <span class="category-arrow">›</span>
+      </a>
 
+      <a class="category-card" href="products.html?category=steel-wheelchair">
+        <div class="category-icon">♿</div>
         <div>
-
-            <a href="tel:034392068">
-                洽詢維修
-            </a>
-
+          <h3>鐵製輪椅</h3>
+          <p>耐用穩固的輪椅選擇</p>
         </div>
+        <span class="category-arrow">›</span>
+      </a>
 
+      <a class="category-card" href="products.html?category=rollator">
+        <div class="category-icon">⌁</div>
+        <div>
+          <h3>助步車</h3>
+          <p>移動支撐與步行輔助</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html?category=commode-chair">
+        <div class="category-icon">▤</div>
+        <div>
+          <h3>便椅</h3>
+          <p>日常如廁與照護輔助</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html?category=shower-chair">
+        <div class="category-icon">◫</div>
+        <div>
+          <h3>洗澡椅</h3>
+          <p>提升沐浴時的穩定與便利</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html?category=walker">
+        <div class="category-icon">⌁</div>
+        <div>
+          <h3>助行器</h3>
+          <p>提升行走穩定與安全</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html?category=cane-crutch">
+        <div class="category-icon">⌇</div>
+        <div>
+          <h3>手／拐杖</h3>
+          <p>各式手杖與拐杖用品</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html?category=quad-cane">
+        <div class="category-icon">⌇</div>
+        <div>
+          <h3>四腳拐</h3>
+          <p>四點支撐型行走輔具</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html?category=accessories">
+        <div class="category-icon">＋</div>
+        <div>
+          <h3>輔助用品</h3>
+          <p>各式醫療與日常輔助用品</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
+
+      <a class="category-card" href="products.html">
+        <div class="category-icon">⋯</div>
+        <div>
+          <h3>全部產品</h3>
+          <p>瀏覽富立德完整產品系列</p>
+        </div>
+        <span class="category-arrow">›</span>
+      </a>
     </div>
-
+  </div>
 </section>
 
+<section class="featured" id="featured">
+  <div class="container">
+    <div class="section-head">
+      <div class="section-kicker">推薦選品</div>
+      <h2 class="section-title">精選實用，從日常需求出發</h2>
+      <p>以下商品由後台設定為推薦商品後自動顯示</p>
+    </div>
 
-<!-- CONTACT -->
+    <div id="featuredProductGrid" class="featured-grid">
+      <div class="featured-loading">推薦商品載入中...</div>
+    </div>
+
+    <div class="all-products">
+      <a href="products.html">查看全部產品</a>
+    </div>
+  </div>
+</section>
+
+<section class="service-strip" id="service">
+  <div class="container">
+    <div class="service-box">
+      <div class="service-main">
+        <h3>使用諮詢與售後協助</h3>
+        <p>有任何產品使用或選購問題，都歡迎與我們聯絡。</p>
+      </div>
+
+      <div class="service-mini">
+        <strong>選購諮詢</strong>
+        <span>協助了解產品差異</span>
+      </div>
+
+      <div class="service-mini">
+        <strong>使用指導</strong>
+        <span>提供基本操作說明</span>
+      </div>
+
+      <div class="service-mini">
+        <strong>售後服務</strong>
+        <span>提供產品相關協助</span>
+      </div>
+
+      <div class="service-contact">
+        <a href="tel:034392068">聯絡我們</a>
+      </div>
+    </div>
+  </div>
+</section>
 
 <section class="contact" id="contact">
-
-    <div class="section-title">
-
-        <span>
-            CONTACT US
-        </span>
-
-        <h2>
-            聯絡我們
-        </h2>
-
-        <p>
-            歡迎洽詢產品、醫療器材與輔具維修相關服務
-        </p>
-
+  <div class="container">
+    <div class="section-head">
+      <div class="section-kicker">聯絡資訊</div>
+      <h2 class="section-title">需要了解產品？歡迎直接與我們聯絡</h2>
+      <p>產品規格、使用方式與選購需求，都可以先來電詢問</p>
     </div>
 
-    <div class="contact-container">
+    <div class="contact-grid">
+      <div class="contact-info">
+        <h3>富立德有限公司</h3>
+        <p>醫療器材、輔具用品與居家照護相關需求，歡迎洽詢。</p>
 
-        <div class="contact-info">
-
-            <h3>
-                富立德有限公司
-            </h3>
-
-            <p class="contact-intro">
-                商品、醫療器材、輔具及維修相關需求，
-                歡迎與我們聯繫。
-            </p>
-
-            <div class="contact-item">
-
-                <span class="contact-label">
-                    聯絡電話
-                </span>
-
-                <div class="contact-value">
-
-                    <a href="tel:034392068">
-                        03-439-2068
-                    </a>
-
-                </div>
-
-            </div>
-<div class="contact-item">
-
-                <span class="contact-label">
-                    電子信箱
-                </span>
-
-                <div class="contact-value">
-
-                    尚未提供
-
-                </div>
-
-            </div>
-
-            <div class="contact-item">
-
-                <span class="contact-label">
-                    公司地址
-                </span>
-
-                <div class="contact-value">
-                    桃園市平鎮區北富里大勇街2巷7弄10號1樓
-                </div>
-
-            </div>
-
-            <div class="contact-buttons">
-
-                <a href="tel:034392068">
-                    電話洽詢
-                </a>
-
-                <a
-                    href="https://www.google.com/maps/search/?api=1&query=桃園市平鎮區北富里大勇街2巷7弄10號1樓"
-                    target="_blank"
-                    rel="noopener">
-                    Google Maps 導航
-                </a>
-
-            </div>
-
+        <div class="contact-item">
+          <span>聯絡電話</span>
+          <a href="tel:034392068">03-439-2068</a>
         </div>
 
-        <div class="map-box">
-
-            <iframe
-                src="https://www.google.com/maps?q=桃園市平鎮區北富里大勇街2巷7弄10號1樓&output=embed"
-                loading="lazy"
-                referrerpolicy="no-referrer-when-downgrade"
-                title="富立德有限公司地圖">
-            </iframe>
-
+        <div class="contact-item">
+          <span>電子信箱</span>
+          <strong>尚未提供</strong>
         </div>
 
+        <div class="contact-item">
+          <span>公司地址</span>
+          <strong>桃園市平鎮區北富里大勇街2巷7弄10號1樓</strong>
+        </div>
+      </div>
+
+      <div class="map-box">
+        <iframe
+          src="https://www.google.com/maps?q=桃園市平鎮區北富里大勇街2巷7弄10號1樓&output=embed"
+          loading="lazy"
+          referrerpolicy="no-referrer-when-downgrade"
+          title="富立德有限公司地圖">
+        </iframe>
+      </div>
     </div>
-
+  </div>
 </section>
 
-
 <footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <img src="fulide-logo.png" alt="富立德有限公司 Logo">
+        <div>
+          <strong>富立德有限公司</strong>
+          <span>FULIDE CO., LTD.</span>
+        </div>
+      </div>
 
-    © 2026 富立德有限公司
-    ｜ 桃園市平鎮區北富里大勇街2巷7弄10號1樓
-    ｜ 03-439-2068
+      <div>
+        <div class="footer-title">快速連結</div>
+        <div class="footer-links">
+          <a href="#home">首頁</a>
+          <a href="#about">關於我們</a>
+          <a href="#categories">產品專區</a>
+          <a href="#featured">推薦選品</a>
+          <a href="#contact">聯絡我們</a>
+        </div>
+      </div>
 
-    <a
-        href="admin.html"
-        class="admin-login-link"
-        title="管理登入">
-        管理登入
-    </a>
+      <div>
+        <div class="footer-title">聯絡資訊</div>
+        <div class="footer-info">
+          <div>03-439-2068</div>
+          <div>桃園市平鎮區北富里大勇街2巷7弄10號1樓</div>
+          <div>成立於 2023 年</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© 2026 富立德有限公司 All Rights Reserved.</span>
+      <a href="admin.html" class="admin-login-link" title="管理登入">管理登入</a>
+    </div>
+  </div>
 </footer>
-
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
-
 <script>
-const HOME_SUPABASE_URL =
-    "https://sdkgiedglmhmchiietru.supabase.co";
+/*
+  目前先保留原本 Supabase 連線，
+  等建立富立德自己的 Supabase Project 後，
+  只需要更換下方 URL 與 KEY。
+*/
+const HOME_SUPABASE_URL = "https://sdkgiedglmhmchiietru.supabase.co";
+const HOME_SUPABASE_KEY = "sb_publishable_ofwe1YigppMHJjcWu_VjUA_XF7wNzEm";
 
-const HOME_SUPABASE_KEY =
-    "sb_publishable_ofwe1YigppMHJjcWu_VjUA_XF7wNzEm";
+const homeDb = supabase.createClient(HOME_SUPABASE_URL, HOME_SUPABASE_KEY);
+const featuredProductGrid = document.getElementById("featuredProductGrid");
 
-const homeDb =
-    supabase.createClient(
-        HOME_SUPABASE_URL,
-        HOME_SUPABASE_KEY
-    );
+const categoryNames = {
+  "aluminum-wheelchair": "鋁製輪椅",
+  "steel-wheelchair": "鐵製輪椅",
+  "rollator": "助步車",
+  "commode-chair": "便椅",
+  "shower-chair": "洗澡椅",
+  "walker": "助行器",
+  "cane-crutch": "手／拐杖",
+  "quad-cane": "四腳拐",
+  "accessories": "輔助用品",
+  "wheelchair": "輪椅系列",
+  "mobility": "行動輔具",
+  "assistive": "照護輔具",
+  "medical": "醫療用品",
+  "repair": "輔具維修"
+};
 
-const featuredProductGrid =
-    document.getElementById(
-        "featuredProductGrid"
-    );
-
-function homeCategoryName(category) {
-
-    const names = {
-        wheelchair: "輪椅系列",
-        mobility: "行動輔具",
-        assistive: "照護輔具",
-        medical: "醫療用品",
-        repair: "輔具維修"
-    };
-
-    return names[category] || category || "商品";
+function esc(value){
+  const div = document.createElement("div");
+  div.textContent = value || "";
+  return div.innerHTML;
 }
 
-function homeEscapeHTML(value) {
-
-    const div =
-        document.createElement("div");
-
-    div.textContent =
-        value || "";
-
-    return div.innerHTML;
+function escAttr(value){
+  return String(value || "")
+    .replace(/&/g,"&amp;")
+    .replace(/"/g,"&quot;")
+    .replace(/</g,"&lt;")
+    .replace(/>/g,"&gt;");
 }
 
-function homeEscapeAttribute(value) {
+async function loadFeaturedProducts(){
+  if(!featuredProductGrid) return;
 
-    return String(value || "")
-        .replace(/&/g, "&amp;")
-        .replace(/"/g, "&quot;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;");
-}
+  featuredProductGrid.innerHTML =
+    '<div class="featured-loading">推薦商品載入中...</div>';
 
-async function loadFeaturedProducts() {
+  const { data, error } = await homeDb
+    .from("products")
+    .select("*")
+    .eq("is_active", true)
+    .eq("featured", true)
+    .order("sort_order", { ascending:true })
+    .order("created_at", { ascending:false })
+    .limit(4);
 
-    if (!featuredProductGrid) {
-        return;
-    }
+  if(error){
+    console.error(error);
+    featuredProductGrid.innerHTML =
+      '<div class="featured-loading">推薦商品暫時無法載入</div>';
+    return;
+  }
 
-    featuredProductGrid.innerHTML = `
-        <div class="featured-loading">
-            熱賣商品載入中...
-        </div>
+  if(!data || !data.length){
+    featuredProductGrid.innerHTML =
+      '<div class="featured-loading">目前尚未設定推薦商品</div>';
+    return;
+  }
+
+  featuredProductGrid.innerHTML = "";
+
+  data.forEach(product => {
+    const image =
+      product.image_urls && product.image_urls.length
+        ? product.image_urls[0]
+        : "";
+
+    const description =
+      product.short_description ||
+      product.description ||
+      "歡迎查看完整商品資訊。";
+
+    const category = product.category || "all";
+    const categoryLabel = categoryNames[category] || "商品";
+
+    const card = document.createElement("article");
+    card.className = "product-card";
+
+    card.innerHTML = `
+      <div class="product-image">
+        ${
+          image
+          ? `<img src="${escAttr(image)}" alt="${escAttr(product.name)}">`
+          : `<div style="color:#999;">尚無商品圖片</div>`
+        }
+      </div>
+
+      <div class="product-content">
+        <span class="product-tag">${esc(categoryLabel)}</span>
+        <h3>${esc(product.name)}</h3>
+        <p>${esc(description)}</p>
+        <a class="product-btn"
+           href="products.html?category=${encodeURIComponent(category)}">
+          查看商品
+        </a>
+      </div>
     `;
 
-    const {
-        data,
-        error
-    } =
-        await homeDb
-        .from("products")
-        .select("*")
-        .eq("is_active", true)
-        .eq("featured", true)
-        .order(
-            "sort_order",
-            {
-                ascending: true
-            }
-        )
-        .order(
-            "created_at",
-            {
-                ascending: false
-            }
-        )
-        .limit(6);
-
-    if (error) {
-
-        featuredProductGrid.innerHTML = `
-            <div class="featured-loading">
-                熱賣商品暫時無法載入
-            </div>
-        `;
-
-        console.error(
-            "Featured products error:",
-            error
-        );
-
-        return;
-    }
-
-    if (!data || !data.length) {
-
-        featuredProductGrid.innerHTML = `
-            <div class="featured-loading">
-                目前尚未設定熱賣商品
-            </div>
-        `;
-
-        return;
-    }
-
-    featuredProductGrid.innerHTML = "";
-
-    data.forEach(
-        function (product) {
-
-            const card =
-                document.createElement(
-                    "div"
-                );
-
-            card.className =
-                "featured-card";
-
-            const image =
-                product.image_urls &&
-                product.image_urls.length
-                ?
-                product.image_urls[0]
-                :
-                "";
-
-            const description =
-                product.short_description
-                ||
-                product.description
-                ||
-                "歡迎查看完整商品資訊。";
-
-            const category =
-                product.category
-                ||
-                "all";
-
-            card.innerHTML = `
-
-                <div class="featured-image">
-
-                    ${
-                        image
-                        ?
-                        `
-                        <img
-                            src="${homeEscapeAttribute(image)}"
-                            alt="${homeEscapeAttribute(product.name)}">
-                        `
-                        :
-                        `
-                        <div style="
-                            color:#999;
-                            text-align:center;
-                        ">
-                            尚無商品圖片
-                        </div>
-                        `
-                    }
-
-                </div>
-
-                <div class="featured-content">
-
-                    <span class="product-label">
-                        ${homeEscapeHTML(
-                            homeCategoryName(
-                                product.category
-                            )
-                        )}
-                    </span>
-
-                    <h3>
-                        ${homeEscapeHTML(product.name)}
-                    </h3>
-
-                    <p>
-                        ${homeEscapeHTML(description)}
-                    </p>
-
-                    ${
-                        product.subsidy
-                        ?
-                        `
-                        <div class="featured-info">
-                            補助：${homeEscapeHTML(product.subsidy)}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
-
-                    <a
-                        href="products.html?category=${encodeURIComponent(category)}"
-                        class="featured-button">
-                        查看產品
-                    </a>
-
-                </div>
-
-            `;
-
-            featuredProductGrid.appendChild(
-                card
-            );
-        }
-    );
+    featuredProductGrid.appendChild(card);
+  });
 }
 
 loadFeaturedProducts();
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", () => {
+  const links = [...document.querySelectorAll('nav a[href^="#"]')];
+  const ids = ["home","about","categories","featured","service","contact"];
 
-    const nav = document.querySelector("header nav");
-    if (!nav) return;
+  function updateNav(){
+    const y = window.scrollY + 150;
+    let current = "home";
 
-    const indicator = nav.querySelector(".nav-indicator");
-
-    const links = Array.from(
-        nav.querySelectorAll('a[href^="#"]')
-    );
-
-    const sectionIds = [
-        "home",
-        "about",
-        "categories",
-        "products",
-        "contact"
-    ];
-
-    function moveIndicator(link) {
-
-        if (!link) return;
-
-        links.forEach(function (item) {
-            item.classList.remove("nav-current");
-        });
-
-        link.classList.add("nav-current");
-
-        if (indicator && window.innerWidth > 750) {
-            indicator.style.width = link.offsetWidth + "px";
-            indicator.style.left = link.offsetLeft + "px";
-        }
-    }
-
-    function updateActiveNav() {
-
-        const scrollPosition =
-            window.scrollY + 180;
-
-        let currentId = "home";
-
-        sectionIds.forEach(function (id) {
-
-            const section =
-                document.getElementById(id);
-
-            if (
-                section &&
-                section.offsetTop <= scrollPosition
-            ) {
-                currentId = id;
-            }
-
-        });
-
-        if (
-            window.innerHeight + window.scrollY >=
-            document.documentElement.scrollHeight - 10
-        ) {
-            currentId = "contact";
-        }
-
-        const currentLink =
-            links.find(function (link) {
-                return link.getAttribute("href") ===
-                       "#" + currentId;
-            });
-
-        moveIndicator(currentLink);
-    }
-
-    links.forEach(function (link) {
-
-        link.addEventListener(
-            "click",
-            function () {
-                moveIndicator(link);
-            }
-        );
-
+    ids.forEach(id => {
+      const el = document.getElementById(id);
+      if(el && el.offsetTop <= y){
+        current = id;
+      }
     });
 
-    window.addEventListener(
-        "scroll",
-        updateActiveNav,
-        { passive: true }
-    );
+    links.forEach(link => {
+      link.classList.toggle(
+        "active",
+        link.getAttribute("href") === "#" + current
+      );
+    });
+  }
 
-    window.addEventListener(
-        "resize",
-        updateActiveNav
-    );
-
-    updateActiveNav();
-
+  window.addEventListener("scroll", updateNav, { passive:true });
+  updateNav();
 });
 </script>
 
 </body>
-
 </html>
