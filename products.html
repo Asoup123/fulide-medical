@@ -993,6 +993,26 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
             margin-top: 10px;
         }
 
+
+        /* ===== 商品特色區固定高度，確保按鈕對齊 ===== */
+        .product-features {
+            height: 120px;
+            min-height: 120px;
+            margin: 17px 0;
+            padding-top: 13px;
+            overflow: hidden;
+            box-sizing: border-box;
+        }
+
+        .product-features.empty-features {
+            visibility: hidden;
+        }
+
+        .product-actions {
+            margin-top: 0;
+            flex-shrink: 0;
+        }
+
 </style>
 
 </head>
@@ -1478,26 +1498,22 @@ function renderProducts(products) {
                         }
                     </p>
 
-                    ${
-                        features.length
-                        ?
-                        `
-                        <ul class="product-features">
+                    <ul class="product-features ${features.length ? "" : "empty-features"}">
 
-                            ${
-                                features
+                        ${
+                            features.length
+                            ?
+                            features
                                 .map(
                                     feature =>
                                         `<li>${escapeHTML(feature)}</li>`
                                 )
                                 .join("")
-                            }
+                            :
+                            `<li>預留商品特色</li>`
+                        }
 
-                        </ul>
-                        `
-                        :
-                        ""
-                    }
+                    </ul>
 
                     ${
                         product.subsidy
