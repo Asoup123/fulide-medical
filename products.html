@@ -994,11 +994,59 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
         }
 
 
-        /* ===== 商品特色區固定高度，確保按鈕對齊 ===== */
+        /* ===== 最終商品卡固定版面：每個區塊都有固定高度 ===== */
+        .product-grid {
+            align-items: stretch;
+        }
+
+        .product-card {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-content {
+            display: grid !important;
+            grid-template-rows:
+                32px   /* 分類 */
+                72px   /* 商品名稱 */
+                84px   /* 商品簡介 */
+                120px  /* 商品特色 */
+                72px   /* 補助區 */
+                auto;  /* 按鈕區 */
+            gap: 0;
+            flex: 1;
+            height: 100%;
+        }
+
+        .product-type {
+            align-self: start;
+            margin-bottom: 0 !important;
+        }
+
+        .product-content h3 {
+            height: 72px;
+            margin: 0 !important;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-intro {
+            height: 84px !important;
+            min-height: 84px !important;
+            margin: 0 !important;
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+        }
+
         .product-features {
-            height: 120px;
-            min-height: 120px;
-            margin: 17px 0;
+            height: 120px !important;
+            min-height: 120px !important;
+            margin: 0 !important;
             padding-top: 13px;
             overflow: hidden;
             box-sizing: border-box;
@@ -1008,33 +1056,59 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
             visibility: hidden;
         }
 
-        .product-actions {
-            margin-top: auto;
-            flex-shrink: 0;
+        .subsidy-slot {
+            height: 72px;
+            min-height: 72px;
+            display: flex;
+            align-items: flex-start;
         }
 
-
-        /* 最終對齊規則：放在 style 最後，避免被前面的 CSS 蓋掉 */
-        .product-grid {
-            align-items: stretch;
+        .product-card .subsidy {
+            width: 100%;
+            margin: 0 !important;
         }
 
-        .product-card {
-            height: 100%;
-        }
-
-        .product-content {
-            height: 100%;
-        }
-
-        .product-features {
-            height: 120px;
-            min-height: 120px;
-            flex: 0 0 120px;
+        .subsidy-empty {
+            visibility: hidden;
         }
 
         .product-actions {
-            margin-top: auto !important;
+            margin-top: 0 !important;
+            align-self: end;
+            width: 100%;
+        }
+
+        .product-actions .detail-button {
+            margin-top: 0 !important;
+        }
+
+        .product-actions .ask-button {
+            margin-top: 10px !important;
+        }
+
+        @media (max-width: 600px) {
+            .product-content {
+                grid-template-rows:
+                    32px
+                    auto
+                    auto
+                    auto
+                    auto
+                    auto;
+            }
+
+            .product-content h3,
+            .product-intro,
+            .product-features,
+            .subsidy-slot {
+                height: auto !important;
+                min-height: 0 !important;
+            }
+
+            .product-features.empty-features,
+            .subsidy-empty {
+                display: none;
+            }
         }
 
 </style>
@@ -1523,7 +1597,6 @@ function renderProducts(products) {
                     </p>
 
                     <ul class="product-features ${features.length ? "" : "empty-features"}">
-
                         ${
                             features.length
                             ?
@@ -1536,21 +1609,22 @@ function renderProducts(products) {
                             :
                             `<li>預留商品特色</li>`
                         }
-
                     </ul>
 
-                    ${
-                        product.subsidy
-                        ?
-                        `
-                        <div class="subsidy">
-                            符合補助項目：
-                            ${escapeHTML(product.subsidy)}
-                        </div>
-                        `
-                        :
-                        ""
-                    }
+                    <div class="subsidy-slot">
+                        ${
+                            product.subsidy
+                            ?
+                            `
+                            <div class="subsidy">
+                                符合補助項目：
+                                ${escapeHTML(product.subsidy)}
+                            </div>
+                            `
+                            :
+                            `<div class="subsidy subsidy-empty">預留補助資訊</div>`
+                        }
+                    </div>
 
                     <div class="product-actions">
                         <button
