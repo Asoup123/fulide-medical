@@ -3,4 +3,4 @@ Allow: /
 
 Disallow: /admin.html
 
-Sitemap: https://fuzikon.com.tw/sitemap.xml
+Sitemap: https://fulide.com.tw/sitemap.xml
