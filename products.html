@@ -1009,8 +1009,32 @@ footer{padding:30px 6%;color:rgba(255,255,255,.66);background:#102d26;border-top
         }
 
         .product-actions {
-            margin-top: 0;
+            margin-top: auto;
             flex-shrink: 0;
+        }
+
+
+        /* 最終對齊規則：放在 style 最後，避免被前面的 CSS 蓋掉 */
+        .product-grid {
+            align-items: stretch;
+        }
+
+        .product-card {
+            height: 100%;
+        }
+
+        .product-content {
+            height: 100%;
+        }
+
+        .product-features {
+            height: 120px;
+            min-height: 120px;
+            flex: 0 0 120px;
+        }
+
+        .product-actions {
+            margin-top: auto !important;
         }
 
 </style>
