@@ -548,6 +548,97 @@ body.modal-open{overflow:hidden}
   .main-photo{height:330px}
   .feature-list{grid-template-columns:1fr}
 }
+
+/* ==================================================
+   商品卡精簡高度：桌機一個畫面盡量看完整張卡
+   商品特色超過固定高度時可在卡片內捲動
+================================================== */
+@media (min-width: 751px) {
+  .product-card{
+    max-height:610px;
+  }
+
+  .product-image{
+    height:190px;
+    padding:12px;
+  }
+
+  .product-content{
+    padding:13px 14px 14px;
+  }
+
+  .product-type{
+    margin-bottom:5px;
+    padding:4px 10px;
+    font-size:11px;
+  }
+
+  .product-content h3{
+    min-height:46px;
+    margin-bottom:6px;
+    font-size:17px;
+    line-height:1.4;
+  }
+
+  .product-intro{
+    height:48px;
+    min-height:48px;
+    font-size:13px;
+    line-height:1.55;
+    -webkit-line-clamp:2;
+  }
+
+  .product-features{
+    height:82px;
+    min-height:82px;
+    margin:10px 0;
+    padding-top:8px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:thin;
+    overscroll-behavior:contain;
+  }
+
+  .product-features li{
+    margin:4px 0;
+    padding-left:20px;
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  .product-features::-webkit-scrollbar{
+    width:5px;
+  }
+
+  .product-features::-webkit-scrollbar-thumb{
+    background:#c8d8d0;
+    border-radius:999px;
+  }
+
+  .subsidy-slot{
+    height:48px;
+    min-height:48px;
+  }
+
+  .subsidy{
+    padding:7px 9px;
+    font-size:11px;
+    line-height:1.4;
+    max-height:44px;
+    overflow:hidden;
+  }
+
+  .detail-button,
+  .ask-button{
+    padding:8px;
+    font-size:13px;
+  }
+
+  .ask-button{
+    margin-top:7px;
+  }
+}
+
 </style>
 </head>
 
