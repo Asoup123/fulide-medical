@@ -1276,7 +1276,18 @@ function openModal(product=null){
   }else{
     $("modalTitle").textContent = "新增商品";
     addDynamicRow("feature");
-    addDynamicRow("spec");
+
+    // 新增商品時，自動建立常用規格
+    [
+      "座寬",
+      "座深",
+      "座高",
+      "總寬",
+      "總高",
+      "總長",
+      "淨重"
+    ].forEach(name => addDynamicRow("spec", name, ""));
+
     addDynamicRow("variant");
   }
 
