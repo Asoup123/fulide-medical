@@ -1218,7 +1218,7 @@ async function loadFeaturedProducts(){
     .eq("featured", true)
     .order("sort_order", { ascending:true })
     .order("created_at", { ascending:false })
-    .limit(4);
+    .limit(8);
 
   if(error){
     console.error(error);
