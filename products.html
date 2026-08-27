@@ -1085,6 +1085,101 @@ function buildVariantTable(variants) {
         return "";
     }
 
+    /*
+      相容兩種 variants 格式：
+
+      1. 目前後台格式
+         [
+           { name:"A款", value:"座寬 45 cm" },
+           { name:"B款", value:"座寬 48 cm" }
+         ]
+
+      2. 舊版巢狀規格格式
+         [
+           {
+             model:"A款",
+             specs:[
+               {name:"座寬",value:"45 cm"},
+               {name:"座深",value:"40 cm"}
+             ]
+           }
+         ]
+    */
+
+    const isNestedVariant =
+        variants.some(
+            variant =>
+                Array.isArray(variant?.specs)
+                ||
+                "model" in (variant || {})
+        );
+
+    if (!isNestedVariant) {
+
+        const rows =
+            variants
+            .map(
+                variant => {
+
+                    const name =
+                        variant?.name
+                        ??
+                        variant?.model
+                        ??
+                        "";
+
+                    const value =
+                        variant?.value
+                        ??
+                        variant?.text
+                        ??
+                        variant?.size
+                        ??
+                        "";
+
+                    if (!name && !value) {
+                        return "";
+                    }
+
+                    return `
+                        <tr>
+                            <td class="variant-model">
+                                ${escapeHTML(name || "未命名型號")}
+                            </td>
+                            <td>
+                                ${escapeHTML(value || "—")}
+                            </td>
+                        </tr>
+                    `;
+                }
+            )
+            .join("");
+
+        if (!rows) {
+            return "";
+        }
+
+        return `
+            <div class="variant-table-wrap">
+                <table class="variant-table">
+                    <thead>
+                        <tr>
+                            <th>型號</th>
+                            <th>尺寸 / 備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="variant-note">
+                不同型號／尺寸可能有不同規格，實際供應狀況歡迎洽詢。
+            </div>
+        `;
+    }
+
     const specNames = [];
 
     variants.forEach(
@@ -1113,31 +1208,74 @@ function buildVariantTable(variants) {
     );
 
     if (!specNames.length) {
-        return "";
+
+        const rows =
+            variants
+            .map(
+                variant => `
+                    <tr>
+                        <td class="variant-model">
+                            ${escapeHTML(
+                                variant?.model
+                                ||
+                                variant?.name
+                                ||
+                                "未命名型號"
+                            )}
+                        </td>
+                        <td>
+                            ${escapeHTML(
+                                variant?.value
+                                ||
+                                variant?.text
+                                ||
+                                variant?.size
+                                ||
+                                "—"
+                            )}
+                        </td>
+                    </tr>
+                `
+            )
+            .join("");
+
+        return `
+            <div class="variant-table-wrap">
+                <table class="variant-table">
+                    <thead>
+                        <tr>
+                            <th>型號</th>
+                            <th>尺寸 / 備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="variant-note">
+                不同型號／尺寸可能有不同規格，實際供應狀況歡迎洽詢。
+            </div>
+        `;
     }
 
     const header = `
-
         <tr>
-
-            <th>
-                型號
-            </th>
+            <th>型號</th>
 
             ${
                 specNames
                 .map(
                     name => `
-                    <th>
-                        ${escapeHTML(name)}
-                    </th>
+                        <th>
+                            ${escapeHTML(name)}
+                        </th>
                     `
                 )
                 .join("")
             }
-
         </tr>
-
     `;
 
     const rows =
@@ -1159,12 +1297,14 @@ function buildVariantTable(variants) {
                 );
 
                 return `
-
                     <tr>
-
                         <td class="variant-model">
                             ${escapeHTML(
-                                variant.model || "未命名型號"
+                                variant.model
+                                ||
+                                variant.name
+                                ||
+                                "未命名型號"
                             )}
                         </td>
 
@@ -1172,33 +1312,28 @@ function buildVariantTable(variants) {
                             specNames
                             .map(
                                 name => `
-                                <td>
-                                    ${
-                                        map[name]
-                                        ?
-                                        escapeHTML(map[name])
-                                        :
-                                        "—"
-                                    }
-                                </td>
+                                    <td>
+                                        ${
+                                            map[name]
+                                            ?
+                                            escapeHTML(map[name])
+                                            :
+                                            "—"
+                                        }
+                                    </td>
                                 `
                             )
                             .join("")
                         }
-
                     </tr>
-
                 `;
             }
         )
         .join("");
 
     return `
-
         <div class="variant-table-wrap">
-
             <table class="variant-table">
-
                 <thead>
                     ${header}
                 </thead>
@@ -1206,17 +1341,15 @@ function buildVariantTable(variants) {
                 <tbody>
                     ${rows}
                 </tbody>
-
             </table>
-
         </div>
 
         <div class="variant-note">
             不同型號／尺寸可能有不同規格，實際供應狀況歡迎洽詢。
         </div>
-
     `;
 }
+
 
 function openProduct(id) {
 
