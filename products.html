@@ -2,15 +2,18 @@
 <html lang="zh-TW">
 <!--
   富立德有限公司｜產品專區
-  整理版：2026-09-02
+  第二輪整理版：2026-09-02
 
-  本次整理原則：
-  - 不改 Supabase 資料結構
-  - 不改商品篩選與排序
-  - 不改商品卡與詳細資訊功能
-  - 不改目前桌機 / 手機版排版效果
-  - 保留維康專區與回到首頁按鈕
+  整理原則：
+  - 保留目前產品卡片與詳細資料視覺
+  - 詳細商品圖片使用 contain，完整顯示、不裁切
+  - 保留 Supabase products 資料讀取
+  - 保留分類網址 products.html?category=...
+  - 保留商品特色、補助、規格、型號與圖片輪播
+  - 保留桌機 / 平板 / 手機 RWD
+  - 不更動資料庫欄位與既有功能
 -->
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -829,9 +832,50 @@ body.modal-open{overflow:hidden}
 
 <script>
 
+function sortProductsByCategoryAndOrder(list){
+  const categoryIndex = new Map(
+    CATEGORY_ORDER.map((category, index) => [category, index])
+  );
+
+  return [...(list || [])].sort((a,b) => {
+    const ac = categoryIndex.has(a.category)
+      ? categoryIndex.get(a.category)
+      : CATEGORY_ORDER.length;
+    const bc = categoryIndex.has(b.category)
+      ? categoryIndex.get(b.category)
+      : CATEGORY_ORDER.length;
+
+    if(ac !== bc) return ac - bc;
+
+    const ao = Number(a.sort_order ?? 0);
+    const bo = Number(b.sort_order ?? 0);
+    if(ao !== bo) return ao - bo;
+
+    return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+  });
+}
+
+
+
 /* =========================
    SUPABASE
 ========================= */
+/* =========================
+   SUPABASE / CONFIG
+========================= */
+const CATEGORY_ORDER = [
+  "aluminum-wheelchair",
+  "steel-wheelchair",
+  "rollator",
+  "commode-chair",
+  "shower-chair",
+  "walker",
+  "cane-crutch",
+  "quad-cane",
+  "accessories",
+  "parts-accessories"
+];
+
 const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
