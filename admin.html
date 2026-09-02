@@ -363,6 +363,20 @@
       margin-top:7px;
     }
 
+    .pill.weikang{
+      background:#e9f0ff;
+      color:#315da8;
+      margin-top:7px;
+    }
+
+    .weikang-code-field{
+      margin-top:4px;
+      padding:14px 16px;
+      border:1px solid #d9e3f4;
+      border-radius:12px;
+      background:#f7faff;
+    }
+
     .row-actions{
       display:flex;
       gap:8px;
@@ -854,6 +868,20 @@
               <input id="featured" type="checkbox">
               首頁推薦
             </label>
+
+            <label class="check-label">
+              <input id="isWeikang" type="checkbox">
+              上架維康專區
+            </label>
+          </div>
+
+          <div id="weikangCodeField" class="field full weikang-code-field hidden">
+            <label for="weikangCode">維康碼</label>
+            <input id="weikangCode" type="text" inputmode="numeric"
+                   placeholder="輸入此商品的維康一維碼">
+            <div class="hint" style="margin-top:6px;margin-bottom:0;">
+              勾選「上架維康專區」後，此商品會顯示在維康專區，並以此欄位產生一維條碼。
+            </div>
           </div>
 
           <div class="full section-box">
@@ -1117,6 +1145,12 @@ function renderProducts(){
               ? '<span class="pill featured">★ 首頁推薦</span>'
               : ""
           }
+
+          ${
+            p.is_weikang
+              ? '<span class="pill weikang">維康專區</span>'
+              : ""
+          }
         </div>
 
         <div class="row-actions">
@@ -1229,12 +1263,22 @@ function normalizePairs(input){
   });
 }
 
+function updateWeikangField(){
+  const enabled = $("isWeikang").checked;
+  $("weikangCodeField").classList.toggle("hidden", !enabled);
+}
+
+$("isWeikang").addEventListener("change", updateWeikangField);
+
 function openModal(product=null){
   $("productForm").reset();
   $("productId").value = "";
   $("sortOrder").value = "0";
   $("isActive").checked = true;
   $("featured").checked = false;
+  $("isWeikang").checked = false;
+  $("weikangCode").value = "";
+  updateWeikangField();
   clearDynamicLists();
 
   editingImages = [];
@@ -1254,6 +1298,9 @@ function openModal(product=null){
     $("sortOrder").value = product.sort_order ?? 0;
     $("isActive").checked = product.is_active !== false;
     $("featured").checked = product.featured === true;
+    $("isWeikang").checked = product.is_weikang === true;
+    $("weikangCode").value = product.weikang_code || "";
+    updateWeikangField();
 
     editingImages =
       Array.isArray(product.image_urls)
@@ -1409,6 +1456,13 @@ $("productForm").addEventListener("submit", async e => {
       throw new Error("請輸入商品名稱");
     }
 
+    const weikangEnabled = $("isWeikang").checked;
+    const weikangCode = $("weikangCode").value.trim();
+
+    if(weikangEnabled && !weikangCode){
+      throw new Error("已勾選上架維康專區，請輸入維康碼");
+    }
+
     const uploadedUrls = await uploadNewImages();
     const allImages = [...editingImages, ...uploadedUrls];
 
@@ -1421,6 +1475,8 @@ $("productForm").addEventListener("submit", async e => {
       sort_order: Number($("sortOrder").value || 0),
       is_active: $("isActive").checked,
       featured: $("featured").checked,
+      is_weikang: weikangEnabled,
+      weikang_code: weikangEnabled ? weikangCode : null,
       image_urls: allImages,
       features: collectFeatures(),
       specs: collectPairs("specsList"),
@@ -1501,6 +1557,8 @@ window.duplicateProduct = async function(id){
     subsidy: original.subsidy,
     image_urls: original.image_urls || [],
     featured: false,
+    is_weikang: false,
+    weikang_code: null,
     is_active: false,
     sort_order: original.sort_order ?? 0
   };
