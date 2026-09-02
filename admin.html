@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <!--
   富立德有限公司｜商品管理後台
-  拖曳排序修正版：2026-09-02
+  固定分類排序＋分類內拖曳版：2026-09-02
 
   本次整理原則：
   - 不改 Supabase 專案與資料表
@@ -840,8 +840,7 @@
         <option value="inactive">已下架</option>
       </select>
 
-      <div class="sort-hint">☰ 拖曳商品可調整顯示順序</div>
-
+      <div class="sort-hint">☰ 分類順序固定；同分類內可拖曳細調</div>
       <select id="categoryFilter">
         <option value="all">全部分類</option>
         <option value="aluminum-wheelchair">鋁製輪椅</option>
@@ -1006,6 +1005,19 @@ let products = [];
 let editingImages = [];
 let newImageFiles = [];
 
+const CATEGORY_ORDER = [
+  "aluminum-wheelchair",
+  "steel-wheelchair",
+  "rollator",
+  "commode-chair",
+  "shower-chair",
+  "walker",
+  "cane-crutch",
+  "quad-cane",
+  "accessories",
+  "parts-accessories"
+];
+
 const categoryNames = {
   "aluminum-wheelchair":"鋁製輪椅",
   "steel-wheelchair":"鐵製輪椅",
@@ -1152,23 +1164,46 @@ function filteredProducts(){
   const status = $("statusFilter").value;
   const category = $("categoryFilter").value;
 
-  return products.filter(p => {
-    const haystack = [
-      p.name,
-      p.short_description,
-      p.description,
-      p.category
-    ].join(" ").toLowerCase();
+  const categoryIndex = new Map(
+    CATEGORY_ORDER.map((value,index) => [value,index])
+  );
 
-    const matchKeyword = !keyword || haystack.includes(keyword);
-    const matchCategory = category === "all" || p.category === category;
-    const matchStatus =
-      status === "all" ||
-      (status === "active" && p.is_active) ||
-      (status === "inactive" && !p.is_active);
+  return products
+    .filter(p => {
+      const haystack = [
+        p.name,
+        p.short_description,
+        p.description,
+        p.category
+      ].join(" ").toLowerCase();
 
-    return matchKeyword && matchCategory && matchStatus;
-  });
+      const matchKeyword = !keyword || haystack.includes(keyword);
+      const matchCategory = category === "all" || p.category === category;
+      const matchStatus =
+        status === "all" ||
+        (status === "active" && p.is_active) ||
+        (status === "inactive" && !p.is_active);
+
+      return matchKeyword && matchCategory && matchStatus;
+    })
+    .sort((a,b) => {
+      // 第一層：分類固定順序
+      const ac = categoryIndex.has(a.category)
+        ? categoryIndex.get(a.category)
+        : CATEGORY_ORDER.length;
+      const bc = categoryIndex.has(b.category)
+        ? categoryIndex.get(b.category)
+        : CATEGORY_ORDER.length;
+
+      if(ac !== bc) return ac - bc;
+
+      // 第二層：同分類內才使用手動拖曳順序
+      const ao = Number(a.sort_order ?? 0);
+      const bo = Number(b.sort_order ?? 0);
+      if(ao !== bo) return ao - bo;
+
+      return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+    });
 }
 
 function renderProducts(){
@@ -1187,7 +1222,7 @@ function renderProducts(){
         : "";
 
     return `
-      <article class="product-row" data-product-id="${p.id}">
+      <article class="product-row" data-product-id="${p.id}" data-category="${escAttr(p.category || "")}">
         <button class="drag-handle" type="button" aria-label="拖曳調整排序" title="拖曳調整排序">☰</button>
         <div class="thumb">
           ${
@@ -1285,6 +1320,13 @@ function initProductSorting(){
     scrollSpeed: 22,
     forceAutoScrollFallback: true,
 
+    // 分類順序固定：不同分類之間不能互相穿插
+    onMove: evt => {
+      const draggedCategory = evt.dragged?.dataset?.category || "";
+      const relatedCategory = evt.related?.dataset?.category || "";
+      return !relatedCategory || draggedCategory === relatedCategory;
+    },
+
     onEnd: async () => {
       if(isSavingSort) return;
       await saveDraggedOrder();
@@ -1300,62 +1342,69 @@ async function saveDraggedOrder(){
   isSavingSort = true;
 
   try{
-    const visibleIds = visibleRows.map(row => row.dataset.productId);
-    const visibleSet = new Set(visibleIds);
+    // 找出目前畫面上有被拖曳排序的分類
+    const categoriesOnScreen = [
+      ...new Set(visibleRows.map(row => row.dataset.category).filter(Boolean))
+    ];
 
-    // 目前畫面中未顯示的商品保留原本相對順序。
-    const currentOrdered = [...products].sort((a,b) => {
-      const ao = Number(a.sort_order ?? 0);
-      const bo = Number(b.sort_order ?? 0);
-      if(ao !== bo) return ao - bo;
-      return String(b.created_at || "").localeCompare(String(a.created_at || ""));
-    });
+    for(const category of categoriesOnScreen){
+      const visibleCategoryRows = visibleRows.filter(
+        row => row.dataset.category === category
+      );
+      if(!visibleCategoryRows.length) continue;
 
-    const reorderedVisible = visibleIds
-      .map(id => products.find(p => p.id === id))
-      .filter(Boolean);
+      const visibleIds = visibleCategoryRows.map(row => row.dataset.productId);
+      const visibleSet = new Set(visibleIds);
 
-    let visibleIndex = 0;
-    const merged = currentOrdered.map(product => {
-      if(visibleSet.has(product.id)){
-        return reorderedVisible[visibleIndex++];
+      // 只處理同一分類；其他分類完全不受影響
+      const allInCategory = products
+        .filter(p => p.category === category)
+        .sort((a,b) => {
+          const ao = Number(a.sort_order ?? 0);
+          const bo = Number(b.sort_order ?? 0);
+          if(ao !== bo) return ao - bo;
+          return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+        });
+
+      const reorderedVisible = visibleIds
+        .map(id => products.find(p => p.id === id))
+        .filter(Boolean);
+
+      let visibleIndex = 0;
+      const merged = allInCategory.map(product => {
+        if(visibleSet.has(product.id)){
+          return reorderedVisible[visibleIndex++];
+        }
+        return product;
+      });
+
+      const updates = merged.map((product,index) => ({
+        id: product.id,
+        sort_order: index + 1
+      }));
+
+      const results = await Promise.all(
+        updates.map(item =>
+          db.from("products")
+            .update({ sort_order:item.sort_order })
+            .eq("id", item.id)
+        )
+      );
+
+      const failed = results.find(result => result.error);
+      if(failed){
+        throw new Error(failed.error.message);
       }
-      return product;
-    });
 
-    const updates = merged.map((product,index) => ({
-      id: product.id,
-      sort_order: index + 1
-    }));
-
-    const results = await Promise.all(
-      updates.map(item =>
-        db.from("products")
-          .update({ sort_order:item.sort_order })
-          .eq("id", item.id)
-      )
-    );
-
-    const failed = results.find(result => result.error);
-    if(failed){
-      throw new Error(failed.error.message);
+      updates.forEach(item => {
+        const product = products.find(p => p.id === item.id);
+        if(product) product.sort_order = item.sort_order;
+      });
     }
 
-    updates.forEach(item => {
-      const product = products.find(p => p.id === item.id);
-      if(product) product.sort_order = item.sort_order;
-    });
-
-    // DOM 本身已經是拖曳後的新順序，不需要重新重畫列表。
-    // 同步記憶體中的 products 順序，讓後續搜尋/篩選也立即使用新排序。
-    products.sort((a,b) => {
-      const ao = Number(a.sort_order ?? 0);
-      const bo = Number(b.sort_order ?? 0);
-      if(ao !== bo) return ao - bo;
-      return String(b.created_at || "").localeCompare(String(a.created_at || ""));
-    });
-
-    showToast("商品順序已更新");
+    // 重新渲染，分類固定順序會立即套用
+    renderProducts();
+    showToast("分類內商品順序已更新");
   }catch(err){
     alert("排序儲存失敗：" + (err.message || String(err)));
     await loadProducts();
@@ -1367,6 +1416,21 @@ async function saveDraggedOrder(){
 $("searchInput").addEventListener("input", renderProducts);
 $("statusFilter").addEventListener("change", renderProducts);
 $("categoryFilter").addEventListener("change", renderProducts);
+
+$("category").addEventListener("change", () => {
+  // 只有新增商品時才自動決定該分類最後順位；編輯既有商品不覆蓋原排序
+  if(editingId) return;
+
+  const selectedCategory = $("category").value;
+  const sameCategory = products.filter(p => p.category === selectedCategory);
+  $("sortOrder").value = String(
+    sameCategory.length
+      ? Math.max(...sameCategory.map(p => Number(p.sort_order ?? 0))) + 1
+      : 1
+  );
+});
+
+
 
 /* =========================
    DYNAMIC FORM ROWS
