@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<!--
+  富立德有限公司｜商品管理後台
+  整理版：2026-09-02
+
+  本次整理原則：
+  - 不改 Supabase 專案與資料表
+  - 不改管理員 UID 與登入權限
+  - 不改商品新增、編輯、上下架、複製、刪除
+  - 不改圖片上傳與 Storage
+  - 保留首頁推薦、維康專區、維康碼
+  - 保留商品特色、規格、型號與補助資訊
+-->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -932,6 +944,9 @@
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
 <script>
+/* =========================
+   CONFIG / SUPABASE
+========================= */
 const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
 const ADMIN_UID = "4fdfcde5-cbb0-4616-8237-b3dec68bd99d";
@@ -958,6 +973,9 @@ const categoryNames = {
 
 const $ = id => document.getElementById(id);
 
+/* =========================
+   HELPERS
+========================= */
 function esc(value){
   const div = document.createElement("div");
   div.textContent = value ?? "";
@@ -991,6 +1009,9 @@ function slugify(name){
   return (base || "product") + "-" + Date.now();
 }
 
+/* =========================
+   AUTH
+========================= */
 async function ensureAdmin(session){
   if(!session?.user){
     showLogin();
@@ -1046,6 +1067,9 @@ $("logoutBtn").addEventListener("click", async () => {
   showLogin();
 });
 
+/* =========================
+   PRODUCT LIST
+========================= */
 async function loadProducts(){
   $("productList").innerHTML =
     '<div class="empty-box">商品載入中...</div>';
@@ -1183,6 +1207,9 @@ $("searchInput").addEventListener("input", renderProducts);
 $("statusFilter").addEventListener("change", renderProducts);
 $("categoryFilter").addEventListener("change", renderProducts);
 
+/* =========================
+   DYNAMIC FORM ROWS
+========================= */
 function clearDynamicLists(){
   $("featuresList").innerHTML = "";
   $("specsList").innerHTML = "";
@@ -1263,6 +1290,9 @@ function normalizePairs(input){
   });
 }
 
+/* =========================
+   WEIKANG
+========================= */
 function updateWeikangField(){
   const enabled = $("isWeikang").checked;
   $("weikangCodeField").classList.toggle("hidden", !enabled);
@@ -1270,6 +1300,9 @@ function updateWeikangField(){
 
 $("isWeikang").addEventListener("change", updateWeikangField);
 
+/* =========================
+   PRODUCT FORM / MODAL
+========================= */
 function openModal(product=null){
   $("productForm").reset();
   $("productId").value = "";
@@ -1370,6 +1403,9 @@ $("imageFiles").addEventListener("change", e => {
   e.target.value = "";
 });
 
+/* =========================
+   PRODUCT IMAGES
+========================= */
 function renderImagePreview(){
   const host = $("imagePreview");
   host.innerHTML = "";
@@ -1442,6 +1478,9 @@ async function uploadNewImages(){
   return urls;
 }
 
+/* =========================
+   SAVE PRODUCT
+========================= */
 $("productForm").addEventListener("submit", async e => {
   e.preventDefault();
 
@@ -1516,6 +1555,9 @@ $("productForm").addEventListener("submit", async e => {
   }
 });
 
+/* =========================
+   PRODUCT ACTIONS
+========================= */
 window.toggleStatus = async function(id,current){
   const action = current ? "下架" : "重新上架";
 
@@ -1600,6 +1642,9 @@ window.deleteProduct = async function(id){
   await loadProducts();
 };
 
+/* =========================
+   INIT
+========================= */
 (async function init(){
   const { data } = await db.auth.getSession();
   await ensureAdmin(data.session);
