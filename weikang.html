@@ -1,5 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<!--
+  富立德有限公司｜維康專區
+  整理版：2026-09-02
+
+  本次整理原則：
+  - 不改 Supabase 資料結構
+  - 僅顯示 is_active = true 且 is_weikang = true 的商品
+  - 保留維康碼與 Code 128 一維條碼
+  - 保留商品詳細資訊、規格、型號與補助資訊
+  - 保留產品專區與回到首頁按鈕
+  - 不改目前桌機 / 手機版排版效果
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -639,7 +651,6 @@ body.modal-open{overflow:hidden}
   }
 }
 
-
 .weikang-code-box{
   margin-top:12px;
   padding:10px 12px;
@@ -673,7 +684,6 @@ body.modal-open{overflow:hidden}
   height:72px;
   margin-top:6px;
 }
-
 
 /* ==================================================
    維康專區商品卡：條碼版精簡排版
@@ -940,32 +950,21 @@ body.modal-open{overflow:hidden}
 
 <script>
 
-const SUPABASE_URL =
-    "https://goiyznauetntttimdlzx.supabase.co";
+/* =========================
+   SUPABASE
+========================= */
+const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SUPABASE_KEY =
-    "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
-
-const db =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-const productGrid =
-    document.getElementById("productGrid");
-
-const title =
-    document.getElementById("category-title");
-
-const description =
-    document.getElementById("category-description");
-
-const modal =
-    document.getElementById("productModal");
-
-const modalContent =
-    document.getElementById("modalContent");
+/* =========================
+   DOM
+========================= */
+const productGrid = document.getElementById("productGrid");
+const title = document.getElementById("category-title");
+const description = document.getElementById("category-description");
+const modal = document.getElementById("productModal");
+const modalContent = document.getElementById("modalContent");
 
 let allProducts = [];
 
@@ -1028,6 +1027,9 @@ const categoryText = {
 
 };
 
+/* =========================
+   CATEGORY
+========================= */
 function categoryName(category) {
 
     return categoryText[category]
@@ -1035,6 +1037,9 @@ function categoryName(category) {
         : category;
 }
 
+/* =========================
+   LOAD WEIKANG PRODUCTS
+========================= */
 async function loadProducts() {
 
     productGrid.innerHTML = `
@@ -1135,6 +1140,9 @@ function filterProducts(category) {
     renderProducts(filtered);
 }
 
+/* =========================
+   PRODUCT CARDS
+========================= */
 function renderProducts(products) {
 
     productGrid.innerHTML = "";
@@ -1263,7 +1271,6 @@ function renderProducts(products) {
                         }
                     </div>
 
-
                     ${
                         product.weikang_code
                         ?
@@ -1337,6 +1344,9 @@ function renderProducts(products) {
     );
 }
 
+/* =========================
+   VARIANT TABLE
+========================= */
 function buildVariantTable(variants) {
 
     if (
@@ -1612,7 +1622,9 @@ function buildVariantTable(variants) {
     `;
 }
 
-
+/* =========================
+   PRODUCT DETAIL MODAL
+========================= */
 function openProduct(id) {
 
     const product =
@@ -1991,6 +2003,9 @@ document
     }
 );
 
+/* =========================
+   HELPERS
+========================= */
 function escapeHTML(value) {
 
     const div =
