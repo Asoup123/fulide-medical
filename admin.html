@@ -310,9 +310,44 @@
       border-radius:18px;
       padding:16px;
       display:grid;
-      grid-template-columns:92px 1.4fr .85fr .75fr auto;
-      gap:18px;
+      grid-template-columns:38px 92px 1.4fr .85fr .75fr auto;
+      gap:14px;
       align-items:center;
+    }
+
+    .drag-handle{
+      width:34px;
+      height:34px;
+      border-radius:10px;
+      display:grid;
+      place-items:center;
+      background:#f2f5f3;
+      color:#7a857f;
+      font-size:20px;
+      cursor:grab;
+      user-select:none;
+      touch-action:none;
+    }
+
+    .drag-handle:active{
+      cursor:grabbing;
+    }
+
+    .product-row.sortable-ghost{
+      opacity:.35;
+      background:#eef6f1;
+    }
+
+    .product-row.sortable-chosen{
+      box-shadow:0 16px 34px rgba(15,107,72,.16);
+    }
+
+    .sort-hint{
+      color:var(--muted);
+      font-size:13px;
+      font-weight:700;
+      padding:8px 4px;
+      white-space:nowrap;
     }
 
     .thumb{
@@ -661,12 +696,12 @@
 
     @media(max-width:950px){
       .product-row{
-        grid-template-columns:78px 1fr;
+        grid-template-columns:34px 78px 1fr;
       }
-      .product-row > :nth-child(3),
       .product-row > :nth-child(4),
+      .product-row > :nth-child(5),
       .row-actions{
-        grid-column:2;
+        grid-column:3;
       }
       .row-actions{
         justify-content:flex-start;
@@ -698,13 +733,17 @@
         grid-template-columns:1fr;
       }
       .product-row{
-        grid-template-columns:1fr;
+        grid-template-columns:34px 1fr;
       }
       .thumb{
         width:100%;
         height:180px;
       }
       .product-row > *{
+        grid-column:1 / -1!important;
+      }
+
+      .product-row > .drag-handle{
         grid-column:1!important;
       }
       .image-preview{
@@ -795,6 +834,8 @@
         <option value="inactive">已下架</option>
       </select>
 
+      <div class="sort-hint">☰ 拖曳商品可調整顯示順序</div>
+
       <select id="categoryFilter">
         <option value="all">全部分類</option>
         <option value="aluminum-wheelchair">鋁製輪椅</option>
@@ -865,9 +906,9 @@
             <input id="subsidy" type="text" placeholder="例如：符合補助項目...">
           </div>
 
-          <div class="field">
+          <div class="field hidden" aria-hidden="true">
             <label for="sortOrder">排序</label>
-            <input id="sortOrder" type="number" value="0">
+            <input id="sortOrder" type="number" value="0" tabindex="-1">
           </div>
 
           <div class="full checkbox-row">
@@ -942,6 +983,7 @@
 <div id="toast" class="toast hidden"></div>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 
 <script>
 /* =========================
@@ -1139,7 +1181,8 @@ function renderProducts(){
         : "";
 
     return `
-      <article class="product-row">
+      <article class="product-row" data-product-id="${p.id}">
+        <button class="drag-handle" type="button" aria-label="拖曳調整排序" title="拖曳調整排序">☰</button>
         <div class="thumb">
           ${
             image
@@ -1201,6 +1244,101 @@ function renderProducts(){
       </article>
     `;
   }).join("");
+
+  initProductSorting();
+}
+
+
+let productSortable = null;
+let isSavingSort = false;
+
+function initProductSorting(){
+  const host = $("productList");
+  if(!host || typeof Sortable === "undefined") return;
+
+  if(productSortable){
+    productSortable.destroy();
+    productSortable = null;
+  }
+
+  const rows = host.querySelectorAll(".product-row");
+  if(!rows.length) return;
+
+  productSortable = Sortable.create(host, {
+    animation: 180,
+    handle: ".drag-handle",
+    draggable: ".product-row",
+    ghostClass: "sortable-ghost",
+    chosenClass: "sortable-chosen",
+    onEnd: async () => {
+      if(isSavingSort) return;
+      await saveDraggedOrder();
+    }
+  });
+}
+
+async function saveDraggedOrder(){
+  const host = $("productList");
+  const visibleRows = [...host.querySelectorAll(".product-row")];
+  if(!visibleRows.length) return;
+
+  isSavingSort = true;
+
+  try{
+    const visibleIds = visibleRows.map(row => row.dataset.productId);
+    const visibleSet = new Set(visibleIds);
+
+    // 目前畫面中未顯示的商品保留原本相對順序。
+    const currentOrdered = [...products].sort((a,b) => {
+      const ao = Number(a.sort_order ?? 0);
+      const bo = Number(b.sort_order ?? 0);
+      if(ao !== bo) return ao - bo;
+      return String(b.created_at || "").localeCompare(String(a.created_at || ""));
+    });
+
+    const reorderedVisible = visibleIds
+      .map(id => products.find(p => p.id === id))
+      .filter(Boolean);
+
+    let visibleIndex = 0;
+    const merged = currentOrdered.map(product => {
+      if(visibleSet.has(product.id)){
+        return reorderedVisible[visibleIndex++];
+      }
+      return product;
+    });
+
+    const updates = merged.map((product,index) => ({
+      id: product.id,
+      sort_order: index + 1
+    }));
+
+    const results = await Promise.all(
+      updates.map(item =>
+        db.from("products")
+          .update({ sort_order:item.sort_order })
+          .eq("id", item.id)
+      )
+    );
+
+    const failed = results.find(result => result.error);
+    if(failed){
+      throw new Error(failed.error.message);
+    }
+
+    updates.forEach(item => {
+      const product = products.find(p => p.id === item.id);
+      if(product) product.sort_order = item.sort_order;
+    });
+
+    showToast("商品順序已更新");
+    renderProducts();
+  }catch(err){
+    alert("排序儲存失敗：" + (err.message || String(err)));
+    await loadProducts();
+  }finally{
+    isSavingSort = false;
+  }
 }
 
 $("searchInput").addEventListener("input", renderProducts);
