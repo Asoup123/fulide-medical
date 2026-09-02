@@ -1,0 +1,1928 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>維康專區｜富立德有限公司</title>
+
+    <meta name="description"
+          content="富立德有限公司維康專區，提供輪椅、助步車、助行器、拐杖、便椅、洗澡椅及各式醫療器材與居家照護輔具，歡迎洽詢產品資訊。">
+
+        <!-- SEO -->
+    <link rel="canonical" href="https://fulide.com.tw/products.html">
+
+    <meta name="robots" content="index, follow">
+    <link rel="icon" type="image/png" href="fulide-logo.png">
+    <link rel="apple-touch-icon" href="fulide-logo.png">
+    <meta name="theme-color" content="#0f6b48">
+
+    <!-- Open Graph -->
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="zh_TW">
+    <meta property="og:site_name" content="富立德有限公司">
+    <meta property="og:title" content="醫療器材與輔具產品｜富立德有限公司">
+    <meta property="og:description" content="提供輪椅、助步車、助行器、拐杖、便椅、洗澡椅及各式醫療器材與居家照護輔具。">
+    <meta property="og:url" content="https://fulide.com.tw/products.html">
+    <meta property="og:image" content="https://fulide.com.tw/fulide-logo.png">
+
+<style>
+:root{
+  --ink:#173a32;
+  --green:#0d6b4f;
+  --dark:#09523d;
+  --sage:#e8f1ed;
+  --warm:#fbfaf6;
+  --line:#dce7e1;
+  --muted:#718078;
+  --white:#fff;
+  --shadow:0 18px 42px rgba(23,58,50,.08);
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{
+  font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;
+  background:var(--warm);
+  color:var(--ink);
+  line-height:1.7;
+}
+a{text-decoration:none;color:inherit}
+button{font:inherit}
+
+header{
+  min-height:88px;
+  padding:14px 6%;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  position:sticky;
+  top:0;
+  z-index:1000;
+  background:rgba(255,255,255,.96);
+  border-bottom:1px solid var(--line);
+  backdrop-filter:blur(12px);
+}
+
+.logo{
+  display:flex;
+  align-items:center;
+  gap:16px;
+  color:var(--ink);
+  font-size:21px;
+  font-weight:800;
+  letter-spacing:.03em;
+}
+.logo img{height:58px;max-width:88px;object-fit:contain}
+
+nav{display:flex;align-items:center;gap:20px}
+.home-button{
+  padding:10px 18px;
+  color:var(--green)!important;
+  background:transparent;
+  border:1px solid var(--green);
+  border-radius:999px;
+  font-weight:700;
+}
+.home-button:hover{color:#fff!important;background:var(--green)}
+
+.page-hero{
+  position:relative;
+  overflow:hidden;
+  padding:96px 8% 90px;
+  color:var(--ink);
+  background:
+    radial-gradient(circle at 88% 20%,rgba(13,107,79,.13) 0 9%,transparent 10%),
+    radial-gradient(circle at 82% 66%,rgba(13,107,79,.08) 0 17%,transparent 18%),
+    linear-gradient(135deg,#f8f7f1,#eef5f1);
+  border-bottom:1px solid var(--line);
+}
+.page-hero::after{
+  content:"";
+  position:absolute;
+  right:7%;
+  top:50%;
+  width:220px;
+  height:220px;
+  transform:translateY(-50%) rotate(10deg);
+  border:1px solid rgba(13,107,79,.22);
+  border-radius:42% 58% 52% 48%;
+}
+.page-hero span{
+  display:inline-block;
+  margin-bottom:12px;
+  padding:6px 11px;
+  color:var(--green);
+  background:rgba(255,255,255,.7);
+  border:1px solid var(--line);
+  border-radius:999px;
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:.18em;
+}
+.page-hero h1{
+  max-width:760px;
+  margin:0 0 14px;
+  font-size:clamp(38px,5vw,62px);
+  line-height:1.15;
+  letter-spacing:-.03em;
+}
+.page-hero p{max-width:680px;color:var(--muted);font-size:17px}
+
+.category-section{padding:42px 7% 16px}
+.category-buttons{
+  max-width:1280px;
+  margin:auto;
+  display:flex;
+  gap:9px;
+  flex-wrap:wrap;
+}
+.category-button{
+  padding:10px 17px;
+  color:var(--muted);
+  background:rgba(255,255,255,.76);
+  border:1px solid var(--line);
+  border-radius:999px;
+  cursor:pointer;
+  transition:.25s;
+}
+.category-button:hover,
+.category-button.active{
+  color:#fff;
+  background:var(--green);
+  border-color:var(--green);
+  box-shadow:0 7px 18px rgba(13,107,79,.13);
+}
+
+.products-section{padding:30px 7% 100px}
+.products-container{max-width:1280px;margin:auto}
+.products-heading{
+  display:flex;
+  align-items:end;
+  justify-content:space-between;
+  gap:24px;
+  padding-bottom:22px;
+  margin-bottom:28px;
+  border-bottom:1px solid var(--line);
+}
+.products-heading h2{font-size:34px}
+.products-heading p{color:var(--muted)}
+
+.product-grid{
+  display:grid;
+  grid-template-columns:repeat(5,1fr);
+  gap:16px;
+  align-items:stretch;
+}
+.product-card{
+  overflow:hidden;
+  height:100%;
+  display:flex;
+  flex-direction:column;
+  background:rgba(255,255,255,.92);
+  border:1px solid var(--line);
+  border-radius:22px;
+  box-shadow:0 8px 26px rgba(23,58,50,.045);
+  transition:.25s;
+}
+.product-card:hover{
+  transform:translateY(-5px);
+  border-color:#c6d9d0;
+  box-shadow:0 20px 44px rgba(23,58,50,.09);
+}
+
+.product-image{
+  position:relative;
+  height:240px;
+  padding:18px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#ffffff;
+  border-bottom:1px solid var(--line);
+}
+.product-image img{width:100%;height:100%;object-fit:contain}
+
+.featured-badge{
+  position:absolute;
+  left:18px;
+  top:18px;
+  z-index:2;
+  padding:5px 11px;
+  color:var(--dark);
+  background:#dfeee7;
+  border:1px solid #c8ddd3;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:700;
+}
+
+.product-content{
+  padding:16px;
+  display:flex;
+  flex-direction:column;
+  flex:1;
+}
+.product-type{
+  align-self:flex-start;
+  display:inline-block;
+  padding:5px 12px;
+  margin-bottom:8px;
+  color:var(--green);
+  background:var(--sage);
+  border:1px solid #d5e5dd;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:800;
+}
+.product-content h3{
+  min-height:54px;
+  margin-bottom:9px;
+  font-size:18px;
+  display:-webkit-box;
+  -webkit-line-clamp:2;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.product-intro{
+  height:66px;
+  min-height:66px;
+  color:var(--muted);
+  font-size:14px;
+  display:-webkit-box;
+  -webkit-line-clamp:3;
+  -webkit-box-orient:vertical;
+  overflow:hidden;
+}
+.product-features{
+  height:104px;
+  min-height:104px;
+  margin:17px 0;
+  padding-top:13px;
+  overflow:hidden;
+  list-style:none;
+  border-top:1px solid var(--line);
+}
+.product-features.empty-features{visibility:hidden}
+.product-features li{
+  position:relative;
+  margin:7px 0;
+  padding-left:22px;
+  color:var(--muted);
+  font-size:14px;
+}
+.product-features li::before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  color:var(--green);
+  font-weight:900;
+}
+
+.subsidy-slot{
+  height:72px;
+  min-height:72px;
+  display:flex;
+  align-items:flex-start;
+}
+.subsidy{
+  width:100%;
+  margin:0;
+  padding:11px 13px;
+  color:var(--dark);
+  background:#f2f6f3;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-size:13px;
+  font-weight:700;
+}
+.subsidy-empty{visibility:hidden}
+
+.product-actions{
+  margin-top:auto;
+  width:100%;
+  flex-shrink:0;
+}
+.detail-button,
+.ask-button{
+  display:block;
+  width:100%;
+  padding:9px;
+  border-radius:12px;
+  text-align:center;
+  font-weight:700;
+  transition:.25s;
+}
+.detail-button{
+  margin-top:0;
+  color:#fff;
+  background:var(--green);
+  border:0;
+  cursor:pointer;
+}
+.detail-button:hover{background:var(--dark)}
+.ask-button{
+  margin-top:10px;
+  color:var(--green);
+  background:transparent;
+  border:1px solid #bcd4c9;
+}
+.ask-button:hover{color:#fff;background:var(--dark)}
+
+.loading-box,
+.empty-box{
+  grid-column:1/-1;
+  padding:70px 20px;
+  background:rgba(255,255,255,.82);
+  border:1px solid var(--line);
+  border-radius:17px;
+  color:var(--muted);
+  text-align:center;
+}
+
+.help-section{
+  padding:78px 8%;
+  color:#fff;
+  background:var(--ink);
+  text-align:center;
+}
+.help-section h2{font-size:34px;margin-bottom:8px}
+.help-section p{margin-bottom:22px;color:rgba(255,255,255,.7)}
+.help-buttons{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+.help-buttons a{
+  padding:11px 21px;
+  color:var(--ink);
+  background:#f5f4ee;
+  border-radius:999px;
+  font-weight:700;
+}
+
+footer{
+  padding:30px 6%;
+  color:rgba(255,255,255,.66);
+  background:#102d26;
+  border-top:1px solid rgba(255,255,255,.08);
+  text-align:center;
+  font-size:14px;
+}
+.admin-login-link{margin-left:10px;color:rgba(255,255,255,.34);font-size:11px}
+
+.modal{
+  position:fixed;
+  inset:0;
+  z-index:3000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:24px;
+  background:rgba(14,35,29,.64);
+  backdrop-filter:blur(5px);
+}
+.modal.show{display:flex}
+.modal-dialog{
+  width:min(1120px,100%);
+  max-height:92vh;
+  overflow-y:auto;
+  position:relative;
+  background:var(--warm);
+  border-radius:24px;
+  box-shadow:0 30px 80px rgba(0,0,0,.2);
+}
+.modal-close{
+  position:sticky;
+  float:right;
+  top:14px;
+  right:14px;
+  z-index:10;
+  width:42px;
+  height:42px;
+  margin:16px 16px 0 0;
+  border:0;
+  border-radius:50%;
+  background:var(--sage);
+  color:var(--ink);
+  font-size:24px;
+  cursor:pointer;
+}
+.modal-inner{padding:42px}
+.modal-top{display:grid;grid-template-columns:1fr 1fr;gap:40px}
+.main-photo{
+  height:450px;
+  padding:24px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:#ffffff;
+  border:1px solid var(--line);
+  border-radius:14px;
+}
+.main-photo img{width:100%;height:100%;object-fit:cover}
+.thumbnail-list{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.thumbnail{
+  width:72px;
+  height:72px;
+  padding:5px;
+  border:1px solid var(--line);
+  border-radius:8px;
+  background:#fff;
+}
+.thumbnail.active{border:2px solid var(--green)}
+.thumbnail img{width:100%;height:100%;object-fit:contain}
+.modal-category{
+  display:inline-block;
+  padding:5px 12px;
+  color:var(--green);
+  background:var(--sage);
+  border:1px solid #d5e5dd;
+  border-radius:20px;
+  font-size:12px;
+  font-weight:800;
+}
+.modal-info h2{margin:12px 0 14px;font-size:34px}
+.modal-description{color:var(--muted);white-space:pre-line}
+.modal-subsidy{
+  margin-top:20px;
+  padding:13px;
+  color:var(--dark);
+  background:#f2f6f3;
+  border:1px solid var(--line);
+  border-radius:8px;
+  font-weight:700;
+}
+.detail-section{
+  margin-top:38px;
+  padding-top:30px;
+  border-top:1px solid var(--line);
+}
+.detail-section h3{margin-bottom:18px;font-size:24px}
+.feature-list{
+  list-style:none;
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:10px 22px;
+}
+.feature-list li{
+  position:relative;
+  padding-left:22px;
+  color:var(--muted);
+}
+.feature-list li::before{
+  content:"✓";
+  position:absolute;
+  left:0;
+  color:var(--green);
+  font-weight:900;
+}
+.spec-table,
+.variant-table{width:100%;border-collapse:collapse}
+.spec-table tr:nth-child(odd),
+.variant-table tbody tr:nth-child(even){background:#f2f6f3}
+.spec-table th,
+.spec-table td,
+.variant-table th,
+.variant-table td{
+  padding:13px 16px;
+  border-bottom:1px solid var(--line);
+}
+.spec-table th{width:35%;text-align:left}
+.variant-table-wrap{
+  width:100%;
+  overflow-x:auto;
+  border:1px solid var(--line);
+  border-radius:12px;
+  background:#fff;
+}
+.variant-table{min-width:760px}
+.variant-table th,
+.variant-table td{
+  border-right:1px solid var(--line);
+  text-align:center;
+  white-space:nowrap;
+}
+.variant-table th:last-child,
+.variant-table td:last-child{border-right:0}
+.variant-table thead th{background:var(--sage);font-weight:800}
+.variant-model{font-weight:800;text-align:left!important}
+.variant-note{margin-top:10px;color:#7a8a91;font-size:13px}
+
+body.modal-open{overflow:hidden}
+
+@media(max-width:1200px){
+  .product-grid{grid-template-columns:repeat(4,1fr)}
+}
+
+@media(max-width:1000px){
+  .product-grid{grid-template-columns:repeat(3,1fr)}
+}
+
+@media(max-width:900px){
+  .modal-top{grid-template-columns:1fr}
+}
+
+@media(max-width:750px){
+  .product-grid{grid-template-columns:repeat(2,1fr)}
+  header{flex-direction:row;gap:10px}
+  .logo span{font-size:17px}
+  nav{flex-wrap:nowrap}
+  .page-hero{padding:70px 6% 68px}
+  .page-hero::after{right:-100px;opacity:.6}
+  .products-heading{display:block}
+  .products-heading p{margin-top:6px}
+}
+
+@media(max-width:600px){
+  .logo img{height:46px;max-width:68px}
+  .home-button{padding:8px 12px;font-size:13px}
+  .category-section,
+  .products-section{padding-left:5%;padding-right:5%}
+  .product-grid{grid-template-columns:1fr}
+  .product-image{height:260px}
+  .product-content h3,
+  .product-intro,
+  .product-features,
+  .subsidy-slot{height:auto;min-height:0}
+  .product-features.empty-features,
+  .subsidy-empty{display:none}
+  .product-actions{margin-top:18px}
+  .modal-inner{padding:26px 18px 32px}
+  .main-photo{height:330px}
+  .feature-list{grid-template-columns:1fr}
+}
+
+/* ==================================================
+   商品卡精簡高度：桌機一個畫面盡量看完整張卡
+   商品特色超過固定高度時可在卡片內捲動
+================================================== */
+@media (min-width: 751px) {
+  .product-card{
+    max-height:610px;
+  }
+
+  .product-image{
+    height:190px;
+    padding:12px;
+  }
+
+  .product-content{
+    padding:13px 14px 14px;
+  }
+
+  .product-type{
+    margin-bottom:5px;
+    padding:4px 10px;
+    font-size:11px;
+  }
+
+  .product-content h3{
+    min-height:46px;
+    margin-bottom:6px;
+    font-size:17px;
+    line-height:1.4;
+  }
+
+  .product-intro{
+    height:48px;
+    min-height:48px;
+    font-size:13px;
+    line-height:1.55;
+    -webkit-line-clamp:2;
+  }
+
+  .product-features{
+    height:82px;
+    min-height:82px;
+    margin:10px 0;
+    padding-top:8px;
+    overflow-y:auto;
+    overflow-x:hidden;
+    scrollbar-width:thin;
+    overscroll-behavior:contain;
+  }
+
+  .product-features li{
+    margin:4px 0;
+    padding-left:20px;
+    font-size:13px;
+    line-height:1.45;
+  }
+
+  .product-features::-webkit-scrollbar{
+    width:5px;
+  }
+
+  .product-features::-webkit-scrollbar-thumb{
+    background:#c8d8d0;
+    border-radius:999px;
+  }
+
+  .subsidy-slot{
+    height:48px;
+    min-height:48px;
+  }
+
+  .subsidy{
+    padding:7px 9px;
+    font-size:11px;
+    line-height:1.4;
+    max-height:44px;
+    overflow:hidden;
+  }
+
+  .detail-button,
+  .ask-button{
+    padding:8px;
+    font-size:13px;
+  }
+
+  .ask-button{
+    margin-top:7px;
+  }
+}
+
+
+.weikang-code-box{
+  margin-top:12px;
+  padding:10px 12px;
+  border:1px solid #dfe7e1;
+  border-radius:10px;
+  background:#fff;
+}
+.weikang-code-label{
+  font-size:12px;
+  font-weight:800;
+  color:#6c7771;
+  margin-bottom:5px;
+}
+.weikang-barcode{
+  display:block;
+  width:100%;
+  max-width:220px;
+  height:52px;
+}
+.modal-weikang-code{
+  margin-top:18px;
+  padding:14px 16px;
+  border:1px solid #d9e3f4;
+  border-radius:12px;
+  background:#f7faff;
+}
+.modal-weikang-code svg{
+  display:block;
+  width:100%;
+  max-width:300px;
+  height:72px;
+  margin-top:6px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- =========================
+     HEADER
+========================= -->
+
+<header>
+
+    <a href="index.html" class="logo">
+
+        <img
+            src="fulide-logo.png"
+            alt="富立德有限公司 Logo">
+
+        <span>
+            富立德有限公司
+        </span>
+
+    </a>
+
+    <nav>
+        <a href="index.html" class="home-button">
+            回到首頁
+        </a>
+    </nav>
+
+</header>
+
+<!-- =========================
+     HERO
+========================= -->
+
+<section class="page-hero">
+
+    <span>
+        WEIKANG PRODUCTS
+    </span>
+
+    <h1>
+        維康專區
+    </h1>
+
+    <p>
+        提供各式醫療器材、輪椅、行動輔具、
+        醫療用品及相關輔具產品。
+    </p>
+
+</section>
+
+<!-- =========================
+     CATEGORY
+========================= -->
+
+<section class="category-section">
+
+    <div class="category-buttons">
+        <button class="category-button active" data-category="all">全部產品</button>
+        <button class="category-button" data-category="aluminum-wheelchair">鋁製輪椅</button>
+        <button class="category-button" data-category="steel-wheelchair">鐵製輪椅</button>
+        <button class="category-button" data-category="rollator">助步車</button>
+        <button class="category-button" data-category="commode-chair">便椅</button>
+        <button class="category-button" data-category="shower-chair">洗澡椅</button>
+        <button class="category-button" data-category="walker">助行器</button>
+        <button class="category-button" data-category="cane-crutch">手／拐杖</button>
+        <button class="category-button" data-category="quad-cane">四腳拐</button>
+        <button class="category-button" data-category="accessories">輔助用品</button>
+        <button class="category-button" data-category="parts-accessories">配件</button>
+    </div>
+
+</section>
+
+<!-- =========================
+     WEIKANG PRODUCTS
+========================= -->
+
+<section class="products-section">
+
+    <div class="products-container">
+
+        <div class="products-heading">
+
+            <h2 id="category-title">
+                全部產品
+            </h2>
+
+            <p id="category-description">
+                富立德有限公司產品一覽
+            </p>
+
+        </div>
+
+        <div class="product-grid" id="productGrid">
+
+            <div class="loading-box">
+                商品載入中...
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     PRODUCT DETAIL MODAL
+========================= -->
+
+<div id="productModal" class="modal">
+
+    <div class="modal-dialog">
+
+        <button
+            id="modalClose"
+            class="modal-close">
+            ×
+        </button>
+
+        <div
+            id="modalContent"
+            class="modal-inner">
+        </div>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     CONTACT
+========================= -->
+
+<section class="help-section">
+
+    <h2>
+        不確定適合哪一款產品？
+    </h2>
+
+    <p>
+        歡迎聯絡富立德，
+        依照您的使用需求洽詢適合的產品。
+    </p>
+
+    <div class="help-buttons">
+
+        <a href="tel:034392068">
+            電話 03-439-2068
+        </a>
+
+        <a href="index.html#contact">
+            門市與聯絡資訊
+        </a>
+
+    </div>
+
+</section>
+
+<footer>
+
+    © 2026 富立德有限公司
+    ｜ 桃園市平鎮區北富里大勇街2巷7弄10號1樓
+    ｜ 03-439-2068
+
+    <a
+        href="admin.html"
+        class="admin-login-link"
+        title="管理登入">
+        管理登入
+    </a>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.6/dist/JsBarcode.all.min.js"></script>
+
+<script>
+
+const SUPABASE_URL =
+    "https://goiyznauetntttimdlzx.supabase.co";
+
+const SUPABASE_KEY =
+    "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
+
+const db =
+    supabase.createClient(
+        SUPABASE_URL,
+        SUPABASE_KEY
+    );
+
+const productGrid =
+    document.getElementById("productGrid");
+
+const title =
+    document.getElementById("category-title");
+
+const description =
+    document.getElementById("category-description");
+
+const modal =
+    document.getElementById("productModal");
+
+const modalContent =
+    document.getElementById("modalContent");
+
+let allProducts = [];
+
+const categoryText = {
+
+    all: [
+        "全部產品",
+        "富立德有限公司產品一覽"
+    ],
+
+    "aluminum-wheelchair": [
+        "鋁製輪椅",
+        "輕量化鋁合金輪椅系列"
+    ],
+
+    "steel-wheelchair": [
+        "鐵製輪椅",
+        "耐用穩固鐵製輪椅系列"
+    ],
+
+    rollator: [
+        "助步車",
+        "行走輔助與移動支撐用品"
+    ],
+
+    "commode-chair": [
+        "便椅",
+        "如廁輔助相關用品"
+    ],
+
+    "shower-chair": [
+        "洗澡椅",
+        "沐浴使用安全輔助用品"
+    ],
+
+    walker: [
+        "助行器",
+        "提升行走穩定與安全"
+    ],
+
+    "cane-crutch": [
+        "手／拐杖",
+        "各式手杖與拐杖用品"
+    ],
+
+    "quad-cane": [
+        "四腳拐",
+        "四點支撐型行走輔具"
+    ],
+
+    accessories: [
+        "輔助用品",
+        "各式醫療與生活輔助用品"
+    ],
+
+    "parts-accessories": [
+        "配件",
+        "各式輔具替換與加購配件"
+    ]
+
+};
+
+function categoryName(category) {
+
+    return categoryText[category]
+        ? categoryText[category][0]
+        : category;
+}
+
+async function loadProducts() {
+
+    productGrid.innerHTML = `
+        <div class="loading-box">
+            商品載入中...
+        </div>
+    `;
+
+    const {
+        data,
+        error
+    } =
+        await db
+        .from("products")
+        .select("*")
+        .eq("is_active", true)
+        .eq("is_weikang", true)
+        .order(
+            "sort_order",
+            {
+                ascending: true
+            }
+        )
+        .order(
+            "created_at",
+            {
+                ascending: false
+            }
+        );
+
+    if (error) {
+
+        productGrid.innerHTML = `
+            <div class="empty-box">
+                商品讀取失敗：${escapeHTML(error.message)}
+            </div>
+        `;
+
+        console.error(error);
+
+        return;
+    }
+
+    allProducts =
+        data || [];
+
+    const params =
+        new URLSearchParams(
+            window.location.search
+        );
+
+    const requested =
+        params.get("category");
+
+    if (
+        requested &&
+        categoryText[requested]
+    ) {
+        filterProducts(requested);
+    } else {
+        filterProducts("all");
+    }
+}
+
+function filterProducts(category) {
+
+    document
+    .querySelectorAll(".category-button")
+    .forEach(
+        button => {
+
+            button.classList.toggle(
+                "active",
+                button.dataset.category === category
+            );
+        }
+    );
+
+    if (categoryText[category]) {
+
+        title.textContent =
+            categoryText[category][0];
+
+        description.textContent =
+            categoryText[category][1];
+    }
+
+    const filtered =
+        category === "all"
+        ?
+        allProducts
+        :
+        allProducts.filter(
+            product =>
+                product.category === category
+        );
+
+    renderProducts(filtered);
+}
+
+function renderProducts(products) {
+
+    productGrid.innerHTML = "";
+
+    if (!products.length) {
+
+        productGrid.innerHTML = `
+            <div class="empty-box">
+                此分類目前尚未新增商品
+            </div>
+        `;
+
+        return;
+    }
+
+    products.forEach(
+        product => {
+
+            const card =
+                document.createElement("article");
+
+            card.className =
+                "product-card";
+
+            const image =
+                product.image_urls &&
+                product.image_urls.length
+                ?
+                product.image_urls[0]
+                :
+                "";
+
+            const features =
+                Array.isArray(product.features)
+                ?
+                product.features.slice(0, 5)
+                :
+                [];
+
+            card.innerHTML = `
+
+                <div class="product-image">
+
+                    ${
+                        product.featured
+                        ?
+                        `
+                        <span class="featured-badge">
+                            熱賣商品
+                        </span>
+                        `
+                        :
+                        ""
+                    }
+
+                    ${
+                        image
+                        ?
+                        `
+                        <img
+                            src="${escapeAttribute(image)}"
+                            alt="${escapeAttribute(product.name)}">
+                        `
+                        :
+                        `
+                        <div style="
+                            color:#999;
+                            text-align:center;
+                        ">
+                            尚無商品圖片
+                        </div>
+                        `
+                    }
+
+                </div>
+
+                <div class="product-content">
+
+                    <span class="product-type">
+                        ${escapeHTML(categoryName(product.category))}
+                    </span>
+
+                    <h3>
+                        ${escapeHTML(product.name)}
+                    </h3>
+
+                    <p class="product-intro">
+                        ${
+                            escapeHTML(
+                                product.short_description
+                                ||
+                                product.description
+                                ||
+                                "商品詳細資訊請點擊查看。"
+                            )
+                        }
+                    </p>
+
+                    <ul class="product-features ${features.length ? "" : "empty-features"}">
+                        ${
+                            features.length
+                            ?
+                            features
+                                .map(
+                                    feature =>
+                                        `<li>${escapeHTML(feature)}</li>`
+                                )
+                                .join("")
+                            :
+                            `<li>預留商品特色</li>`
+                        }
+                    </ul>
+
+                    <div class="subsidy-slot">
+                        ${
+                            product.subsidy
+                            ?
+                            `
+                            <div class="subsidy">
+                                符合補助項目：
+                                ${escapeHTML(product.subsidy)}
+                            </div>
+                            `
+                            :
+                            `<div class="subsidy subsidy-empty">預留補助資訊</div>`
+                        }
+                    </div>
+
+
+                    ${
+                        product.weikang_code
+                        ?
+                        `
+                        <div class="weikang-code-box">
+                            <div class="weikang-code-label">維康碼</div>
+                            <svg class="weikang-barcode"
+                                 data-barcode="${escapeAttribute(product.weikang_code)}"></svg>
+                        </div>
+                        `
+                        :
+                        ""
+                    }
+
+                    <div class="product-actions">
+                        <button
+                            class="detail-button"
+                            data-product-id="${product.id}">
+                            查看詳細資料
+                        </button>
+
+                        <a
+                            href="index.html#contact"
+                            class="ask-button">
+                            洽詢此產品
+                        </a>
+                    </div>
+
+                </div>
+
+            `;
+
+            productGrid.appendChild(card);
+        }
+    );
+
+    document.querySelectorAll(".weikang-barcode").forEach(svg => {
+        const code = svg.dataset.barcode;
+        if(code && window.JsBarcode){
+            try{
+                JsBarcode(svg, code, {
+                    format:"CODE128",
+                    displayValue:true,
+                    fontSize:13,
+                    height:38,
+                    margin:0
+                });
+            }catch(err){
+                console.warn("維康碼無法產生條碼", code, err);
+            }
+        }
+    });
+
+    document
+    .querySelectorAll(".detail-button")
+    .forEach(
+        button => {
+
+            button.addEventListener(
+                "click",
+                function () {
+
+                    openProduct(
+                        button.dataset.productId
+                    );
+                }
+            );
+        }
+    );
+}
+
+function buildVariantTable(variants) {
+
+    if (
+        !Array.isArray(variants)
+        ||
+        !variants.length
+    ) {
+        return "";
+    }
+
+    /*
+      相容兩種 variants 格式：
+
+      1. 目前後台格式
+         [
+           { name:"A款", value:"座寬 45 cm" },
+           { name:"B款", value:"座寬 48 cm" }
+         ]
+
+      2. 舊版巢狀規格格式
+         [
+           {
+             model:"A款",
+             specs:[
+               {name:"座寬",value:"45 cm"},
+               {name:"座深",value:"40 cm"}
+             ]
+           }
+         ]
+    */
+
+    const isNestedVariant =
+        variants.some(
+            variant =>
+                Array.isArray(variant?.specs)
+                ||
+                "model" in (variant || {})
+        );
+
+    if (!isNestedVariant) {
+
+        const rows =
+            variants
+            .map(
+                variant => {
+
+                    const name =
+                        variant?.name
+                        ??
+                        variant?.model
+                        ??
+                        "";
+
+                    const value =
+                        variant?.value
+                        ??
+                        variant?.text
+                        ??
+                        variant?.size
+                        ??
+                        "";
+
+                    if (!name && !value) {
+                        return "";
+                    }
+
+                    return `
+                        <tr>
+                            <td class="variant-model">
+                                ${escapeHTML(name || "未命名型號")}
+                            </td>
+                            <td>
+                                ${escapeHTML(value || "—")}
+                            </td>
+                        </tr>
+                    `;
+                }
+            )
+            .join("");
+
+        if (!rows) {
+            return "";
+        }
+
+        return `
+            <div class="variant-table-wrap">
+                <table class="variant-table">
+                    <thead>
+                        <tr>
+                            <th>型號</th>
+                            <th>尺寸 / 備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="variant-note">
+                不同型號／尺寸可能有不同規格，實際供應狀況歡迎洽詢。
+            </div>
+        `;
+    }
+
+    const specNames = [];
+
+    variants.forEach(
+        variant => {
+
+            const specs =
+                Array.isArray(variant.specs)
+                ?
+                variant.specs
+                :
+                [];
+
+            specs.forEach(
+                spec => {
+
+                    if (
+                        spec.name
+                        &&
+                        !specNames.includes(spec.name)
+                    ) {
+                        specNames.push(spec.name);
+                    }
+                }
+            );
+        }
+    );
+
+    if (!specNames.length) {
+
+        const rows =
+            variants
+            .map(
+                variant => `
+                    <tr>
+                        <td class="variant-model">
+                            ${escapeHTML(
+                                variant?.model
+                                ||
+                                variant?.name
+                                ||
+                                "未命名型號"
+                            )}
+                        </td>
+                        <td>
+                            ${escapeHTML(
+                                variant?.value
+                                ||
+                                variant?.text
+                                ||
+                                variant?.size
+                                ||
+                                "—"
+                            )}
+                        </td>
+                    </tr>
+                `
+            )
+            .join("");
+
+        return `
+            <div class="variant-table-wrap">
+                <table class="variant-table">
+                    <thead>
+                        <tr>
+                            <th>型號</th>
+                            <th>尺寸 / 備註</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${rows}
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="variant-note">
+                不同型號／尺寸可能有不同規格，實際供應狀況歡迎洽詢。
+            </div>
+        `;
+    }
+
+    const header = `
+        <tr>
+            <th>型號</th>
+
+            ${
+                specNames
+                .map(
+                    name => `
+                        <th>
+                            ${escapeHTML(name)}
+                        </th>
+                    `
+                )
+                .join("")
+            }
+        </tr>
+    `;
+
+    const rows =
+        variants
+        .map(
+            variant => {
+
+                const map = {};
+
+                (variant.specs || [])
+                .forEach(
+                    spec => {
+
+                        if (spec.name) {
+                            map[spec.name] =
+                                spec.value || "";
+                        }
+                    }
+                );
+
+                return `
+                    <tr>
+                        <td class="variant-model">
+                            ${escapeHTML(
+                                variant.model
+                                ||
+                                variant.name
+                                ||
+                                "未命名型號"
+                            )}
+                        </td>
+
+                        ${
+                            specNames
+                            .map(
+                                name => `
+                                    <td>
+                                        ${
+                                            map[name]
+                                            ?
+                                            escapeHTML(map[name])
+                                            :
+                                            "—"
+                                        }
+                                    </td>
+                                `
+                            )
+                            .join("")
+                        }
+                    </tr>
+                `;
+            }
+        )
+        .join("");
+
+    return `
+        <div class="variant-table-wrap">
+            <table class="variant-table">
+                <thead>
+                    ${header}
+                </thead>
+
+                <tbody>
+                    ${rows}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="variant-note">
+            不同型號／尺寸可能有不同規格，實際供應狀況歡迎洽詢。
+        </div>
+    `;
+}
+
+
+function openProduct(id) {
+
+    const product =
+        allProducts.find(
+            item =>
+                item.id === id
+        );
+
+    if (!product) {
+        return;
+    }
+
+    const images =
+        Array.isArray(product.image_urls)
+        ?
+        product.image_urls
+        :
+        [];
+
+    const features =
+        Array.isArray(product.features)
+        ?
+        product.features
+        :
+        [];
+
+    const specs =
+        Array.isArray(product.specs)
+        ?
+        product.specs
+        :
+        [];
+
+    const variants =
+        Array.isArray(product.variants)
+        ?
+        product.variants
+        :
+        [];
+
+    const firstImage =
+        images.length
+        ?
+        images[0]
+        :
+        "";
+
+    modalContent.innerHTML = `
+
+        <div class="modal-top">
+
+            <div>
+
+                <div class="main-photo">
+
+                    ${
+                        firstImage
+                        ?
+                        `
+                        <img
+                            id="mainPhotoImage"
+                            src="${escapeAttribute(firstImage)}"
+                            alt="${escapeAttribute(product.name)}">
+                        `
+                        :
+                        `
+                        <div style="color:#999;">
+                            尚無商品圖片
+                        </div>
+                        `
+                    }
+
+                </div>
+
+                ${
+                    images.length > 1
+                    ?
+                    `
+                    <div class="thumbnail-list">
+
+                        ${
+                            images
+                            .map(
+                                (image,index) => `
+                                <button
+                                    class="thumbnail ${index === 0 ? "active" : ""}"
+                                    data-image="${escapeAttribute(image)}">
+
+                                    <img
+                                        src="${escapeAttribute(image)}"
+                                        alt="">
+
+                                </button>
+                                `
+                            )
+                            .join("")
+                        }
+
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+            </div>
+
+            <div class="modal-info">
+
+                <span class="modal-category">
+                    ${escapeHTML(categoryName(product.category))}
+                </span>
+
+                <h2>
+                    ${escapeHTML(product.name)}
+                </h2>
+
+                <div class="modal-description">
+                    ${
+                        escapeHTML(
+                            product.description
+                            ||
+                            product.short_description
+                            ||
+                            ""
+                        )
+                    }
+                </div>
+
+                ${
+                    product.subsidy
+                    ?
+                    `
+                    <div class="modal-subsidy">
+                        符合補助項目：
+                        ${escapeHTML(product.subsidy)}
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+                ${
+                    product.weikang_code
+                    ?
+                    `
+                    <div class="modal-weikang-code">
+                        <strong>維康碼</strong>
+                        <svg id="modalWeikangBarcode"></svg>
+                    </div>
+                    `
+                    :
+                    ""
+                }
+
+                <a
+                    href="index.html#contact"
+                    class="ask-button"
+                    style="
+                        display:inline-block;
+                        width:auto;
+                        margin-top:20px;
+                        padding-left:22px;
+                        padding-right:22px;
+                    ">
+                    洽詢此產品
+                </a>
+
+            </div>
+
+        </div>
+
+        ${
+            features.length
+            ?
+            `
+            <section class="detail-section">
+
+                <h3>
+                    商品特色
+                </h3>
+
+                <ul class="feature-list">
+
+                    ${
+                        features
+                        .map(
+                            feature =>
+                                `<li>${escapeHTML(feature)}</li>`
+                        )
+                        .join("")
+                    }
+
+                </ul>
+
+            </section>
+            `
+            :
+            ""
+        }
+
+        ${
+            variants.length
+            ?
+            `
+            <section class="detail-section">
+
+                <h3>
+                    型號／尺寸規格
+                </h3>
+
+                ${buildVariantTable(variants)}
+
+            </section>
+            `
+            :
+            ""
+        }
+
+        ${
+            specs.length
+            ?
+            `
+            <section class="detail-section">
+
+                <h3>
+                    ${variants.length ? "共通規格" : "產品規格"}
+                </h3>
+
+                <table class="spec-table">
+
+                    <tbody>
+
+                        ${
+                            specs
+                            .map(
+                                spec => `
+                                <tr>
+                                    <th>
+                                        ${escapeHTML(spec.name)}
+                                    </th>
+                                    <td>
+                                        ${escapeHTML(spec.value)}
+                                    </td>
+                                </tr>
+                                `
+                            )
+                            .join("")
+                        }
+
+                    </tbody>
+
+                </table>
+
+            </section>
+            `
+            :
+            ""
+        }
+
+    `;
+
+    modal.classList.add("show");
+    document.body.classList.add("modal-open");
+
+    if(product.weikang_code && window.JsBarcode){
+        const modalBarcode = document.getElementById("modalWeikangBarcode");
+        if(modalBarcode){
+            try{
+                JsBarcode(modalBarcode, product.weikang_code, {
+                    format:"CODE128",
+                    displayValue:true,
+                    fontSize:15,
+                    height:52,
+                    margin:0
+                });
+            }catch(err){
+                console.warn("維康碼無法產生條碼", product.weikang_code, err);
+            }
+        }
+    }
+
+    document
+    .querySelectorAll(".thumbnail")
+    .forEach(
+        thumbnail => {
+
+            thumbnail.addEventListener(
+                "click",
+                function () {
+
+                    document
+                    .querySelectorAll(".thumbnail")
+                    .forEach(
+                        item =>
+                            item.classList.remove("active")
+                    );
+
+                    thumbnail.classList.add("active");
+
+                    const mainImage =
+                        document.getElementById("mainPhotoImage");
+
+                    if (mainImage) {
+                        mainImage.src =
+                            thumbnail.dataset.image;
+                    }
+                }
+            );
+        }
+    );
+}
+
+function closeModal() {
+
+    modal.classList.remove("show");
+    document.body.classList.remove("modal-open");
+}
+
+document
+.getElementById("modalClose")
+.addEventListener(
+    "click",
+    closeModal
+);
+
+modal.addEventListener(
+    "click",
+    function (event) {
+
+        if (event.target === modal) {
+            closeModal();
+        }
+    }
+);
+
+document.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (event.key === "Escape") {
+            closeModal();
+        }
+    }
+);
+
+document
+.querySelectorAll(".category-button")
+.forEach(
+    button => {
+
+        button.addEventListener(
+            "click",
+            function () {
+
+                const category =
+                    button.dataset.category;
+
+                filterProducts(category);
+
+                const newUrl =
+                    category === "all"
+                    ?
+                    "products.html"
+                    :
+                    "products.html?category="
+                    +
+                    encodeURIComponent(category);
+
+                history.replaceState(
+                    null,
+                    "",
+                    newUrl
+                );
+            }
+        );
+    }
+);
+
+function escapeHTML(value) {
+
+    const div =
+        document.createElement("div");
+
+    div.textContent =
+        value || "";
+
+    return div.innerHTML;
+}
+
+function escapeAttribute(value) {
+
+    return String(value || "")
+        .replace(/&/g, "&amp;")
+        .replace(/"/g, "&quot;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+loadProducts();
+
+</script>
+
+</body>
+</html>
