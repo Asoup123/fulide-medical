@@ -107,7 +107,7 @@ button{cursor:pointer;border:0}
 .image-upload{border:2px dashed #c7d7cd;border-radius:16px;background:#f8fbf9;padding:22px;text-align:center}
 .image-upload input{margin-top:10px}
 .image-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:15px}
-.preview-item{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:white;aspect-ratio:1/1}
+.preview-item{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:white;aspect-ratio:1/1;cursor:grab;user-select:none}.preview-item:active{cursor:grabbing}.preview-item.sortable-ghost{opacity:.35}.preview-item.sortable-chosen{box-shadow:0 0 0 2px rgba(15,118,85,.25)}
 .preview-item img{width:100%;height:100%;object-fit:contain}
 .preview-remove{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(201,75,75,.92);color:white;font-weight:900}
 .dynamic-list{display:grid;gap:10px}
@@ -366,8 +366,30 @@ const STORAGE_BUCKET = "product-images";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
 let products = [];
-let editingImages = [];
-let newImageFiles = [];
+let imageItems = [];
+let imagePreviewSortable = null;
+let imageItemSeq = 0;
+
+function makeImageItem(type, value){
+  const item = { id:`img-${++imageItemSeq}`, type };
+  if(type === "existing"){
+    item.url = value;
+    item.previewUrl = value;
+  }else{
+    item.file = value;
+    item.previewUrl = URL.createObjectURL(value);
+  }
+  return item;
+}
+
+function clearImageItems(){
+  imageItems.forEach(item => {
+    if(item.type === "new" && item.previewUrl){
+      URL.revokeObjectURL(item.previewUrl);
+    }
+  });
+  imageItems = [];
+}
 
 const CATEGORY_ORDER = [
   "aluminum-wheelchair",
@@ -879,8 +901,7 @@ function openModal(product=null){
   updateWeikangField();
   clearDynamicLists();
 
-  editingImages = [];
-  newImageFiles = [];
+  clearImageItems();
   $("imageFiles").value = "";
 
   if(product){
@@ -900,10 +921,9 @@ function openModal(product=null){
     $("weikangCode").value = product.weikang_code || "";
     updateWeikangField();
 
-    editingImages =
-      Array.isArray(product.image_urls)
-        ? [...product.image_urls]
-        : [];
+    imageItems =
+      (Array.isArray(product.image_urls) ? product.image_urls : [])
+        .map(url => makeImageItem("existing", url));
 
     (Array.isArray(product.features) ? product.features : [])
       .forEach(item => {
@@ -945,6 +965,10 @@ function openModal(product=null){
 
 function closeModal(){
   $("productModal").classList.add("hidden");
+  if(imagePreviewSortable){
+    imagePreviewSortable.destroy();
+    imagePreviewSortable = null;
+  }
 }
 
 $("newProductBtn").addEventListener("click", () => openModal());
@@ -963,70 +987,107 @@ window.editProduct = id => {
 };
 
 $("imageFiles").addEventListener("change", e => {
-  newImageFiles.push(...Array.from(e.target.files || []));
+  Array.from(e.target.files || [])
+    .forEach(file => imageItems.push(makeImageItem("new", file)));
   renderImagePreview();
   e.target.value = "";
 });
 
-function addPreviewItem(host, src, alt, onRemove){
-  const item = document.createElement("div");
-  item.className = "preview-item";
-  item.innerHTML = `<img src="${escAttr(src)}" alt="${alt}">
-    <button type="button" class="preview-remove">×</button>`;
-  item.querySelector("button").addEventListener("click", onRemove);
-  host.appendChild(item);
+function addPreviewItem(host, item){
+  const el = document.createElement("div");
+  el.className = "preview-item";
+  el.dataset.imageId = item.id;
+  el.innerHTML = `<img src="${escAttr(item.previewUrl)}" alt="商品圖片">
+    <button type="button" class="preview-remove" title="移除圖片">×</button>`;
+
+  const removeBtn = el.querySelector("button");
+  removeBtn.addEventListener("pointerdown", e => e.stopPropagation());
+  removeBtn.addEventListener("click", e => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const index = imageItems.findIndex(x => x.id === item.id);
+    if(index < 0) return;
+
+    const [removed] = imageItems.splice(index,1);
+    if(removed.type === "new" && removed.previewUrl){
+      URL.revokeObjectURL(removed.previewUrl);
+    }
+    renderImagePreview();
+  });
+
+  host.appendChild(el);
+}
+
+function initImagePreviewSorting(){
+  const host = $("imagePreview");
+  if(!host || typeof Sortable === "undefined") return;
+
+  if(imagePreviewSortable){
+    imagePreviewSortable.destroy();
+    imagePreviewSortable = null;
+  }
+
+  imagePreviewSortable = Sortable.create(host,{
+    animation:160,
+    draggable:".preview-item",
+    filter:".preview-remove",
+    preventOnFilter:false,
+    ghostClass:"sortable-ghost",
+    chosenClass:"sortable-chosen",
+    onEnd(){
+      const byId = new Map(imageItems.map(item => [item.id,item]));
+      imageItems = [...host.querySelectorAll(".preview-item")]
+        .map(el => byId.get(el.dataset.imageId))
+        .filter(Boolean);
+    }
+  });
 }
 
 function renderImagePreview(){
   const host = $("imagePreview");
   host.innerHTML = "";
-
-  editingImages.forEach((url,index) =>
-    addPreviewItem(host, url, "商品圖片", () => {
-      editingImages.splice(index,1);
-      renderImagePreview();
-    })
-  );
-
-  newImageFiles.forEach((file,index) => {
-    const objectUrl = URL.createObjectURL(file);
-    addPreviewItem(host, objectUrl, "待上傳圖片", () => {
-      URL.revokeObjectURL(objectUrl);
-      newImageFiles.splice(index,1);
-      renderImagePreview();
-    });
-  });
+  imageItems.forEach(item => addPreviewItem(host,item));
+  initImagePreviewSorting();
 }
 
-async function uploadNewImages(){
+async function uploadImageFile(file){
+  const ext =
+    (file.name.split(".").pop() || "jpg")
+      .toLowerCase()
+      .replace(/[^a-z0-9]/g,"");
+
+  const path =
+    `${Date.now()}-${Math.random().toString(36).slice(2,10)}.${ext}`;
+
+  const { error } = await db.storage
+    .from(STORAGE_BUCKET)
+    .upload(path,file,{
+      cacheControl:"3600",
+      upsert:false,
+      contentType:file.type || undefined
+    });
+
+  if(error){
+    throw new Error("圖片上傳失敗：" + error.message);
+  }
+
+  const { data } = db.storage
+    .from(STORAGE_BUCKET)
+    .getPublicUrl(path);
+
+  return data.publicUrl;
+}
+
+async function resolveImageUrls(){
   const urls = [];
 
-  for(const file of newImageFiles){
-    const ext =
-      (file.name.split(".").pop() || "jpg")
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g,"");
-
-    const path =
-      `${Date.now()}-${Math.random().toString(36).slice(2,10)}.${ext}`;
-
-    const { error } = await db.storage
-      .from(STORAGE_BUCKET)
-      .upload(path, file, {
-        cacheControl:"3600",
-        upsert:false,
-        contentType:file.type || undefined
-      });
-
-    if(error){
-      throw new Error("圖片上傳失敗：" + error.message);
+  for(const item of imageItems){
+    if(item.type === "existing"){
+      urls.push(item.url);
+    }else{
+      urls.push(await uploadImageFile(item.file));
     }
-
-    const { data } = db.storage
-      .from(STORAGE_BUCKET)
-      .getPublicUrl(path);
-
-    urls.push(data.publicUrl);
   }
 
   return urls;
@@ -1053,8 +1114,7 @@ $("productForm").addEventListener("submit", async e => {
       throw new Error("已勾選上架維康專區，請輸入維康碼");
     }
 
-    const uploadedUrls = await uploadNewImages();
-    const allImages = [...editingImages, ...uploadedUrls];
+    const allImages = await resolveImageUrls();
 
     const payload = {
       name,
