@@ -435,6 +435,15 @@
       gap:8px;
       flex-wrap:wrap;
       justify-content:flex-end;
+      position:relative;
+      z-index:5;
+      pointer-events:auto;
+    }
+
+    .row-actions button{
+      position:relative;
+      z-index:6;
+      pointer-events:auto;
     }
 
     .small-btn{
@@ -1261,23 +1270,30 @@ function renderProducts(){
         </div>
 
         <div class="row-actions">
-          <button class="small-btn" onclick="editProduct('${p.id}')">編輯</button>
+          <button class="small-btn" type="button" data-action="edit" data-id="${p.id}">編輯</button>
 
           <button
             class="small-btn warn"
-            onclick="toggleStatus('${p.id}', ${p.is_active})">
+            type="button"
+            data-action="toggle"
+            data-id="${p.id}"
+            data-active="${p.is_active}">
             ${p.is_active ? "下架" : "重新上架"}
           </button>
 
           <button
             class="small-btn"
-            onclick="duplicateProduct('${p.id}')">
+            type="button"
+            data-action="duplicate"
+            data-id="${p.id}">
             複製
           </button>
 
           <button
             class="small-btn danger"
-            onclick="deleteProduct('${p.id}')">
+            type="button"
+            data-action="delete"
+            data-id="${p.id}">
             刪除
           </button>
         </div>
@@ -1291,6 +1307,49 @@ function renderProducts(){
 
 let productSortable = null;
 let isSavingSort = false;
+
+
+let productActionEventsBound = false;
+
+function bindProductActionEvents(){
+  if(productActionEventsBound) return;
+
+  const host = $("productList");
+  if(!host) return;
+
+  host.addEventListener("click", async event => {
+    const button = event.target.closest("button[data-action]");
+    if(!button || !host.contains(button)) return;
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    const id = button.dataset.id;
+    const action = button.dataset.action;
+
+    if(action === "edit"){
+      window.editProduct(id);
+      return;
+    }
+
+    if(action === "toggle"){
+      const current = button.dataset.active === "true";
+      await window.toggleStatus(id, current);
+      return;
+    }
+
+    if(action === "duplicate"){
+      await window.duplicateProduct(id);
+      return;
+    }
+
+    if(action === "delete"){
+      await window.deleteProduct(id);
+    }
+  });
+
+  productActionEventsBound = true;
+}
 
 function initProductSorting(){
   const host = $("productList");
@@ -1308,6 +1367,11 @@ function initProductSorting(){
     animation: 180,
     handle: ".drag-handle",
     draggable: ".product-row",
+
+    // 編輯 / 上下架 / 複製 / 刪除等操作區完全不參與拖曳
+    filter: ".row-actions, .row-actions button, input, select, textarea, a",
+    preventOnFilter: false,
+
     ghostClass: "sortable-ghost",
     chosenClass: "sortable-chosen",
     dragClass: "sortable-drag",
