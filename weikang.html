@@ -950,9 +950,47 @@ body.modal-open{overflow:hidden}
 
 <script>
 
+function sortProductsByCategoryAndOrder(list){
+  const categoryIndex = new Map(
+    CATEGORY_ORDER.map((category, index) => [category, index])
+  );
+
+  return [...(list || [])].sort((a,b) => {
+    const ac = categoryIndex.has(a.category)
+      ? categoryIndex.get(a.category)
+      : CATEGORY_ORDER.length;
+    const bc = categoryIndex.has(b.category)
+      ? categoryIndex.get(b.category)
+      : CATEGORY_ORDER.length;
+
+    if(ac !== bc) return ac - bc;
+
+    const ao = Number(a.sort_order ?? 0);
+    const bo = Number(b.sort_order ?? 0);
+    if(ao !== bo) return ao - bo;
+
+    return String(a.created_at || "").localeCompare(String(b.created_at || ""));
+  });
+}
+
+
+
 /* =========================
    SUPABASE
 ========================= */
+const CATEGORY_ORDER = [
+  "aluminum-wheelchair",
+  "steel-wheelchair",
+  "rollator",
+  "commode-chair",
+  "shower-chair",
+  "walker",
+  "cane-crutch",
+  "quad-cane",
+  "accessories",
+  "parts-accessories"
+];
+
 const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
