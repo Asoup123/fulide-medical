@@ -781,8 +781,8 @@ $("searchInput").addEventListener("input", renderProducts);
 $("statusFilter").addEventListener("change", renderProducts);
 $("categoryFilter").addEventListener("change", renderProducts);
 
-$("category").addEventListener("change", () => {
-  if(!editingId) $("sortOrder").value = nextSortOrder($("category").value);
+$("productCategory").addEventListener("change", () => {
+  if(!editingId) $("sortOrder").value = nextSortOrder($("productCategory").value);
 });
 
 const DYNAMIC_LISTS = {
