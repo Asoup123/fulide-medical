@@ -2,15 +2,21 @@
 <html lang="zh-TW">
 <!--
   富立德有限公司｜商品管理後台
-  固定分類排序＋分類內拖曳版：2026-09-02
+  程式整理版 v8｜2026-09-02
 
-  本次整理原則：
-  - 不改 Supabase 專案與資料表
-  - 不改管理員 UID 與登入權限
-  - 不改商品新增、編輯、上下架、複製、刪除
-  - 不改圖片上傳與 Storage
-  - 保留首頁推薦、維康專區、維康碼
-  - 保留商品特色、規格、型號與補助資訊
+  保留功能：
+  - Supabase 登入與管理員 UID 權限
+  - 商品新增、編輯、上下架、複製、刪除
+  - 商品圖片上傳與 Storage
+  - 首頁推薦、維康專區、維康碼
+  - 商品特色、規格、型號、補助資訊
+  - 固定分類順序
+  - 同分類內拖曳排序
+  - 長列表拖曳自動捲動
+
+  排序規則：
+  鋁製輪椅 → 鐵製輪椅 → 助步車 → 便椅 → 洗澡椅 → 助行器
+  → 手／拐杖 → 四腳拐 → 輔助用品 → 配件
 -->
 <head>
   <meta charset="UTF-8">
@@ -18,762 +24,125 @@
   <title>富立德有限公司｜商品管理後台</title>
 
   <style>
-    :root{
-      --green:#0f6b48;
-      --green-dark:#0a5238;
-      --green-soft:#e9f4ee;
-      --cream:#fbfaf6;
-      --text:#26342e;
-      --muted:#758079;
-      --line:#dfe7e1;
-      --danger:#c94b4b;
-      --warning:#a76a16;
-      --white:#fff;
-      --shadow:0 14px 35px rgba(27,72,54,.10);
-    }
-
-    *{box-sizing:border-box;margin:0;padding:0}
-
-    body{
-      font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;
-      background:#f5f7f4;
-      color:var(--text);
-      line-height:1.6;
-    }
-
-    button,input,textarea,select{
-      font:inherit;
-    }
-
-    button{
-      cursor:pointer;
-      border:0;
-    }
-
-    .hidden{display:none!important}
-
-    /* LOGIN */
-    .login-page{
-      min-height:100vh;
-      display:grid;
-      place-items:center;
-      padding:24px;
-      background:
-        radial-gradient(circle at top left,rgba(15,107,72,.10),transparent 32%),
-        #f7f8f4;
-    }
-
-    .login-card{
-      width:min(440px,100%);
-      background:white;
-      border-radius:26px;
-      padding:38px;
-      box-shadow:var(--shadow);
-      border:1px solid var(--line);
-    }
-
-    .login-brand{
-      text-align:center;
-      margin-bottom:28px;
-    }
-
-    .login-brand img{
-      width:100px;
-      height:78px;
-      object-fit:contain;
-      margin:0 auto 10px;
-    }
-
-    .login-brand h1{
-      font-size:25px;
-      color:var(--green-dark);
-    }
-
-    .login-brand p{
-      color:var(--muted);
-      font-size:14px;
-      margin-top:4px;
-    }
-
-    .field{
-      margin-bottom:18px;
-    }
-
-    .field label{
-      display:block;
-      margin-bottom:7px;
-      font-size:14px;
-      font-weight:800;
-    }
-
-    .field input,
-    .field textarea,
-    .field select{
-      width:100%;
-      border:1px solid #cfdad3;
-      border-radius:12px;
-      background:#fff;
-      padding:12px 14px;
-      outline:none;
-      transition:.2s;
-    }
-
-    .field input:focus,
-    .field textarea:focus,
-    .field select:focus{
-      border-color:var(--green);
-      box-shadow:0 0 0 3px rgba(15,107,72,.09);
-    }
-
-    .field textarea{
-      min-height:110px;
-      resize:vertical;
-    }
-
-    .login-btn,
-    .primary-btn{
-      width:100%;
-      padding:13px 18px;
-      border-radius:999px;
-      color:white;
-      background:var(--green);
-      font-weight:900;
-    }
-
-    .login-btn:hover,
-    .primary-btn:hover{
-      background:var(--green-dark);
-    }
-
-    .login-msg{
-      min-height:24px;
-      color:var(--danger);
-      font-size:13px;
-      margin-top:12px;
-      text-align:center;
-    }
-
-    /* ADMIN SHELL */
-    .admin-page{
-      min-height:100vh;
-    }
-
-    .topbar{
-      position:sticky;
-      top:0;
-      z-index:100;
-      min-height:72px;
-      background:white;
-      border-bottom:1px solid var(--line);
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      gap:20px;
-      padding:10px 4%;
-    }
-
-    .top-brand{
-      display:flex;
-      align-items:center;
-      gap:12px;
-    }
-
-    .top-brand img{
-      width:60px;
-      height:45px;
-      object-fit:contain;
-    }
-
-    .top-brand strong{
-      display:block;
-      color:var(--green-dark);
-      font-size:18px;
-    }
-
-    .top-brand span{
-      color:var(--muted);
-      font-size:12px;
-    }
-
-    .top-actions{
-      display:flex;
-      gap:10px;
-      align-items:center;
-    }
-
-    .outline-btn{
-      padding:9px 16px;
-      border-radius:999px;
-      border:1px solid var(--green);
-      color:var(--green);
-      background:white;
-      font-weight:800;
-    }
-
-    .outline-btn:hover{
-      background:var(--green-soft);
-    }
-
-    .danger-outline{
-      border-color:#e7bcbc;
-      color:var(--danger);
-    }
-
-    .container{
-      width:min(1380px,94%);
-      margin:30px auto 60px;
-    }
-
-    .heading-row{
-      display:flex;
-      justify-content:space-between;
-      gap:20px;
-      align-items:flex-end;
-      margin-bottom:22px;
-    }
-
-    .heading-row h2{
-      font-size:30px;
-      color:var(--green-dark);
-    }
-
-    .heading-row p{
-      color:var(--muted);
-      margin-top:4px;
-    }
-
-    .add-btn{
-      padding:11px 20px;
-      border-radius:999px;
-      background:var(--green);
-      color:white;
-      font-weight:900;
-      white-space:nowrap;
-    }
-
-    .stats{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:16px;
-      margin-bottom:22px;
-    }
-
-    .stat-card{
-      background:white;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:20px;
-    }
-
-    .stat-card span{
-      color:var(--muted);
-      font-size:13px;
-    }
-
-    .stat-card strong{
-      display:block;
-      margin-top:4px;
-      font-size:28px;
-      color:var(--green-dark);
-    }
-
-    .toolbar{
-      display:flex;
-      gap:12px;
-      flex-wrap:wrap;
-      align-items:center;
-      margin-bottom:18px;
-    }
-
-    .toolbar input,
-    .toolbar select{
-      border:1px solid var(--line);
-      background:white;
-      border-radius:12px;
-      padding:10px 12px;
-      outline:none;
-    }
-
-    .toolbar input{
-      flex:1;
-      min-width:230px;
-    }
-
-    .product-list{
-      display:grid;
-      gap:14px;
-    }
-
-    .product-row{
-      background:white;
-      border:1px solid var(--line);
-      border-radius:18px;
-      padding:16px;
-      display:grid;
-      grid-template-columns:38px 92px 1.4fr .85fr .75fr auto;
-      gap:14px;
-      align-items:center;
-    }
-
-    .drag-handle{
-      width:34px;
-      height:34px;
-      border-radius:10px;
-      display:grid;
-      place-items:center;
-      background:#f2f5f3;
-      color:#7a857f;
-      font-size:20px;
-      cursor:grab;
-      user-select:none;
-      touch-action:none;
-    }
-
-    .drag-handle:active{
-      cursor:grabbing;
-    }
-
-    .product-row.sortable-ghost{
-      opacity:.35;
-      background:#eef6f1;
-    }
-
-    .product-row.sortable-chosen{
-      box-shadow:0 16px 34px rgba(15,107,72,.16);
-      user-select:none;
-    }
-
-    .product-row.sortable-drag{
-      opacity:.95;
-      cursor:grabbing;
-    }
-
-    .sort-hint{
-      color:var(--muted);
-      font-size:13px;
-      font-weight:700;
-      padding:8px 4px;
-      white-space:nowrap;
-    }
-
-    .thumb{
-      width:92px;
-      height:92px;
-      border-radius:14px;
-      background:#f1f4f1;
-      overflow:hidden;
-      display:grid;
-      place-items:center;
-      color:#9aa39e;
-      font-size:12px;
-    }
-
-    .thumb img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-    }
-
-    .product-name{
-      font-size:18px;
-      font-weight:900;
-      margin-bottom:4px;
-    }
-
-    .product-desc{
-      color:var(--muted);
-      font-size:13px;
-      display:-webkit-box;
-      -webkit-line-clamp:2;
-      -webkit-box-orient:vertical;
-      overflow:hidden;
-    }
-
-    .pill{
-      display:inline-flex;
-      align-items:center;
-      gap:6px;
-      padding:6px 11px;
-      border-radius:999px;
-      font-size:12px;
-      font-weight:900;
-      width:max-content;
-    }
-
-    .pill.active{
-      background:#e5f5eb;
-      color:#167445;
-    }
-
-    .pill.inactive{
-      background:#f3efef;
-      color:#8b5a5a;
-    }
-
-    .pill.featured{
-      background:#fff4d9;
-      color:#8a6410;
-      margin-top:7px;
-    }
-
-    .pill.weikang{
-      background:#e9f0ff;
-      color:#315da8;
-      margin-top:7px;
-    }
-
-    .weikang-code-field{
-      margin-top:4px;
-      padding:14px 16px;
-      border:1px solid #d9e3f4;
-      border-radius:12px;
-      background:#f7faff;
-    }
-
-    .row-actions{
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap;
-      justify-content:flex-end;
-      position:relative;
-      z-index:5;
-      pointer-events:auto;
-    }
-
-    .row-actions button{
-      position:relative;
-      z-index:6;
-      pointer-events:auto;
-    }
-
-    .small-btn{
-      padding:8px 12px;
-      border-radius:10px;
-      font-size:13px;
-      font-weight:800;
-      background:#eef4f0;
-      color:var(--green-dark);
-    }
-
-    .small-btn:hover{
-      background:#e0ece5;
-    }
-
-    .small-btn.warn{
-      background:#fff2df;
-      color:var(--warning);
-    }
-
-    .small-btn.danger{
-      background:#fff0f0;
-      color:var(--danger);
-    }
-
-    .empty-box{
-      padding:55px 20px;
-      text-align:center;
-      background:white;
-      color:var(--muted);
-      border:1px dashed #cdd9d2;
-      border-radius:18px;
-    }
-
-    /* MODAL */
-    .modal{
-      position:fixed;
-      inset:0;
-      z-index:500;
-      background:rgba(22,35,29,.55);
-      display:flex;
-      align-items:flex-start;
-      justify-content:center;
-      padding:24px;
-      overflow:auto;
-    }
-
-    .modal-card{
-      width:min(1000px,100%);
-      background:white;
-      border-radius:24px;
-      box-shadow:0 25px 70px rgba(0,0,0,.22);
-      margin:20px 0;
-      overflow:hidden;
-    }
-
-    .modal-head{
-      position:sticky;
-      top:0;
-      z-index:5;
-      padding:18px 24px;
-      border-bottom:1px solid var(--line);
-      background:white;
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      gap:15px;
-    }
-
-    .modal-head h3{
-      color:var(--green-dark);
-      font-size:23px;
-    }
-
-    .close-btn{
-      width:38px;
-      height:38px;
-      border-radius:50%;
-      background:#f0f3f1;
-      font-size:20px;
-    }
-
-    .form-body{
-      padding:24px;
-    }
-
-    .form-grid{
-      display:grid;
-      grid-template-columns:1fr 1fr;
-      gap:16px 18px;
-    }
-
-    .full{
-      grid-column:1/-1;
-    }
-
-    .checkbox-row{
-      display:flex;
-      gap:24px;
-      align-items:center;
-      flex-wrap:wrap;
-      padding:8px 0;
-    }
-
-    .check-label{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      cursor:pointer;
-      font-weight:800;
-    }
-
-    .check-label input{
-      width:18px;
-      height:18px;
-      accent-color:var(--green);
-    }
-
-    .section-box{
-      border:1px solid var(--line);
-      border-radius:16px;
-      padding:18px;
-      background:#fbfcfb;
-    }
-
-    .section-box h4{
-      margin-bottom:12px;
-      color:var(--green-dark);
-    }
-
-    .hint{
-      color:var(--muted);
-      font-size:12px;
-      margin-bottom:10px;
-    }
-
-    .image-upload{
-      border:2px dashed #c7d7cd;
-      border-radius:16px;
-      background:#f8fbf9;
-      padding:22px;
-      text-align:center;
-    }
-
-    .image-upload input{
-      margin-top:10px;
-    }
-
-    .image-preview{
-      display:grid;
-      grid-template-columns:repeat(4,1fr);
-      gap:12px;
-      margin-top:15px;
-    }
-
-    .preview-item{
-      position:relative;
-      border:1px solid var(--line);
-      border-radius:12px;
-      overflow:hidden;
-      background:white;
-      aspect-ratio:1/1;
-    }
-
-    .preview-item img{
-      width:100%;
-      height:100%;
-      object-fit:contain;
-    }
-
-    .preview-remove{
-      position:absolute;
-      top:6px;
-      right:6px;
-      width:28px;
-      height:28px;
-      border-radius:50%;
-      background:rgba(201,75,75,.92);
-      color:white;
-      font-weight:900;
-    }
-
-    .dynamic-list{
-      display:grid;
-      gap:10px;
-    }
-
-    .dynamic-row{
-      display:grid;
-      grid-template-columns:1fr 1fr auto;
-      gap:8px;
-    }
-
-    .dynamic-row input{
-      width:100%;
-      border:1px solid #d2dcd5;
-      border-radius:10px;
-      padding:10px;
-    }
-
-    .remove-row{
-      padding:0 12px;
-      border-radius:10px;
-      background:#fff0f0;
-      color:var(--danger);
-      font-weight:900;
-    }
-
-    .add-row-btn{
-      margin-top:10px;
-      padding:8px 13px;
-      border-radius:10px;
-      background:var(--green-soft);
-      color:var(--green-dark);
-      font-weight:800;
-    }
-
-    .save-bar{
-      position:sticky;
-      bottom:0;
-      z-index:5;
-      display:flex;
-      justify-content:flex-end;
-      gap:10px;
-      padding:16px 24px;
-      border-top:1px solid var(--line);
-      background:white;
-    }
-
-    .cancel-btn{
-      padding:11px 20px;
-      border-radius:999px;
-      background:#eef1ef;
-      color:#4d5953;
-      font-weight:800;
-    }
-
-    .save-btn{
-      min-width:150px;
-      padding:11px 22px;
-      border-radius:999px;
-      background:var(--green);
-      color:white;
-      font-weight:900;
-    }
-
-    .save-btn:disabled{
-      opacity:.55;
-      cursor:not-allowed;
-    }
-
-    .toast{
-      position:fixed;
-      right:22px;
-      bottom:22px;
-      z-index:1000;
-      max-width:380px;
-      padding:14px 18px;
-      border-radius:14px;
-      color:white;
-      background:#253c32;
-      box-shadow:var(--shadow);
-      font-size:14px;
-    }
-
-    @media(max-width:950px){
-      .product-row{
-        grid-template-columns:34px 78px 1fr;
-      }
-      .product-row > :nth-child(4),
-      .product-row > :nth-child(5),
-      .row-actions{
-        grid-column:3;
-      }
-      .row-actions{
-        justify-content:flex-start;
-      }
-      .form-grid{
-        grid-template-columns:1fr;
-      }
-      .full{
-        grid-column:auto;
-      }
-      .image-preview{
-        grid-template-columns:repeat(3,1fr);
-      }
-    }
-
-    @media(max-width:650px){
-      .topbar{
-        align-items:flex-start;
-      }
-      .top-actions{
-        flex-direction:column;
-        align-items:flex-end;
-      }
-      .heading-row{
-        align-items:flex-start;
-        flex-direction:column;
-      }
-      .stats{
-        grid-template-columns:1fr;
-      }
-      .product-row{
-        grid-template-columns:34px 1fr;
-      }
-      .thumb{
-        width:100%;
-        height:180px;
-      }
-      .product-row > *{
-        grid-column:1 / -1!important;
-      }
-
-      .product-row > .drag-handle{
-        grid-column:1!important;
-      }
-      .image-preview{
-        grid-template-columns:repeat(2,1fr);
-      }
-      .dynamic-row{
-        grid-template-columns:1fr;
-      }
-    }
-  </style>
+:root{--green:#0f6b48;--green-dark:#0a5238;--green-soft:#e9f4ee;--cream:#fbfaf6;--text:#26342e;--muted:#758079;--line:#dfe7e1;--danger:#c94b4b;--warning:#a76a16;--white:#fff;--shadow:0 14px 35px rgba(27,72,54,.10)}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Microsoft JhengHei","Noto Sans TC",Arial,sans-serif;background:#f5f7f4;color:var(--text);line-height:1.6}
+button,input,textarea,select{font:inherit}
+button{cursor:pointer;border:0}
+.hidden{display:none!important}
+.login-page{min-height:100vh;display:grid;place-items:center;padding:24px;background:radial-gradient(circle at top left,rgba(15,107,72,.10),transparent 32%),#f7f8f4}
+.login-card{width:min(440px,100%);background:white;border-radius:26px;padding:38px;box-shadow:var(--shadow);border:1px solid var(--line)}
+.login-brand{text-align:center;margin-bottom:28px}
+.login-brand img{width:100px;height:78px;object-fit:contain;margin:0 auto 10px}
+.login-brand h1{font-size:25px;color:var(--green-dark)}
+.login-brand p{color:var(--muted);font-size:14px;margin-top:4px}
+.field{margin-bottom:18px}
+.field label{display:block;margin-bottom:7px;font-size:14px;font-weight:800}
+.field input,.field textarea,.field select{width:100%;border:1px solid #cfdad3;border-radius:12px;background:#fff;padding:12px 14px;outline:none;transition:.2s}
+.field input:focus,.field textarea:focus,.field select:focus{border-color:var(--green);box-shadow:0 0 0 3px rgba(15,107,72,.09)}
+.field textarea{min-height:110px;resize:vertical}
+.login-btn,.primary-btn{width:100%;padding:13px 18px;border-radius:999px;color:white;background:var(--green);font-weight:900}
+.login-btn:hover,.primary-btn:hover{background:var(--green-dark)}
+.login-msg{min-height:24px;color:var(--danger);font-size:13px;margin-top:12px;text-align:center}
+.admin-page{min-height:100vh}
+.topbar{position:sticky;top:0;z-index:100;min-height:72px;background:white;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:20px;padding:10px 4%}
+.top-brand{display:flex;align-items:center;gap:12px}
+.top-brand img{width:60px;height:45px;object-fit:contain}
+.top-brand strong{display:block;color:var(--green-dark);font-size:18px}
+.top-brand span{color:var(--muted);font-size:12px}
+.top-actions{display:flex;gap:10px;align-items:center}
+.outline-btn{padding:9px 16px;border-radius:999px;border:1px solid var(--green);color:var(--green);background:white;font-weight:800}
+.outline-btn:hover{background:var(--green-soft)}
+.danger-outline{border-color:#e7bcbc;color:var(--danger)}
+.container{width:min(1380px,94%);margin:30px auto 60px}
+.heading-row{display:flex;justify-content:space-between;gap:20px;align-items:flex-end;margin-bottom:22px}
+.heading-row h2{font-size:30px;color:var(--green-dark)}
+.heading-row p{color:var(--muted);margin-top:4px}
+.add-btn{padding:11px 20px;border-radius:999px;background:var(--green);color:white;font-weight:900;white-space:nowrap}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:22px}
+.stat-card{background:white;border:1px solid var(--line);border-radius:18px;padding:20px}
+.stat-card span{color:var(--muted);font-size:13px}
+.stat-card strong{display:block;margin-top:4px;font-size:28px;color:var(--green-dark)}
+.toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
+.toolbar input,.toolbar select{border:1px solid var(--line);background:white;border-radius:12px;padding:10px 12px;outline:none}
+.toolbar input{flex:1;min-width:230px}
+.product-list{display:grid;gap:14px}
+.product-row{background:white;border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;grid-template-columns:38px 92px 1.4fr .85fr .75fr auto;gap:14px;align-items:center}
+.drag-handle{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#f2f5f3;color:#7a857f;font-size:20px;cursor:grab;user-select:none;touch-action:none}
+.drag-handle:active{cursor:grabbing}
+.product-row.sortable-ghost{opacity:.35;background:#eef6f1}
+.product-row.sortable-chosen{box-shadow:0 16px 34px rgba(15,107,72,.16);user-select:none}
+.product-row.sortable-drag{opacity:.95;cursor:grabbing}
+.thumb{width:92px;height:92px;border-radius:14px;background:#f1f4f1;overflow:hidden;display:grid;place-items:center;color:#9aa39e;font-size:12px}
+.thumb img{width:100%;height:100%;object-fit:contain}
+.product-name{font-size:18px;font-weight:900;margin-bottom:4px}
+.product-desc{color:var(--muted);font-size:13px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.pill{display:inline-flex;align-items:center;gap:6px;padding:6px 11px;border-radius:999px;font-size:12px;font-weight:900;width:max-content}
+.pill.active{background:#e5f5eb;color:#167445}
+.pill.inactive{background:#f3efef;color:#8b5a5a}
+.pill.featured{background:#fff4d9;color:#8a6410;margin-top:7px}
+.pill.weikang{background:#e9f0ff;color:#315da8;margin-top:7px}
+.weikang-code-field{margin-top:4px;padding:14px 16px;border:1px solid #d9e3f4;border-radius:12px;background:#f7faff}
+.row-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;position:relative;z-index:5;pointer-events:auto}
+.row-actions button{position:relative;z-index:6;pointer-events:auto}
+.small-btn{padding:8px 12px;border-radius:10px;font-size:13px;font-weight:800;background:#eef4f0;color:var(--green-dark)}
+.small-btn:hover{background:#e0ece5}
+.small-btn.warn{background:#fff2df;color:var(--warning)}
+.small-btn.danger{background:#fff0f0;color:var(--danger)}
+.empty-box{padding:55px 20px;text-align:center;background:white;color:var(--muted);border:1px dashed #cdd9d2;border-radius:18px}
+.modal{position:fixed;inset:0;z-index:500;background:rgba(22,35,29,.55);display:flex;align-items:flex-start;justify-content:center;padding:24px;overflow:auto}
+.modal-card{width:min(1000px,100%);background:white;border-radius:24px;box-shadow:0 25px 70px rgba(0,0,0,.22);margin:20px 0;overflow:hidden}
+.modal-head{position:sticky;top:0;z-index:5;padding:18px 24px;border-bottom:1px solid var(--line);background:white;display:flex;justify-content:space-between;align-items:center;gap:15px}
+.modal-head h3{color:var(--green-dark);font-size:23px}
+.close-btn{width:38px;height:38px;border-radius:50%;background:#f0f3f1;font-size:20px}
+.form-body{padding:24px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px 18px}
+.full{grid-column:1/-1}
+.checkbox-row{display:flex;gap:24px;align-items:center;flex-wrap:wrap;padding:8px 0}
+.check-label{display:flex;gap:8px;align-items:center;cursor:pointer;font-weight:800}
+.check-label input{width:18px;height:18px;accent-color:var(--green)}
+.section-box{border:1px solid var(--line);border-radius:16px;padding:18px;background:#fbfcfb}
+.section-box h4{margin-bottom:12px;color:var(--green-dark)}
+.hint{color:var(--muted);font-size:12px;margin-bottom:10px}
+.image-upload{border:2px dashed #c7d7cd;border-radius:16px;background:#f8fbf9;padding:22px;text-align:center}
+.image-upload input{margin-top:10px}
+.image-preview{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-top:15px}
+.preview-item{position:relative;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:white;aspect-ratio:1/1}
+.preview-item img{width:100%;height:100%;object-fit:contain}
+.preview-remove{position:absolute;top:6px;right:6px;width:28px;height:28px;border-radius:50%;background:rgba(201,75,75,.92);color:white;font-weight:900}
+.dynamic-list{display:grid;gap:10px}
+.dynamic-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
+.dynamic-row input{width:100%;border:1px solid #d2dcd5;border-radius:10px;padding:10px}
+.remove-row{padding:0 12px;border-radius:10px;background:#fff0f0;color:var(--danger);font-weight:900}
+.add-row-btn{margin-top:10px;padding:8px 13px;border-radius:10px;background:var(--green-soft);color:var(--green-dark);font-weight:800}
+.save-bar{position:sticky;bottom:0;z-index:5;display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--line);background:white}
+.cancel-btn{padding:11px 20px;border-radius:999px;background:#eef1ef;color:#4d5953;font-weight:800}
+.save-btn{min-width:150px;padding:11px 22px;border-radius:999px;background:var(--green);color:white;font-weight:900}
+.save-btn:disabled{opacity:.55;cursor:not-allowed}
+.toast{position:fixed;right:22px;bottom:22px;z-index:1000;max-width:380px;padding:14px 18px;border-radius:14px;color:white;background:#253c32;box-shadow:var(--shadow);font-size:14px}
+@media(max-width:950px){.product-row{grid-template-columns:34px 78px 1fr}
+.product-row >:nth-child(4),.product-row >:nth-child(5),.row-actions{grid-column:3}
+.row-actions{justify-content:flex-start}
+.form-grid{grid-template-columns:1fr}
+.full{grid-column:auto}
+.image-preview{grid-template-columns:repeat(3,1fr)}
+}
+@media(max-width:650px){.topbar{align-items:flex-start}
+.top-actions{flex-direction:column;align-items:flex-end}
+.heading-row{align-items:flex-start;flex-direction:column}
+.stats{grid-template-columns:1fr}
+.product-row{grid-template-columns:34px 1fr}
+.thumb{width:100%;height:180px}
+.product-row > *{grid-column:1 / -1!important}
+.product-row > .drag-handle{grid-column:1!important}
+.image-preview{grid-template-columns:repeat(2,1fr)}
+.dynamic-row{grid-template-columns:1fr}
+}
+</style>
 </head>
 
 <body>
 
-<!-- LOGIN -->
 <section id="loginPage" class="login-page">
   <div class="login-card">
     <div class="login-brand">
@@ -799,7 +168,6 @@
   </div>
 </section>
 
-<!-- ADMIN -->
 <section id="adminPage" class="admin-page hidden">
   <header class="topbar">
     <div class="top-brand">
@@ -870,7 +238,6 @@
   </main>
 </section>
 
-<!-- PRODUCT MODAL -->
 <div id="productModal" class="modal hidden">
   <div class="modal-card">
     <div class="modal-head">
@@ -926,28 +293,20 @@
 
           <div class="full checkbox-row">
             <label class="check-label">
-              <input id="isActive" type="checkbox" checked>
-              商品上架
-            </label>
+              <input id="isActive" type="checkbox" checked>商品上架</label>
 
             <label class="check-label">
-              <input id="featured" type="checkbox">
-              首頁推薦
-            </label>
+              <input id="featured" type="checkbox">首頁推薦</label>
 
             <label class="check-label">
-              <input id="isWeikang" type="checkbox">
-              上架維康專區
-            </label>
+              <input id="isWeikang" type="checkbox">上架維康專區</label>
           </div>
 
           <div id="weikangCodeField" class="field full weikang-code-field hidden">
             <label for="weikangCode">維康碼</label>
             <input id="weikangCode" type="text" inputmode="numeric"
                    placeholder="輸入此商品的維康一維碼">
-            <div class="hint" style="margin-top:6px;margin-bottom:0;">
-              勾選「上架維康專區」後，此商品會顯示在維康專區，並以此欄位產生一維條碼。
-            </div>
+            <div class="hint" style="margin-top:6px;margin-bottom:0;">勾選「上架維康專區」後，此商品會顯示在維康專區，並以此欄位產生一維條碼。</div>
           </div>
 
           <div class="full section-box">
@@ -999,9 +358,6 @@
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.6/Sortable.min.js"></script>
 
 <script>
-/* =========================
-   CONFIG / SUPABASE
-========================= */
 const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
 const ADMIN_UID = "4fdfcde5-cbb0-4616-8237-b3dec68bd99d";
@@ -1041,9 +397,6 @@ const categoryNames = {
 
 const $ = id => document.getElementById(id);
 
-/* =========================
-   HELPERS
-========================= */
 function esc(value){
   const div = document.createElement("div");
   div.textContent = value ?? "";
@@ -1077,9 +430,6 @@ function slugify(name){
   return (base || "product") + "-" + Date.now();
 }
 
-/* =========================
-   AUTH
-========================= */
 async function ensureAdmin(session){
   if(!session?.user){
     showLogin();
@@ -1098,15 +448,12 @@ async function ensureAdmin(session){
   return true;
 }
 
-function showLogin(){
-  $("loginPage").classList.remove("hidden");
-  $("adminPage").classList.add("hidden");
+function setAdminVisible(visible){
+  $("loginPage").classList.toggle("hidden", visible);
+  $("adminPage").classList.toggle("hidden", !visible);
 }
-
-function showAdmin(){
-  $("loginPage").classList.add("hidden");
-  $("adminPage").classList.remove("hidden");
-}
+const showLogin = () => setAdminVisible(false);
+const showAdmin = () => setAdminVisible(true);
 
 $("loginForm").addEventListener("submit", async e => {
   e.preventDefault();
@@ -1135,9 +482,6 @@ $("logoutBtn").addEventListener("click", async () => {
   showLogin();
 });
 
-/* =========================
-   PRODUCT LIST
-========================= */
 async function loadProducts(){
   $("productList").innerHTML =
     '<div class="empty-box">商品載入中...</div>';
@@ -1167,51 +511,39 @@ function updateStats(){
     products.filter(p => !p.is_active).length;
 }
 
+const CATEGORY_INDEX = new Map(CATEGORY_ORDER.map((value,index) => [value,index]));
+const productById = id => products.find(p => p.id === id);
+const withinCategoryOrder = (a,b) =>
+  Number(a.sort_order ?? 0) - Number(b.sort_order ?? 0) ||
+  String(a.created_at || "").localeCompare(String(b.created_at || ""));
+const productOrder = (a,b) =>
+  (CATEGORY_INDEX.get(a.category) ?? CATEGORY_ORDER.length) -
+  (CATEGORY_INDEX.get(b.category) ?? CATEGORY_ORDER.length) ||
+  withinCategoryOrder(a,b);
+
+function nextSortOrder(category){
+  const orders = products
+    .filter(p => p.category === category)
+    .map(p => Number(p.sort_order ?? 0));
+  return orders.length ? Math.max(...orders) + 1 : 1;
+}
+
 function filteredProducts(){
   const keyword = $("searchInput").value.trim().toLowerCase();
   const status = $("statusFilter").value;
   const category = $("categoryFilter").value;
 
-  const categoryIndex = new Map(
-    CATEGORY_ORDER.map((value,index) => [value,index])
-  );
-
   return products
     .filter(p => {
-      const haystack = [
-        p.name,
-        p.short_description,
-        p.description,
-        p.category
-      ].join(" ").toLowerCase();
-
-      const matchKeyword = !keyword || haystack.includes(keyword);
-      const matchCategory = category === "all" || p.category === category;
-      const matchStatus =
-        status === "all" ||
-        (status === "active" && p.is_active) ||
-        (status === "inactive" && !p.is_active);
-
-      return matchKeyword && matchCategory && matchStatus;
+      const haystack = [p.name,p.short_description,p.description,p.category]
+        .join(" ").toLowerCase();
+      return (!keyword || haystack.includes(keyword)) &&
+        (category === "all" || p.category === category) &&
+        (status === "all" ||
+          (status === "active" && p.is_active) ||
+          (status === "inactive" && !p.is_active));
     })
-    .sort((a,b) => {
-      // 第一層：分類固定順序
-      const ac = categoryIndex.has(a.category)
-        ? categoryIndex.get(a.category)
-        : CATEGORY_ORDER.length;
-      const bc = categoryIndex.has(b.category)
-        ? categoryIndex.get(b.category)
-        : CATEGORY_ORDER.length;
-
-      if(ac !== bc) return ac - bc;
-
-      // 第二層：同分類內才使用手動拖曳順序
-      const ao = Number(a.sort_order ?? 0);
-      const bo = Number(b.sort_order ?? 0);
-      if(ao !== bo) return ao - bo;
-
-      return String(a.created_at || "").localeCompare(String(b.created_at || ""));
-    });
+    .sort(productOrder);
 }
 
 function renderProducts(){
@@ -1242,9 +574,7 @@ function renderProducts(){
 
         <div>
           <div class="product-name">${esc(p.name)}</div>
-          <div class="product-desc">
-            ${esc(p.short_description || p.description || "尚未填寫商品介紹")}
-          </div>
+          <div class="product-desc">${esc(p.short_description || p.description || "尚未填寫商品介紹")}</div>
         </div>
 
         <div>
@@ -1252,9 +582,7 @@ function renderProducts(){
         </div>
 
         <div>
-          <span class="pill ${p.is_active ? "active" : "inactive"}">
-            ${p.is_active ? "● 上架中" : "● 已下架"}
-          </span>
+          <span class="pill ${p.is_active ? "active" : "inactive"}">${p.is_active ? "● 上架中" : "● 已下架"}</span>
 
           ${
             p.featured
@@ -1277,25 +605,19 @@ function renderProducts(){
             type="button"
             data-action="toggle"
             data-id="${p.id}"
-            data-active="${p.is_active}">
-            ${p.is_active ? "下架" : "重新上架"}
-          </button>
+            data-active="${p.is_active}">${p.is_active ? "下架" : "重新上架"}</button>
 
           <button
             class="small-btn"
             type="button"
             data-action="duplicate"
-            data-id="${p.id}">
-            複製
-          </button>
+            data-id="${p.id}">複製</button>
 
           <button
             class="small-btn danger"
             type="button"
             data-action="delete"
-            data-id="${p.id}">
-            刪除
-          </button>
+            data-id="${p.id}">刪除</button>
         </div>
       </article>
     `;
@@ -1304,11 +626,8 @@ function renderProducts(){
   initProductSorting();
 }
 
-
 let productSortable = null;
 let isSavingSort = false;
-
-
 let productActionEventsBound = false;
 
 function bindProductActionEvents(){
@@ -1325,27 +644,14 @@ function bindProductActionEvents(){
     event.stopPropagation();
 
     const id = button.dataset.id;
-    const action = button.dataset.action;
+    const actions = {
+      edit: () => window.editProduct(id),
+      toggle: () => window.toggleStatus(id, button.dataset.active === "true"),
+      duplicate: () => window.duplicateProduct(id),
+      delete: () => window.deleteProduct(id)
+    };
 
-    if(action === "edit"){
-      window.editProduct(id);
-      return;
-    }
-
-    if(action === "toggle"){
-      const current = button.dataset.active === "true";
-      await window.toggleStatus(id, current);
-      return;
-    }
-
-    if(action === "duplicate"){
-      await window.duplicateProduct(id);
-      return;
-    }
-
-    if(action === "delete"){
-      await window.deleteProduct(id);
-    }
+    await actions[button.dataset.action]?.();
   });
 
   productActionEventsBound = true;
@@ -1368,7 +674,6 @@ function initProductSorting(){
     handle: ".drag-handle",
     draggable: ".product-row",
 
-    // 編輯 / 上下架 / 複製 / 刪除等操作區完全不參與拖曳
     filter: ".row-actions, .row-actions button, input, select, textarea, a",
     preventOnFilter: false,
 
@@ -1376,14 +681,12 @@ function initProductSorting(){
     chosenClass: "sortable-chosen",
     dragClass: "sortable-drag",
 
-    // 長列表拖曳時，游標靠近視窗上下邊緣會自動捲動畫面
     scroll: true,
     bubbleScroll: true,
     scrollSensitivity: 120,
     scrollSpeed: 22,
     forceAutoScrollFallback: true,
 
-    // 分類順序固定：不同分類之間不能互相穿插
     onMove: evt => {
       const draggedCategory = evt.dragged?.dataset?.category || "";
       const relatedCategory = evt.related?.dataset?.category || "";
@@ -1422,16 +725,9 @@ async function saveDraggedOrder(){
       // 只處理同一分類；其他分類完全不受影響
       const allInCategory = products
         .filter(p => p.category === category)
-        .sort((a,b) => {
-          const ao = Number(a.sort_order ?? 0);
-          const bo = Number(b.sort_order ?? 0);
-          if(ao !== bo) return ao - bo;
-          return String(a.created_at || "").localeCompare(String(b.created_at || ""));
-        });
+        .sort(withinCategoryOrder);
 
-      const reorderedVisible = visibleIds
-        .map(id => products.find(p => p.id === id))
-        .filter(Boolean);
+      const reorderedVisible = visibleIds.map(productById).filter(Boolean);
 
       let visibleIndex = 0;
       const merged = allInCategory.map(product => {
@@ -1460,7 +756,7 @@ async function saveDraggedOrder(){
       }
 
       updates.forEach(item => {
-        const product = products.find(p => p.id === item.id);
+        const product = productById(item.id);
         if(product) product.sort_order = item.sort_order;
       });
     }
@@ -1481,37 +777,21 @@ $("statusFilter").addEventListener("change", renderProducts);
 $("categoryFilter").addEventListener("change", renderProducts);
 
 $("category").addEventListener("change", () => {
-  // 只有新增商品時才自動決定該分類最後順位；編輯既有商品不覆蓋原排序
-  if(editingId) return;
-
-  const selectedCategory = $("category").value;
-  const sameCategory = products.filter(p => p.category === selectedCategory);
-  $("sortOrder").value = String(
-    sameCategory.length
-      ? Math.max(...sameCategory.map(p => Number(p.sort_order ?? 0))) + 1
-      : 1
-  );
+  if(!editingId) $("sortOrder").value = nextSortOrder($("category").value);
 });
 
+const DYNAMIC_LISTS = {
+  feature:"featuresList",
+  spec:"specsList",
+  variant:"variantsList"
+};
 
-
-/* =========================
-   DYNAMIC FORM ROWS
-========================= */
 function clearDynamicLists(){
-  $("featuresList").innerHTML = "";
-  $("specsList").innerHTML = "";
-  $("variantsList").innerHTML = "";
+  Object.values(DYNAMIC_LISTS).forEach(id => $(id).innerHTML = "");
 }
 
 function addDynamicRow(type, key="", value=""){
-  const map = {
-    feature: $("featuresList"),
-    spec: $("specsList"),
-    variant: $("variantsList")
-  };
-
-  const host = map[type];
+  const host = $(DYNAMIC_LISTS[type]);
   const row = document.createElement("div");
   row.className = "dynamic-row";
   row.dataset.type = type;
@@ -1548,20 +828,18 @@ document.querySelectorAll("[data-add]").forEach(btn => {
   });
 });
 
-function collectFeatures(){
-  return [...$("featuresList").querySelectorAll(".dynamic-row")]
-    .map(row => row.querySelector(".row-key").value.trim())
-    .filter(Boolean);
+function collectRows(hostId, featureOnly=false){
+  return [...$(hostId).querySelectorAll(".dynamic-row")]
+    .map(row => {
+      const name = row.querySelector(".row-key").value.trim();
+      if(featureOnly) return name;
+      return { name, value:row.querySelector(".row-value").value.trim() };
+    })
+    .filter(item => featureOnly ? Boolean(item) : item.name || item.value);
 }
 
-function collectPairs(hostId){
-  return [...$(hostId).querySelectorAll(".dynamic-row")]
-    .map(row => ({
-      name: row.querySelector(".row-key").value.trim(),
-      value: row.querySelector(".row-value").value.trim()
-    }))
-    .filter(item => item.name || item.value);
-}
+const collectFeatures = () => collectRows("featuresList", true);
+const collectPairs = hostId => collectRows(hostId);
 
 function normalizePairs(input){
   if(!Array.isArray(input)) return [];
@@ -1578,9 +856,6 @@ function normalizePairs(input){
   });
 }
 
-/* =========================
-   WEIKANG
-========================= */
 function updateWeikangField(){
   const enabled = $("isWeikang").checked;
   $("weikangCodeField").classList.toggle("hidden", !enabled);
@@ -1588,13 +863,10 @@ function updateWeikangField(){
 
 $("isWeikang").addEventListener("change", updateWeikangField);
 
-/* =========================
-   PRODUCT FORM / MODAL
-========================= */
 function openModal(product=null){
   $("productForm").reset();
   $("productId").value = "";
-  $("sortOrder").value = "0";
+  $("sortOrder").value = nextSortOrder($("productCategory").value);
   $("isActive").checked = true;
   $("featured").checked = false;
   $("isWeikang").checked = false;
@@ -1680,8 +952,8 @@ $("productModal").addEventListener("click", e => {
   }
 });
 
-window.editProduct = function(id){
-  const product = products.find(p => p.id === id);
+window.editProduct = id => {
+  const product = productById(id);
   if(product) openModal(product);
 };
 
@@ -1691,44 +963,33 @@ $("imageFiles").addEventListener("change", e => {
   e.target.value = "";
 });
 
-/* =========================
-   PRODUCT IMAGES
-========================= */
+function addPreviewItem(host, src, alt, onRemove){
+  const item = document.createElement("div");
+  item.className = "preview-item";
+  item.innerHTML = `<img src="${escAttr(src)}" alt="${alt}">
+    <button type="button" class="preview-remove">×</button>`;
+  item.querySelector("button").addEventListener("click", onRemove);
+  host.appendChild(item);
+}
+
 function renderImagePreview(){
   const host = $("imagePreview");
   host.innerHTML = "";
 
-  editingImages.forEach((url,index) => {
-    const item = document.createElement("div");
-    item.className = "preview-item";
-    item.innerHTML = `
-      <img src="${escAttr(url)}" alt="商品圖片">
-      <button type="button" class="preview-remove">×</button>
-    `;
-    item.querySelector("button").addEventListener("click", () => {
+  editingImages.forEach((url,index) =>
+    addPreviewItem(host, url, "商品圖片", () => {
       editingImages.splice(index,1);
       renderImagePreview();
-    });
-    host.appendChild(item);
-  });
+    })
+  );
 
   newImageFiles.forEach((file,index) => {
-    const item = document.createElement("div");
-    item.className = "preview-item";
     const objectUrl = URL.createObjectURL(file);
-
-    item.innerHTML = `
-      <img src="${escAttr(objectUrl)}" alt="待上傳圖片">
-      <button type="button" class="preview-remove">×</button>
-    `;
-
-    item.querySelector("button").addEventListener("click", () => {
+    addPreviewItem(host, objectUrl, "待上傳圖片", () => {
       URL.revokeObjectURL(objectUrl);
       newImageFiles.splice(index,1);
       renderImagePreview();
     });
-
-    host.appendChild(item);
   });
 }
 
@@ -1766,9 +1027,6 @@ async function uploadNewImages(){
   return urls;
 }
 
-/* =========================
-   SAVE PRODUCT
-========================= */
 $("productForm").addEventListener("submit", async e => {
   e.preventDefault();
 
@@ -1843,9 +1101,17 @@ $("productForm").addEventListener("submit", async e => {
   }
 });
 
-/* =========================
-   PRODUCT ACTIONS
-========================= */
+async function runProductMutation(query, errorPrefix, successMessage){
+  const { error } = await query;
+  if(error){
+    alert(errorPrefix + error.message);
+    return false;
+  }
+  showToast(successMessage);
+  await loadProducts();
+  return true;
+}
+
 window.toggleStatus = async function(id,current){
   const action = current ? "下架" : "重新上架";
 
@@ -1853,22 +1119,15 @@ window.toggleStatus = async function(id,current){
     return;
   }
 
-  const { error } = await db
-    .from("products")
-    .update({ is_active: !current })
-    .eq("id", id);
-
-  if(error){
-    alert("狀態更新失敗：" + error.message);
-    return;
-  }
-
-  showToast(`商品已${action}`);
-  await loadProducts();
+  await runProductMutation(
+    db.from("products").update({ is_active:!current }).eq("id", id),
+    "狀態更新失敗：",
+    `商品已${action}`
+  );
 };
 
 window.duplicateProduct = async function(id){
-  const original = products.find(p => p.id === id);
+  const original = productById(id);
   if(!original) return;
 
   if(!confirm(`要複製「${original.name}」嗎？`)){
@@ -1893,21 +1152,15 @@ window.duplicateProduct = async function(id){
     sort_order: original.sort_order ?? 0
   };
 
-  const { error } = await db
-    .from("products")
-    .insert(copy);
-
-  if(error){
-    alert("複製失敗：" + error.message);
-    return;
-  }
-
-  showToast("商品已複製，預設為下架");
-  await loadProducts();
+  await runProductMutation(
+    db.from("products").insert(copy),
+    "複製失敗：",
+    "商品已複製，預設為下架"
+  );
 };
 
 window.deleteProduct = async function(id){
-  const product = products.find(p => p.id === id);
+  const product = productById(id);
   if(!product) return;
 
   if(!confirm(
@@ -1916,23 +1169,13 @@ window.deleteProduct = async function(id){
     return;
   }
 
-  const { error } = await db
-    .from("products")
-    .delete()
-    .eq("id", id);
-
-  if(error){
-    alert("刪除失敗：" + error.message);
-    return;
-  }
-
-  showToast("商品已刪除");
-  await loadProducts();
+  await runProductMutation(
+    db.from("products").delete().eq("id", id),
+    "刪除失敗：",
+    "商品已刪除"
+  );
 };
 
-/* =========================
-   INIT
-========================= */
 (async function init(){
   const { data } = await db.auth.getSession();
   await ensureAdmin(data.session);
