@@ -674,6 +674,92 @@ body.modal-open{overflow:hidden}
   margin-top:6px;
 }
 
+
+/* ==================================================
+   維康專區商品卡：條碼版精簡排版
+   商品特色改放到「查看詳細資料」中，避免商品卡過長
+================================================== */
+.weikang-code-box{
+  margin-top:12px;
+  padding:8px 10px 7px;
+  border:1px solid var(--line);
+  border-radius:10px;
+  background:#fff;
+}
+
+.weikang-code-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  margin-bottom:4px;
+}
+
+.weikang-code-label{
+  margin:0;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+}
+
+.weikang-code-number{
+  color:var(--ink);
+  font-size:11px;
+  font-weight:800;
+  letter-spacing:.04em;
+  white-space:nowrap;
+}
+
+.weikang-barcode{
+  display:block;
+  width:100%;
+  max-width:none;
+  height:38px;
+}
+
+@media (min-width:751px){
+  /* 維康卡片不再使用產品專區的 610px 高度限制 */
+  .product-card{
+    max-height:none;
+  }
+
+  /* 商品特色完整保留在詳細資訊，卡片先不顯示 */
+  .product-features{
+    display:none;
+  }
+
+  .product-intro{
+    height:44px;
+    min-height:44px;
+    -webkit-line-clamp:2;
+  }
+
+  .subsidy-slot{
+    height:auto;
+    min-height:0;
+    margin-top:9px;
+  }
+
+  .subsidy{
+    max-height:none;
+    padding:7px 9px;
+  }
+
+  .product-actions{
+    margin-top:10px;
+  }
+}
+
+@media (max-width:600px){
+  .weikang-code-box{
+    margin-top:10px;
+  }
+
+  .weikang-barcode{
+    height:42px;
+  }
+}
+
 </style>
 </head>
 
@@ -1180,7 +1266,10 @@ function renderProducts(products) {
                         ?
                         `
                         <div class="weikang-code-box">
-                            <div class="weikang-code-label">維康碼</div>
+                            <div class="weikang-code-head">
+                                <div class="weikang-code-label">維康碼</div>
+                                <div class="weikang-code-number">${escapeHTML(product.weikang_code)}</div>
+                            </div>
                             <svg class="weikang-barcode"
                                  data-barcode="${escapeAttribute(product.weikang_code)}"></svg>
                         </div>
@@ -1217,9 +1306,8 @@ function renderProducts(products) {
             try{
                 JsBarcode(svg, code, {
                     format:"CODE128",
-                    displayValue:true,
-                    fontSize:13,
-                    height:38,
+                    displayValue:false,
+                    height:34,
                     margin:0
                 });
             }catch(err){
