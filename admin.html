@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <!--
   富立德有限公司｜商品管理後台
-  整理版：2026-09-02
+  拖曳排序修正版：2026-09-02
 
   本次整理原則：
   - 不改 Supabase 專案與資料表
@@ -340,6 +340,12 @@
 
     .product-row.sortable-chosen{
       box-shadow:0 16px 34px rgba(15,107,72,.16);
+      user-select:none;
+    }
+
+    .product-row.sortable-drag{
+      opacity:.95;
+      cursor:grabbing;
     }
 
     .sort-hint{
@@ -1270,6 +1276,15 @@ function initProductSorting(){
     draggable: ".product-row",
     ghostClass: "sortable-ghost",
     chosenClass: "sortable-chosen",
+    dragClass: "sortable-drag",
+
+    // 長列表拖曳時，游標靠近視窗上下邊緣會自動捲動畫面
+    scroll: true,
+    bubbleScroll: true,
+    scrollSensitivity: 120,
+    scrollSpeed: 22,
+    forceAutoScrollFallback: true,
+
     onEnd: async () => {
       if(isSavingSort) return;
       await saveDraggedOrder();
@@ -1331,8 +1346,16 @@ async function saveDraggedOrder(){
       if(product) product.sort_order = item.sort_order;
     });
 
+    // DOM 本身已經是拖曳後的新順序，不需要重新重畫列表。
+    // 同步記憶體中的 products 順序，讓後續搜尋/篩選也立即使用新排序。
+    products.sort((a,b) => {
+      const ao = Number(a.sort_order ?? 0);
+      const bo = Number(b.sort_order ?? 0);
+      if(ao !== bo) return ao - bo;
+      return String(b.created_at || "").localeCompare(String(a.created_at || ""));
+    });
+
     showToast("商品順序已更新");
-    renderProducts();
   }catch(err){
     alert("排序儲存失敗：" + (err.message || String(err)));
     await loadProducts();
