@@ -1,5 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+<!--
+  富立德有限公司｜產品專區
+  整理版：2026-09-02
+
+  本次整理原則：
+  - 不改 Supabase 資料結構
+  - 不改商品篩選與排序
+  - 不改商品卡與詳細資訊功能
+  - 不改目前桌機 / 手機版排版效果
+  - 保留維康專區與回到首頁按鈕
+-->
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -818,32 +829,21 @@ body.modal-open{overflow:hidden}
 
 <script>
 
-const SUPABASE_URL =
-    "https://goiyznauetntttimdlzx.supabase.co";
+/* =========================
+   SUPABASE
+========================= */
+const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
+const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
+const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-const SUPABASE_KEY =
-    "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
-
-const db =
-    supabase.createClient(
-        SUPABASE_URL,
-        SUPABASE_KEY
-    );
-
-const productGrid =
-    document.getElementById("productGrid");
-
-const title =
-    document.getElementById("category-title");
-
-const description =
-    document.getElementById("category-description");
-
-const modal =
-    document.getElementById("productModal");
-
-const modalContent =
-    document.getElementById("modalContent");
+/* =========================
+   DOM
+========================= */
+const productGrid = document.getElementById("productGrid");
+const title = document.getElementById("category-title");
+const description = document.getElementById("category-description");
+const modal = document.getElementById("productModal");
+const modalContent = document.getElementById("modalContent");
 
 let allProducts = [];
 
@@ -906,6 +906,9 @@ const categoryText = {
 
 };
 
+/* =========================
+   CATEGORY
+========================= */
 function categoryName(category) {
 
     return categoryText[category]
@@ -913,6 +916,9 @@ function categoryName(category) {
         : category;
 }
 
+/* =========================
+   LOAD PRODUCTS
+========================= */
 async function loadProducts() {
 
     productGrid.innerHTML = `
@@ -1012,6 +1018,9 @@ function filterProducts(category) {
     renderProducts(filtered);
 }
 
+/* =========================
+   PRODUCT CARDS
+========================= */
 function renderProducts(products) {
 
     productGrid.innerHTML = "";
@@ -1180,6 +1189,9 @@ function renderProducts(products) {
     );
 }
 
+/* =========================
+   VARIANT TABLE
+========================= */
 function buildVariantTable(variants) {
 
     if (
@@ -1455,7 +1467,9 @@ function buildVariantTable(variants) {
     `;
 }
 
-
+/* =========================
+   PRODUCT DETAIL MODAL
+========================= */
 function openProduct(id) {
 
     const product =
@@ -1804,6 +1818,9 @@ document
     }
 );
 
+/* =========================
+   HELPERS
+========================= */
 function escapeHTML(value) {
 
     const div =
