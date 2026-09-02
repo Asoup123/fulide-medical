@@ -1059,7 +1059,12 @@ function filterProducts(category) {
                 product.category === category
         );
 
-    renderProducts(filtered);
+    // 前台顯示順序：
+    // 1. 固定分類順序
+    // 2. 同分類內依後台拖曳後的 sort_order
+    renderProducts(
+        sortProductsByCategoryAndOrder(filtered)
+    );
 }
 
 /* =========================
