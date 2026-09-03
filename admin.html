@@ -276,14 +276,14 @@ button{cursor:pointer;border:0}
             <input id="shortDescription" type="text" placeholder="顯示在商品卡片上的簡短描述">
           </div>
 
-          <div class="field full">
-            <label for="description">完整商品說明</label>
-            <textarea id="description" placeholder="輸入完整商品介紹"></textarea>
+          <div class="field">
+            <label for="disabilitySubsidy">身障補助</label>
+            <input id="disabilitySubsidy" type="text" placeholder="輸入身障補助資訊">
           </div>
 
           <div class="field">
-            <label for="subsidy">補助資訊</label>
-            <input id="subsidy" type="text" placeholder="例如：符合補助項目...">
+            <label for="longTermSubsidy">長照補助</label>
+            <input id="longTermSubsidy" type="text" placeholder="輸入長照補助資訊">
           </div>
 
           <div class="field hidden" aria-hidden="true">
@@ -890,6 +890,33 @@ function updateWeikangField(){
 
 $("isWeikang").addEventListener("change", updateWeikangField);
 
+function parseSubsidy(value=""){
+  const result = { disability:"", longTerm:"" };
+  if(!value) return result;
+
+  const disability = value.match(/身障補助[：:]\s*([^\n]*)/);
+  const longTerm = value.match(/長照補助[：:]\s*([^\n]*)/);
+
+  if(disability || longTerm){
+    result.disability = disability?.[1]?.trim() || "";
+    result.longTerm = longTerm?.[1]?.trim() || "";
+  }else{
+    // 舊資料只有一個補助欄位時，先放在身障補助，避免資料消失
+    result.disability = value;
+  }
+  return result;
+}
+
+function buildSubsidy(){
+  const disability = $("disabilitySubsidy").value.trim();
+  const longTerm = $("longTermSubsidy").value.trim();
+
+  return [
+    disability ? `身障補助：${disability}` : "",
+    longTerm ? `長照補助：${longTerm}` : ""
+  ].filter(Boolean).join("\n") || null;
+}
+
 function openModal(product=null){
   $("productForm").reset();
   $("productId").value = "";
@@ -912,8 +939,10 @@ function openModal(product=null){
       product.category || "aluminum-wheelchair";
     $("shortDescription").value =
       product.short_description || "";
-    $("description").value = product.description || "";
-    $("subsidy").value = product.subsidy || "";
+
+    const subsidy = parseSubsidy(product.subsidy || "");
+    $("disabilitySubsidy").value = subsidy.disability;
+    $("longTermSubsidy").value = subsidy.longTerm;
     $("sortOrder").value = product.sort_order ?? 0;
     $("isActive").checked = product.is_active !== false;
     $("featured").checked = product.featured === true;
@@ -1120,8 +1149,8 @@ $("productForm").addEventListener("submit", async e => {
       name,
       category: $("productCategory").value,
       short_description: $("shortDescription").value.trim() || null,
-      description: $("description").value.trim() || null,
-      subsidy: $("subsidy").value.trim() || null,
+      description: editingId ? (productById(editingId)?.description || null) : null,
+      subsidy: buildSubsidy(),
       sort_order: Number($("sortOrder").value || 0),
       is_active: $("isActive").checked,
       featured: $("featured").checked,
