@@ -1149,7 +1149,7 @@ $("productForm").addEventListener("submit", async e => {
       name,
       category: $("productCategory").value,
       short_description: $("shortDescription").value.trim() || null,
-      description: editingId ? (productById(editingId)?.description || null) : null,
+      description: null,
       subsidy: buildSubsidy(),
       sort_order: Number($("sortOrder").value || 0),
       is_active: $("isActive").checked,
