@@ -300,14 +300,29 @@ nav{display:flex;align-items:center;gap:20px}
 .subsidy{
   width:100%;
   margin:0;
-  padding:11px 13px;
+  padding:10px 12px;
   color:var(--dark);
-  background:#f2f6f3;
+  background:#f7faf8;
   border:1px solid var(--line);
-  border-radius:8px;
+  border-radius:10px;
   font-size:13px;
-  font-weight:700;
 }
+.subsidy-list{display:grid;gap:7px}
+.subsidy-row{display:grid;grid-template-columns:auto 1fr;align-items:start;gap:8px;line-height:1.45}
+.subsidy-label{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-width:64px;
+  padding:2px 7px;
+  border-radius:999px;
+  background:#e7f2ed;
+  color:var(--green);
+  font-size:12px;
+  font-weight:800;
+  white-space:nowrap;
+}
+.subsidy-text{min-width:0;color:var(--dark);font-weight:700;word-break:break-word}
 .subsidy-empty{visibility:hidden}
 
 .product-actions{
@@ -454,13 +469,17 @@ footer{
 .modal-description{color:var(--muted);white-space:pre-line}
 .modal-subsidy{
   margin-top:20px;
-  padding:13px;
+  padding:16px 18px;
   color:var(--dark);
-  background:#f2f6f3;
+  background:#f7faf8;
   border:1px solid var(--line);
-  border-radius:8px;
-  font-weight:700;
+  border-radius:12px;
 }
+.modal-subsidy-title{margin-bottom:10px;color:var(--green);font-size:14px;font-weight:900}
+.modal-subsidy .subsidy-list{gap:10px}
+.modal-subsidy .subsidy-row{gap:10px;line-height:1.6}
+.modal-subsidy .subsidy-label{min-width:76px;padding:4px 10px;font-size:13px}
+.modal-subsidy .subsidy-text{font-size:15px}
 .detail-section{
   margin-top:38px;
   padding-top:30px;
@@ -1303,12 +1322,7 @@ function renderProducts(products) {
                         ${
                             product.subsidy
                             ?
-                            `
-                            <div class="subsidy">
-                                符合補助項目：
-                                ${escapeHTML(product.subsidy)}
-                            </div>
-                            `
+                            renderSubsidyInfo(product.subsidy)
                             :
                             `<div class="subsidy subsidy-empty">預留補助資訊</div>`
                         }
@@ -1793,12 +1807,7 @@ function openProduct(id) {
                 ${
                     product.subsidy
                     ?
-                    `
-                    <div class="modal-subsidy">
-                        符合補助項目：
-                        ${escapeHTML(product.subsidy)}
-                    </div>
-                    `
+                    renderSubsidyInfo(product.subsidy, true)
                     :
                     ""
                 }
@@ -2039,6 +2048,57 @@ function escapeHTML(value) {
         value || "";
 
     return div.innerHTML;
+}
+
+function parseSubsidyInfo(value){
+    const raw = String(value || "").trim();
+    if(!raw) return [];
+
+    const cleaned = raw
+        .replace(/^符合補助項目[：:]\s*/, "")
+        .replace(/\r/g, "");
+
+    const pattern = /(身障補助|長照補助)[：:]\s*/g;
+    const hits = [];
+    let match;
+
+    while((match = pattern.exec(cleaned))){
+        hits.push({
+            label: match[1],
+            start: match.index,
+            valueStart: pattern.lastIndex
+        });
+    }
+
+    if(!hits.length){
+        return [{label:"補助資訊", text:cleaned}];
+    }
+
+    return hits.map((hit,index) => ({
+        label: hit.label,
+        text: cleaned
+            .slice(hit.valueStart, hits[index + 1]?.start ?? cleaned.length)
+            .trim()
+    })).filter(item => item.text);
+}
+
+function renderSubsidyInfo(value, modal=false){
+    const items = parseSubsidyInfo(value);
+    if(!items.length) return "";
+
+    const rows = items.map(item => `
+        <div class="subsidy-row">
+            <span class="subsidy-label">${escapeHTML(item.label)}</span>
+            <span class="subsidy-text">${escapeHTML(item.text)}</span>
+        </div>
+    `).join("");
+
+    return modal
+        ? `<div class="modal-subsidy">
+               <div class="modal-subsidy-title">補助資訊</div>
+               <div class="subsidy-list">${rows}</div>
+           </div>`
+        : `<div class="subsidy"><div class="subsidy-list">${rows}</div></div>`;
 }
 
 function escapeAttribute(value) {
