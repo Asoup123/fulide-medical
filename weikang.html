@@ -612,11 +612,11 @@ body.modal-open{overflow:hidden}
   }
 
   .product-intro{
-    height:48px;
-    min-height:48px;
+    height:28px;
+    min-height:28px;
     font-size:13px;
     line-height:1.55;
-    -webkit-line-clamp:2;
+    -webkit-line-clamp:1;
   }
 
   .product-features{
@@ -647,17 +647,22 @@ body.modal-open{overflow:hidden}
   }
 
   .subsidy-slot{
-    height:48px;
-    min-height:48px;
+    height:78px;
+    min-height:78px;
   }
 
   .subsidy{
     padding:7px 9px;
     font-size:11px;
     line-height:1.4;
-    max-height:44px;
-    overflow:hidden;
+    max-height:none;
+    overflow:visible;
   }
+
+  .subsidy-list{gap:5px}
+  .subsidy-row{gap:6px;line-height:1.35}
+  .subsidy-label{min-width:60px;padding:2px 6px;font-size:11px}
+  .subsidy-text{font-size:11px}
 
   .detail-button,
   .ask-button{
@@ -758,20 +763,21 @@ body.modal-open{overflow:hidden}
   }
 
   .product-intro{
-    height:44px;
-    min-height:44px;
-    -webkit-line-clamp:2;
+    height:28px;
+    min-height:28px;
+    -webkit-line-clamp:1;
   }
 
   .subsidy-slot{
     height:auto;
-    min-height:0;
-    margin-top:9px;
+    min-height:72px;
+    margin-top:7px;
   }
 
   .subsidy{
     max-height:none;
     padding:7px 9px;
+    overflow:visible;
   }
 
   .product-actions{
