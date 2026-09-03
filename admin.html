@@ -113,6 +113,46 @@ button{cursor:pointer;border:0}
 .dynamic-list{display:grid;gap:10px}
 .dynamic-row{display:grid;grid-template-columns:1fr 1fr auto;gap:8px}
 .dynamic-row input{width:100%;border:1px solid #d2dcd5;border-radius:10px;padding:10px}
+
+.variant-row{
+  display:block;
+  padding:14px;
+  border:1px solid #d7e3dc;
+  border-radius:14px;
+  background:#fbfdfc;
+}
+.variant-head{
+  display:grid;
+  grid-template-columns:1fr 1fr auto;
+  gap:8px;
+  align-items:center;
+}
+.variant-specs{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:10px;
+  margin-top:12px;
+  padding-top:12px;
+  border-top:1px solid #e4ece7;
+}
+.variant-spec-field label{
+  display:block;
+  margin-bottom:5px;
+  color:#557067;
+  font-size:12px;
+  font-weight:700;
+}
+.variant-spec-field input{
+  width:100%;
+  min-width:0;
+}
+@media(max-width:900px){
+  .variant-specs{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media(max-width:620px){
+  .variant-head{grid-template-columns:1fr}
+  .variant-specs{grid-template-columns:1fr}
+}
 .remove-row{padding:0 12px;border-radius:10px;background:#fff0f0;color:var(--danger);font-weight:900}
 .add-row-btn{margin-top:10px;padding:8px 13px;border-radius:10px;background:var(--green-soft);color:var(--green-dark);font-weight:800}
 .save-bar{position:sticky;bottom:0;z-index:5;display:flex;justify-content:flex-end;gap:10px;padding:16px 24px;border-top:1px solid var(--line);background:white}
@@ -337,7 +377,7 @@ button{cursor:pointer;border:0}
 
           <div class="full section-box">
             <h4>型號 / 尺寸</h4>
-            <div class="hint">可建立多組型號。左邊為型號名稱，右邊可填尺寸或備註。</div>
+            <div class="hint">每個型號都可以分別填寫座寬、座深、座高、總寬、總高、總長、淨重；未填的欄位不會顯示。</div>
             <div id="variantsList" class="dynamic-list"></div>
             <button type="button" class="add-row-btn" data-add="variant">＋ 新增型號</button>
           </div>
@@ -804,7 +844,9 @@ $("statusFilter").addEventListener("change", renderProducts);
 $("categoryFilter").addEventListener("change", renderProducts);
 
 $("productCategory").addEventListener("change", () => {
-  if(!editingId) $("sortOrder").value = nextSortOrder($("productCategory").value);
+  if(!$("productId").value){
+    $("sortOrder").value = nextSortOrder($("productCategory").value);
+  }
 });
 
 const DYNAMIC_LISTS = {
@@ -817,7 +859,23 @@ function clearDynamicLists(){
   Object.values(DYNAMIC_LISTS).forEach(id => $(id).innerHTML = "");
 }
 
-function addDynamicRow(type, key="", value=""){
+const VARIANT_SPEC_NAMES = [
+  "座寬",
+  "座深",
+  "座高",
+  "總寬",
+  "總高",
+  "總長",
+  "淨重"
+];
+
+function variantSpecValue(specs, name){
+  if(!Array.isArray(specs)) return "";
+  const found = specs.find(spec => (spec?.name ?? spec?.key ?? "") === name);
+  return found?.value ?? found?.text ?? "";
+}
+
+function addDynamicRow(type, key="", value="", extra=null){
   const host = $(DYNAMIC_LISTS[type]);
   const row = document.createElement("div");
   row.className = "dynamic-row";
@@ -831,13 +889,41 @@ function addDynamicRow(type, key="", value=""){
       <input class="row-value" type="hidden" value="">
       <button type="button" class="remove-row">刪除</button>
     `;
+  }else if(type === "variant"){
+    const specs = Array.isArray(extra?.specs) ? extra.specs : [];
+    row.classList.add("variant-row");
+    row.innerHTML = `
+      <div class="variant-head">
+        <input class="row-key" type="text"
+               placeholder="型號"
+               value="${escAttr(key)}">
+        <input class="row-value" type="text"
+               placeholder="尺寸 / 備註（可留空）"
+               value="${escAttr(value)}">
+        <button type="button" class="remove-row">刪除</button>
+      </div>
+
+      <div class="variant-specs">
+        ${VARIANT_SPEC_NAMES.map(name => `
+          <div class="variant-spec-field">
+            <label>${esc(name)}</label>
+            <input
+              type="text"
+              class="variant-spec-input"
+              data-spec-name="${escAttr(name)}"
+              placeholder="數值"
+              value="${escAttr(variantSpecValue(specs, name))}">
+          </div>
+        `).join("")}
+      </div>
+    `;
   }else{
     row.innerHTML = `
       <input class="row-key" type="text"
-             placeholder="${type === "spec" ? "名稱" : "型號"}"
+             placeholder="名稱"
              value="${escAttr(key)}">
       <input class="row-value" type="text"
-             placeholder="${type === "spec" ? "數值" : "尺寸 / 備註"}"
+             placeholder="數值"
              value="${escAttr(value)}">
       <button type="button" class="remove-row">刪除</button>
     `;
@@ -867,6 +953,24 @@ function collectRows(hostId, featureOnly=false){
 
 const collectFeatures = () => collectRows("featuresList", true);
 const collectPairs = hostId => collectRows(hostId);
+
+function collectVariants(){
+  return [...$("variantsList").querySelectorAll(".dynamic-row")]
+    .map(row => {
+      const model = row.querySelector(".row-key")?.value.trim() || "";
+      const value = row.querySelector(".row-value")?.value.trim() || "";
+
+      const specs = [...row.querySelectorAll(".variant-spec-input")]
+        .map(input => ({
+          name: input.dataset.specName || "",
+          value: input.value.trim()
+        }))
+        .filter(spec => spec.name && spec.value);
+
+      return { model, value, specs };
+    })
+    .filter(item => item.model || item.value || item.specs.length);
+}
 
 function normalizePairs(input){
   if(!Array.isArray(input)) return [];
@@ -967,8 +1071,20 @@ function openModal(product=null){
     normalizePairs(product.specs)
       .forEach(item => addDynamicRow("spec", item.name, item.value));
 
-    normalizePairs(product.variants)
-      .forEach(item => addDynamicRow("variant", item.name, item.value));
+    (Array.isArray(product.variants) ? product.variants : [])
+      .forEach(item => {
+        if(typeof item === "string"){
+          addDynamicRow("variant", item, "");
+          return;
+        }
+
+        addDynamicRow(
+          "variant",
+          item?.model ?? item?.name ?? "",
+          item?.value ?? item?.text ?? item?.size ?? "",
+          { specs:Array.isArray(item?.specs) ? item.specs : [] }
+        );
+      });
 
   }else{
     $("modalTitle").textContent = "新增商品";
@@ -1159,7 +1275,7 @@ $("productForm").addEventListener("submit", async e => {
       image_urls: allImages,
       features: collectFeatures(),
       specs: collectPairs("specsList"),
-      variants: collectPairs("variantsList")
+      variants: collectVariants()
     };
 
     const id = $("productId").value;
