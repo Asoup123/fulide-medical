@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <!--
   富立德有限公司｜商品管理後台
-  程式整理版 v9｜2026-09-04｜圖片同步刪除版
+  程式整理版 v10｜2026-09-04｜商品＋圖片管理版
 
   保留功能：
   - Supabase 登入與管理員 UID 權限
@@ -178,6 +178,41 @@ button{cursor:pointer;border:0}
 .image-preview{grid-template-columns:repeat(2,1fr)}
 .dynamic-row{grid-template-columns:1fr}
 }
+
+/* ===== 圖片管理 ===== */
+.image-manager-btn{border-color:#7f67c8;color:#654cae}
+.image-manager-btn:hover{background:#f3efff}
+.image-manager-modal .modal-card{width:min(1280px,100%)}
+.image-manager-body{padding:22px}
+.image-manager-summary{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:16px}
+.image-manager-stat{border:1px solid var(--line);border-radius:16px;background:#fff;padding:16px}
+.image-manager-stat span{display:block;color:var(--muted);font-size:12px}
+.image-manager-stat strong{display:block;font-size:25px;color:var(--green-dark);margin-top:2px}
+.image-manager-toolbar{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:16px}
+.image-manager-toolbar select{border:1px solid var(--line);border-radius:11px;background:#fff;padding:9px 12px}
+.image-manager-toolbar .spacer{flex:1}
+.image-manager-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:14px}
+.storage-image-card{position:relative;border:1px solid var(--line);border-radius:15px;background:#fff;overflow:hidden}
+.storage-image-card.unused{border-color:#e7c9a0}
+.storage-image-check{position:absolute;left:9px;top:9px;z-index:2;width:20px;height:20px;accent-color:var(--danger)}
+.storage-image-thumb{aspect-ratio:1/1;background:#f5f6f4;display:grid;place-items:center;overflow:hidden}
+.storage-image-thumb img{width:100%;height:100%;object-fit:contain}
+.storage-image-info{padding:11px}
+.storage-image-name{font-size:12px;font-weight:800;word-break:break-all;line-height:1.35;min-height:34px}
+.storage-image-meta{font-size:11px;color:var(--muted);margin-top:5px}
+.storage-image-usedby{font-size:11px;margin-top:6px;color:#53645b;line-height:1.4}
+.storage-status{display:inline-flex;margin-top:7px;padding:4px 8px;border-radius:999px;font-size:11px;font-weight:900}
+.storage-status.used{background:#e5f5eb;color:#167445}
+.storage-status.unused{background:#fff1df;color:#9a6014}
+.storage-loading{grid-column:1/-1;padding:55px 20px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:16px}
+.storage-danger-btn{padding:9px 15px;border-radius:999px;background:var(--danger);color:#fff;font-weight:900}
+.storage-danger-btn:disabled{opacity:.45;cursor:not-allowed}
+.storage-secondary-btn{padding:9px 15px;border-radius:999px;background:#eef4f0;color:var(--green-dark);font-weight:900}
+.storage-warning{margin-bottom:14px;padding:12px 14px;border-radius:12px;background:#fff8e9;color:#855a16;font-size:13px}
+@media(max-width:1000px){.image-manager-grid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media(max-width:760px){.image-manager-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.image-manager-summary{grid-template-columns:1fr}}
+@media(max-width:520px){.image-manager-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+
 </style>
 </head>
 
@@ -219,6 +254,7 @@ button{cursor:pointer;border:0}
     </div>
 
     <div class="top-actions">
+      <button id="openImageManagerBtn" class="outline-btn image-manager-btn" type="button">圖片管理</button>
       <a class="outline-btn" href="index.html" target="_blank">查看網站</a>
       <button id="logoutBtn" class="outline-btn danger-outline">登出</button>
     </div>
@@ -389,6 +425,59 @@ button{cursor:pointer;border:0}
         <button id="saveProductBtn" type="submit" class="save-btn">儲存商品</button>
       </div>
     </form>
+  </div>
+</div>
+
+
+<!-- 圖片管理 -->
+<div id="imageManagerModal" class="modal image-manager-modal hidden">
+  <div class="modal-card">
+    <div class="modal-head">
+      <div>
+        <h3>圖片管理</h3>
+        <div class="hint" style="margin:2px 0 0;">自動比對 Supabase Storage 與目前商品圖片引用。</div>
+      </div>
+      <button id="closeImageManagerBtn" class="close-btn" type="button">×</button>
+    </div>
+
+    <div class="image-manager-body">
+      <div id="imageManagerWarning" class="storage-warning hidden"></div>
+
+      <div class="image-manager-summary">
+        <div class="image-manager-stat">
+          <span>Storage 圖片</span>
+          <strong id="storageTotalCount">0</strong>
+        </div>
+        <div class="image-manager-stat">
+          <span>使用中</span>
+          <strong id="storageUsedCount">0</strong>
+        </div>
+        <div class="image-manager-stat">
+          <span>未使用</span>
+          <strong id="storageUnusedCount">0</strong>
+        </div>
+      </div>
+
+      <div class="image-manager-toolbar">
+        <select id="storageStatusFilter">
+          <option value="all">全部圖片</option>
+          <option value="unused">只看未使用</option>
+          <option value="used">只看使用中</option>
+        </select>
+
+        <button id="refreshStorageBtn" class="storage-secondary-btn" type="button">重新整理</button>
+        <button id="selectAllUnusedBtn" class="storage-secondary-btn" type="button">全選未使用</button>
+        <button id="clearStorageSelectionBtn" class="storage-secondary-btn" type="button">取消選取</button>
+
+        <span class="spacer"></span>
+        <strong id="selectedStorageCount">已選 0 張</strong>
+        <button id="deleteSelectedStorageBtn" class="storage-danger-btn" type="button" disabled>刪除選取圖片</button>
+      </div>
+
+      <div id="storageImageGrid" class="image-manager-grid">
+        <div class="storage-loading">尚未載入圖片。</div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1551,6 +1640,349 @@ window.deleteProduct = async function(id){
     showToast("商品與未共用的圖片已同步刪除");
   }
 };
+
+
+/* =========================================================
+   圖片管理 v10
+   ========================================================= */
+let storageImageRows = [];
+let selectedStoragePaths = new Set();
+
+function formatBytes(bytes){
+  const n = Number(bytes || 0);
+  if(!n) return "—";
+  if(n < 1024) return `${n} B`;
+  if(n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
+  return `${(n / 1024 / 1024).toFixed(1)} MB`;
+}
+
+function storagePublicUrl(path){
+  return db.storage.from(STORAGE_BUCKET).getPublicUrl(path).data.publicUrl;
+}
+
+function productImageUsageMap(){
+  const map = new Map();
+
+  products.forEach(product => {
+    (Array.isArray(product.image_urls) ? product.image_urls : []).forEach(url => {
+      const path = storagePathFromPublicUrl(url);
+      if(!path) return;
+
+      if(!map.has(path)) map.set(path, []);
+      map.get(path).push(product.name || "未命名商品");
+    });
+  });
+
+  return map;
+}
+
+async function listStorageDirectory(prefix=""){
+  const all = [];
+  let offset = 0;
+  const limit = 1000;
+
+  while(true){
+    const { data, error } = await db.storage
+      .from(STORAGE_BUCKET)
+      .list(prefix, {
+        limit,
+        offset,
+        sortBy:{ column:"name", order:"asc" }
+      });
+
+    if(error) throw error;
+
+    const items = data || [];
+
+    for(const item of items){
+      if(!item?.name) continue;
+
+      const path = prefix ? `${prefix}/${item.name}` : item.name;
+
+      // Supabase 資料夾通常沒有 id；檔案則有 id
+      if(item.id){
+        all.push({
+          path,
+          name:item.name,
+          id:item.id,
+          created_at:item.created_at || "",
+          updated_at:item.updated_at || "",
+          size:Number(item.metadata?.size || 0),
+          mimetype:item.metadata?.mimetype || ""
+        });
+      }else{
+        const nested = await listStorageDirectory(path);
+        all.push(...nested);
+      }
+    }
+
+    if(items.length < limit) break;
+    offset += limit;
+  }
+
+  return all;
+}
+
+async function loadStorageImages(){
+  const grid = $("storageImageGrid");
+  const warning = $("imageManagerWarning");
+
+  warning.classList.add("hidden");
+  warning.textContent = "";
+  grid.innerHTML = '<div class="storage-loading">正在讀取 Supabase Storage 並比對商品使用狀態...</div>';
+
+  selectedStoragePaths.clear();
+  updateStorageSelectionUI();
+
+  try{
+    // 先抓最新商品，避免用舊資料判斷
+    const { data:latestProducts, error:productError } = await db
+      .from("products")
+      .select("*")
+      .order("sort_order", { ascending:true })
+      .order("created_at", { ascending:false });
+
+    if(productError) throw new Error("商品資料讀取失敗：" + productError.message);
+
+    products = latestProducts || [];
+    updateStats();
+
+    const usageMap = productImageUsageMap();
+    const files = await listStorageDirectory("");
+
+    storageImageRows = files.map(file => ({
+      ...file,
+      usedBy: usageMap.get(file.path) || []
+    }));
+
+    // 若商品有 Storage 引用，但 list 完全讀不到，禁止讓畫面誤判為空
+    if(usageMap.size > 0 && files.length === 0){
+      warning.textContent =
+        `⚠ 商品目前引用 ${usageMap.size} 個 Storage 圖片路徑，但 Storage 清單讀取為 0。` +
+        `這通常代表 SELECT/List 權限或 Bucket 路徑仍有問題；目前不允許刪除。`;
+      warning.classList.remove("hidden");
+      $("deleteSelectedStorageBtn").disabled = true;
+    }
+
+    renderStorageImages();
+  }catch(error){
+    storageImageRows = [];
+    $("storageTotalCount").textContent = "—";
+    $("storageUsedCount").textContent = "—";
+    $("storageUnusedCount").textContent = "—";
+    grid.innerHTML =
+      `<div class="storage-loading">圖片讀取失敗：${esc(error.message || String(error))}</div>`;
+    warning.textContent =
+      "⚠ 無法安全取得 Storage 圖片清單，因此刪除功能已停用。";
+    warning.classList.remove("hidden");
+    $("deleteSelectedStorageBtn").disabled = true;
+  }
+}
+
+function filteredStorageImages(){
+  const filter = $("storageStatusFilter").value;
+
+  return storageImageRows.filter(item => {
+    const used = item.usedBy.length > 0;
+    if(filter === "used") return used;
+    if(filter === "unused") return !used;
+    return true;
+  });
+}
+
+function renderStorageImages(){
+  const grid = $("storageImageGrid");
+  const usedCount = storageImageRows.filter(item => item.usedBy.length > 0).length;
+  const unusedCount = storageImageRows.length - usedCount;
+
+  $("storageTotalCount").textContent = storageImageRows.length;
+  $("storageUsedCount").textContent = usedCount;
+  $("storageUnusedCount").textContent = unusedCount;
+
+  const rows = filteredStorageImages();
+
+  if(!rows.length){
+    grid.innerHTML = '<div class="storage-loading">目前沒有符合條件的圖片。</div>';
+    updateStorageSelectionUI();
+    return;
+  }
+
+  grid.innerHTML = rows.map(item => {
+    const used = item.usedBy.length > 0;
+    const url = storagePublicUrl(item.path);
+    const checked = selectedStoragePaths.has(item.path);
+
+    return `
+      <article class="storage-image-card ${used ? "" : "unused"}">
+        ${used ? "" : `
+          <input
+            class="storage-image-check"
+            type="checkbox"
+            data-storage-path="${escAttr(item.path)}"
+            ${checked ? "checked" : ""}>
+        `}
+        <div class="storage-image-thumb">
+          <img src="${escAttr(url)}" alt="${escAttr(item.name)}" loading="lazy">
+        </div>
+        <div class="storage-image-info">
+          <div class="storage-image-name" title="${escAttr(item.path)}">${esc(item.name)}</div>
+          <div class="storage-image-meta">
+            ${esc(formatBytes(item.size))}
+            ${item.created_at ? "｜" + esc(new Date(item.created_at).toLocaleDateString("zh-TW")) : ""}
+          </div>
+          <span class="storage-status ${used ? "used" : "unused"}">
+            ${used ? "使用中" : "未使用"}
+          </span>
+          ${used
+            ? `<div class="storage-image-usedby">使用商品：${item.usedBy.map(esc).join("、")}</div>`
+            : `<div class="storage-image-usedby">目前沒有任何商品引用這張圖片。</div>`
+          }
+        </div>
+      </article>
+    `;
+  }).join("");
+
+  grid.querySelectorAll(".storage-image-check").forEach(input => {
+    input.addEventListener("change", () => {
+      const path = input.dataset.storagePath;
+      if(input.checked){
+        selectedStoragePaths.add(path);
+      }else{
+        selectedStoragePaths.delete(path);
+      }
+      updateStorageSelectionUI();
+    });
+  });
+
+  updateStorageSelectionUI();
+}
+
+function updateStorageSelectionUI(){
+  // 只允許保留仍屬於「未使用」的選取項目
+  const unusedPaths = new Set(
+    storageImageRows
+      .filter(item => item.usedBy.length === 0)
+      .map(item => item.path)
+  );
+
+  [...selectedStoragePaths].forEach(path => {
+    if(!unusedPaths.has(path)) selectedStoragePaths.delete(path);
+  });
+
+  $("selectedStorageCount").textContent = `已選 ${selectedStoragePaths.size} 張`;
+
+  const warningVisible = !$("imageManagerWarning").classList.contains("hidden");
+  $("deleteSelectedStorageBtn").disabled =
+    selectedStoragePaths.size === 0 || warningVisible;
+}
+
+async function deleteSelectedStorageImages(){
+  if(!selectedStoragePaths.size) return;
+
+  // 刪除前再次重新讀取商品引用，避免管理頁開著時其他地方剛好更新商品
+  const { data:latestProducts, error:productError } = await db
+    .from("products")
+    .select("id,name,image_urls");
+
+  if(productError){
+    alert("刪除前安全檢查失敗：" + productError.message);
+    return;
+  }
+
+  const usedPaths = new Set();
+  (latestProducts || []).forEach(product => {
+    (Array.isArray(product.image_urls) ? product.image_urls : []).forEach(url => {
+      const path = storagePathFromPublicUrl(url);
+      if(path) usedPaths.add(path);
+    });
+  });
+
+  const requested = [...selectedStoragePaths];
+  const safePaths = requested.filter(path => !usedPaths.has(path));
+  const blocked = requested.length - safePaths.length;
+
+  if(!safePaths.length){
+    alert("選取的圖片目前都已被商品使用，因此沒有刪除任何圖片。");
+    await loadStorageImages();
+    return;
+  }
+
+  const message =
+    `確定要永久刪除 ${safePaths.length} 張「未使用圖片」嗎？\n\n` +
+    `刪除後無法復原。` +
+    (blocked ? `\n另有 ${blocked} 張因目前已被商品使用，將自動保留。` : "");
+
+  if(!confirm(message)) return;
+
+  const btn = $("deleteSelectedStorageBtn");
+  btn.disabled = true;
+  btn.textContent = "刪除中...";
+
+  try{
+    let deleted = 0;
+
+    // 分批刪除，避免一次傳太多路徑
+    for(let i=0; i<safePaths.length; i+=100){
+      const batch = safePaths.slice(i, i+100);
+
+      const { data, error } = await db.storage
+        .from(STORAGE_BUCKET)
+        .remove(batch);
+
+      if(error) throw error;
+
+      // data 是 Supabase 回傳已處理的物件；最終仍會重新讀取清單驗證畫面
+      deleted += Array.isArray(data) ? data.length : batch.length;
+    }
+
+    selectedStoragePaths.clear();
+    await loadStorageImages();
+    showToast(`圖片整理完成，已送出刪除 ${safePaths.length} 張`);
+  }catch(error){
+    alert(
+      "Storage 圖片刪除失敗：\n" +
+      (error.message || String(error)) +
+      "\n\n請確認 DELETE Policy。"
+    );
+    await loadStorageImages();
+  }finally{
+    btn.textContent = "刪除選取圖片";
+    updateStorageSelectionUI();
+  }
+}
+
+$("openImageManagerBtn").addEventListener("click", async () => {
+  $("imageManagerModal").classList.remove("hidden");
+  await loadStorageImages();
+});
+
+$("closeImageManagerBtn").addEventListener("click", () => {
+  $("imageManagerModal").classList.add("hidden");
+});
+
+$("imageManagerModal").addEventListener("click", e => {
+  if(e.target === $("imageManagerModal")){
+    $("imageManagerModal").classList.add("hidden");
+  }
+});
+
+$("refreshStorageBtn").addEventListener("click", loadStorageImages);
+$("storageStatusFilter").addEventListener("change", renderStorageImages);
+
+$("selectAllUnusedBtn").addEventListener("click", () => {
+  storageImageRows
+    .filter(item => item.usedBy.length === 0)
+    .forEach(item => selectedStoragePaths.add(item.path));
+  renderStorageImages();
+});
+
+$("clearStorageSelectionBtn").addEventListener("click", () => {
+  selectedStoragePaths.clear();
+  renderStorageImages();
+});
+
+$("deleteSelectedStorageBtn").addEventListener("click", deleteSelectedStorageImages);
+
 
 (async function init(){
   const { data } = await db.auth.getSession();
