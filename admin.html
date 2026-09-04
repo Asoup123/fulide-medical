@@ -2,7 +2,7 @@
 <html lang="zh-TW">
 <!--
   富立德有限公司｜商品管理後台
-  程式整理版 v10｜2026-09-04｜商品＋圖片管理版
+  程式整理版 v11｜2026-09-04｜圖片統一管理版
 
   保留功能：
   - Supabase 登入與管理員 UID 權限
@@ -583,11 +583,9 @@ function slugify(name){
 
 
 /* =========================================================
-   商品圖片同步刪除
-   - 不使用 Storage list()，因此不需要掃描整個 Bucket
-   - 只處理「本次確定被移除」的圖片
-   - 刪除前會重新讀取所有 products.image_urls
-   - 只要還有其他商品引用同一張圖，就不會刪 Storage 檔案
+   Storage 公開網址轉檔案路徑
+   - 商品編輯 / 刪除不會直接刪除 Storage
+   - 所有實體圖片刪除統一由「圖片管理」處理
    ========================================================= */
 
 function storagePathFromPublicUrl(url){
@@ -608,64 +606,6 @@ function storagePathFromPublicUrl(url){
   }
 }
 
-async function deleteStorageUrlsIfUnused(candidateUrls){
-  const candidates = [
-    ...new Set(
-      (Array.isArray(candidateUrls) ? candidateUrls : [])
-        .filter(Boolean)
-    )
-  ];
-
-  if(!candidates.length){
-    return { deleted:0, kept:0 };
-  }
-
-  // 重新讀取最新商品圖片引用，避免共用圖片被誤刪
-  const { data, error } = await db
-    .from("products")
-    .select("image_urls");
-
-  if(error){
-    throw new Error("無法確認圖片是否仍被其他商品使用：" + error.message);
-  }
-
-  const stillUsedUrls = new Set();
-
-  (data || []).forEach(product => {
-    (Array.isArray(product.image_urls) ? product.image_urls : [])
-      .forEach(url => {
-        if(url) stillUsedUrls.add(url);
-      });
-  });
-
-  const pathsToDelete = [
-    ...new Set(
-      candidates
-        .filter(url => !stillUsedUrls.has(url))
-        .map(storagePathFromPublicUrl)
-        .filter(Boolean)
-    )
-  ];
-
-  const kept = candidates.length - pathsToDelete.length;
-
-  if(!pathsToDelete.length){
-    return { deleted:0, kept };
-  }
-
-  const { error:removeError } = await db.storage
-    .from(STORAGE_BUCKET)
-    .remove(pathsToDelete);
-
-  if(removeError){
-    throw new Error("Storage 圖片刪除失敗：" + removeError.message);
-  }
-
-  return {
-    deleted: pathsToDelete.length,
-    kept
-  };
-}
 
 async function ensureAdmin(session){
   if(!session?.user){
@@ -1435,14 +1375,6 @@ $("productForm").addEventListener("submit", async e => {
     }
 
     const id = $("productId").value;
-
-    // 編輯商品時，先記住原本的圖片網址
-    const originalProduct = id ? productById(id) : null;
-    const oldImageUrls =
-      Array.isArray(originalProduct?.image_urls)
-        ? [...originalProduct.image_urls]
-        : [];
-
     const allImages = await resolveImageUrls();
 
     const payload = {
@@ -1481,41 +1413,14 @@ $("productForm").addEventListener("submit", async e => {
       throw new Error(result.error.message);
     }
 
-    // 資料庫更新成功後，才處理真正被移除的舊圖片
-    let cleanupWarning = "";
-
-    if(id && oldImageUrls.length){
-      const currentSet = new Set(allImages);
-      const removedUrls = oldImageUrls.filter(url => !currentSet.has(url));
-
-      if(removedUrls.length){
-        try{
-          const cleanup = await deleteStorageUrlsIfUnused(removedUrls);
-
-          if(cleanup.kept > 0){
-            console.info(
-              `${cleanup.kept} 張圖片仍被其他商品使用，因此保留 Storage 檔案。`
-            );
-          }
-        }catch(cleanError){
-          console.error("舊圖片同步刪除失敗：", cleanError);
-          cleanupWarning = cleanError.message || String(cleanError);
-        }
-      }
-    }
-
     closeModal();
     await loadProducts();
 
-    if(cleanupWarning){
-      alert(
-        "商品資料已成功儲存，但舊圖片沒有從 Storage 刪除。\n\n" +
-        cleanupWarning +
-        "\n\n請檢查 Supabase Storage 的 DELETE 權限。"
-      );
-    }else{
-      showToast(id ? "商品已更新，移除圖片已同步清理" : "商品已新增");
-    }
+    showToast(
+      id
+        ? "商品已更新；未使用圖片可到「圖片管理」統一清理"
+        : "商品已新增"
+    );
 
   }catch(err){
     alert(err.message || String(err));
@@ -1589,18 +1494,11 @@ window.deleteProduct = async function(id){
 
   if(!confirm(
     `確定要刪除「${product.name}」嗎？\n\n` +
-    `商品資料會刪除；沒有被其他商品使用的圖片也會同步從 Storage 刪除。`
+    `商品資料會刪除；圖片檔案會先保留在 Storage，之後可到「圖片管理」統一清理未使用圖片。`
   )){
     return;
   }
 
-  const productImageUrls =
-    Array.isArray(product.image_urls)
-      ? [...product.image_urls]
-      : [];
-
-  // 必須先刪商品資料。
-  // 之後重新檢查剩餘商品引用，才知道哪些圖片真的可以刪。
   const { error } = await db
     .from("products")
     .delete()
@@ -1611,39 +1509,12 @@ window.deleteProduct = async function(id){
     return;
   }
 
-  let cleanupWarning = "";
-
-  if(productImageUrls.length){
-    try{
-      const cleanup = await deleteStorageUrlsIfUnused(productImageUrls);
-
-      if(cleanup.kept > 0){
-        console.info(
-          `${cleanup.kept} 張圖片仍被其他商品使用，因此沒有刪除 Storage 檔案。`
-        );
-      }
-    }catch(cleanError){
-      console.error("商品圖片同步刪除失敗：", cleanError);
-      cleanupWarning = cleanError.message || String(cleanError);
-    }
-  }
-
   await loadProducts();
-
-  if(cleanupWarning){
-    alert(
-      "商品資料已刪除，但 Storage 圖片沒有同步刪除。\n\n" +
-      cleanupWarning +
-      "\n\n請檢查 Supabase Storage 的 DELETE 權限。"
-    );
-  }else{
-    showToast("商品與未共用的圖片已同步刪除");
-  }
+  showToast("商品已刪除；未使用圖片可到「圖片管理」清理");
 };
 
-
 /* =========================================================
-   圖片管理 v10
+   圖片管理 v11
    ========================================================= */
 let storageImageRows = [];
 let selectedStoragePaths = new Set();
