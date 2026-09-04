@@ -66,6 +66,12 @@ button{cursor:pointer;border:0}
 .toolbar{display:flex;gap:12px;flex-wrap:wrap;align-items:center;margin-bottom:18px}
 .toolbar input,.toolbar select{border:1px solid var(--line);background:white;border-radius:12px;padding:10px 12px;outline:none}
 .toolbar input{flex:1;min-width:230px}
+.storage-tools{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:18px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:14px}
+.storage-tools strong{color:var(--green-dark)}
+.storage-tools .storage-status{color:var(--muted);font-size:13px;margin-right:auto}
+.storage-scan-btn{padding:9px 15px;border-radius:999px;background:#eef4f0;color:var(--green-dark);font-weight:900}
+.storage-clean-btn{padding:9px 15px;border-radius:999px;background:#fff0f0;color:var(--danger);font-weight:900}
+.storage-clean-btn:disabled,.storage-scan-btn:disabled{opacity:.55;cursor:not-allowed}
 .product-list{display:grid;gap:14px}
 .product-row{background:white;border:1px solid var(--line);border-radius:18px;padding:16px;display:grid;grid-template-columns:38px 92px 1.4fr .85fr .75fr auto;gap:14px;align-items:center}
 .drag-handle{width:34px;height:34px;border-radius:10px;display:grid;place-items:center;background:#f2f5f3;color:#7a857f;font-size:20px;cursor:grab;user-select:none;touch-action:none}
@@ -248,6 +254,13 @@ button{cursor:pointer;border:0}
       </div>
     </section>
 
+    <div class="storage-tools">
+      <strong>圖片空間整理</strong>
+      <span id="storageCleanupStatus" class="storage-status">尚未掃描未使用圖片</span>
+      <button id="scanUnusedImagesBtn" class="storage-scan-btn" type="button">掃描未使用圖片</button>
+      <button id="cleanUnusedImagesBtn" class="storage-clean-btn" type="button" disabled>清除未使用圖片</button>
+    </div>
+
     <div class="toolbar">
       <input id="searchInput" type="search" placeholder="搜尋商品名稱、描述...">
 
@@ -409,6 +422,8 @@ let products = [];
 let imageItems = [];
 let imagePreviewSortable = null;
 let imageItemSeq = 0;
+let unusedStoragePaths = [];
+let storageScanSummary = null;
 
 function makeImageItem(type, value){
   const item = { id:`img-${++imageItemSeq}`, type };
@@ -543,6 +558,187 @@ $("logoutBtn").addEventListener("click", async () => {
   await db.auth.signOut();
   showLogin();
 });
+
+function storagePathFromPublicUrl(url){
+  if(!url) return "";
+  try{
+    const parsed = new URL(url);
+    const marker = `/storage/v1/object/public/${STORAGE_BUCKET}/`;
+    const index = parsed.pathname.indexOf(marker);
+    if(index < 0) return "";
+    return decodeURIComponent(parsed.pathname.slice(index + marker.length));
+  }catch(_error){
+    return "";
+  }
+}
+
+function getUsedStoragePaths(){
+  const used = new Set();
+  products.forEach(product => {
+    (Array.isArray(product.image_urls) ? product.image_urls : []).forEach(url => {
+      const path = storagePathFromPublicUrl(url);
+      if(path) used.add(path);
+    });
+  });
+  return used;
+}
+
+async function listAllStorageFiles(){
+  const all = [];
+  const limit = 1000;
+  let offset = 0;
+
+  while(true){
+    const { data, error } = await db.storage
+      .from(STORAGE_BUCKET)
+      .list("", {
+        limit,
+        offset,
+        sortBy:{ column:"name", order:"asc" }
+      });
+
+    if(error) throw new Error("Storage 圖片讀取失敗：" + error.message);
+
+    const batch = (data || []).filter(item => item?.name && item.id);
+    all.push(...batch.map(item => item.name));
+
+    if((data || []).length < limit) break;
+    offset += limit;
+  }
+
+  return all;
+}
+
+function resetStorageCleanupState(message="尚未掃描未使用圖片"){
+  unusedStoragePaths = [];
+  storageScanSummary = null;
+  $("storageCleanupStatus").textContent = message;
+  $("cleanUnusedImagesBtn").disabled = true;
+}
+
+async function scanUnusedStorageImages(){
+  const scanBtn = $("scanUnusedImagesBtn");
+  const cleanBtn = $("cleanUnusedImagesBtn");
+
+  scanBtn.disabled = true;
+  cleanBtn.disabled = true;
+  $("storageCleanupStatus").textContent = "掃描中...";
+
+  try{
+    // 重新讀取最新商品資料，避免拿舊畫面資料比對
+    const { data, error } = await db
+      .from("products")
+      .select("image_urls");
+
+    if(error) throw new Error("商品圖片資料讀取失敗：" + error.message);
+
+    const latestProducts = data || [];
+    const used = new Set();
+    latestProducts.forEach(product => {
+      (Array.isArray(product.image_urls) ? product.image_urls : []).forEach(url => {
+        const path = storagePathFromPublicUrl(url);
+        if(path) used.add(path);
+      });
+    });
+
+    const storagePaths = await listAllStorageFiles();
+    unusedStoragePaths = storagePaths.filter(path => !used.has(path));
+    storageScanSummary = {
+      total: storagePaths.length,
+      used: storagePaths.length - unusedStoragePaths.length,
+      unused: unusedStoragePaths.length
+    };
+
+    $("storageCleanupStatus").textContent =
+      `Storage 共 ${storageScanSummary.total} 張｜使用中 ${storageScanSummary.used} 張｜未使用 ${storageScanSummary.unused} 張`;
+
+    cleanBtn.disabled = unusedStoragePaths.length === 0;
+
+    if(unusedStoragePaths.length === 0){
+      showToast("掃描完成，目前沒有未使用圖片");
+    }else{
+      showToast(`掃描完成，找到 ${unusedStoragePaths.length} 張未使用圖片`);
+    }
+  }catch(err){
+    resetStorageCleanupState("掃描失敗，請查看錯誤訊息");
+    alert(err.message || String(err));
+  }finally{
+    scanBtn.disabled = false;
+  }
+}
+
+async function cleanUnusedStorageImages(){
+  if(!unusedStoragePaths.length || !storageScanSummary) return;
+
+  const count = unusedStoragePaths.length;
+  if(!confirm(
+    `確定要永久刪除 ${count} 張「目前沒有任何商品使用」的圖片嗎？\n\n` +
+    `這個動作無法復原。為了安全，系統會在刪除前再重新掃描一次。`
+  )) return;
+
+  const cleanBtn = $("cleanUnusedImagesBtn");
+  const scanBtn = $("scanUnusedImagesBtn");
+  cleanBtn.disabled = true;
+  scanBtn.disabled = true;
+  cleanBtn.textContent = "重新確認中...";
+
+  try{
+    // 刪除前重新比對，避免第一次掃描後商品資料剛好有變動
+    const { data, error } = await db
+      .from("products")
+      .select("image_urls");
+
+    if(error) throw new Error("商品圖片資料重新確認失敗：" + error.message);
+
+    const usedNow = new Set();
+    (data || []).forEach(product => {
+      (Array.isArray(product.image_urls) ? product.image_urls : []).forEach(url => {
+        const path = storagePathFromPublicUrl(url);
+        if(path) usedNow.add(path);
+      });
+    });
+
+    const storagePathsNow = await listAllStorageFiles();
+    const safeToDelete = storagePathsNow.filter(path => !usedNow.has(path));
+
+    if(!safeToDelete.length){
+      resetStorageCleanupState("重新確認後沒有可清除的未使用圖片");
+      showToast("沒有圖片需要清除");
+      return;
+    }
+
+    cleanBtn.textContent = `清除中 0 / ${safeToDelete.length}`;
+
+    // Supabase Storage remove 一次可傳多個路徑；分批處理避免單次過大
+    const batchSize = 100;
+    let deleted = 0;
+    for(let i=0; i<safeToDelete.length; i+=batchSize){
+      const batch = safeToDelete.slice(i, i + batchSize);
+      const { error:removeError } = await db.storage
+        .from(STORAGE_BUCKET)
+        .remove(batch);
+
+      if(removeError){
+        throw new Error("圖片清除失敗：" + removeError.message);
+      }
+
+      deleted += batch.length;
+      cleanBtn.textContent = `清除中 ${deleted} / ${safeToDelete.length}`;
+    }
+
+    resetStorageCleanupState(`已清除 ${deleted} 張未使用圖片，建議再掃描確認`);
+    showToast(`已安全清除 ${deleted} 張未使用圖片`);
+  }catch(err){
+    resetStorageCleanupState("清除失敗，請重新掃描後再試");
+    alert(err.message || String(err));
+  }finally{
+    cleanBtn.textContent = "清除未使用圖片";
+    scanBtn.disabled = false;
+  }
+}
+
+$("scanUnusedImagesBtn").addEventListener("click", scanUnusedStorageImages);
+$("cleanUnusedImagesBtn").addEventListener("click", cleanUnusedStorageImages);
 
 async function loadProducts(){
   $("productList").innerHTML =
@@ -1300,6 +1496,7 @@ $("productForm").addEventListener("submit", async e => {
     }
 
     closeModal();
+    resetStorageCleanupState("商品資料已變更，請重新掃描未使用圖片");
     showToast(id ? "商品已更新" : "商品已新增");
     await loadProducts();
 
@@ -1317,6 +1514,7 @@ async function runProductMutation(query, errorPrefix, successMessage){
     alert(errorPrefix + error.message);
     return false;
   }
+  resetStorageCleanupState("商品資料已變更，請重新掃描未使用圖片");
   showToast(successMessage);
   await loadProducts();
   return true;
