@@ -922,6 +922,29 @@ const SUPABASE_URL = "https://goiyznauetntttimdlzx.supabase.co";
 const SUPABASE_KEY = "sb_publishable_GqpU4-qusmUsU_dgf-VHIA_NdIlD2QT";
 const db = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+/* 圖片優化：只調整 Supabase 公開 Storage 圖片，其他網址保持原樣。
+   若專案不支援圖片轉換，圖片錯誤時會自動退回原始網址。 */
+function optimizedImageUrl(url, width, quality = 75) {
+    if (!url || typeof url !== "string") return url || "";
+    try {
+        const parsed = new URL(url, window.location.href);
+        if (parsed.origin !== new URL(SUPABASE_URL).origin ||
+            !parsed.pathname.includes("/storage/v1/object/public/")) return url;
+        parsed.pathname = parsed.pathname.replace("/storage/v1/object/public/", "/storage/v1/render/image/public/");
+        parsed.searchParams.set("width", String(width));
+        parsed.searchParams.set("quality", String(quality));
+        parsed.searchParams.set("resize", "contain");
+        return parsed.toString();
+    } catch (e) { return url; }
+}
+function imageFallback(img) {
+    const original = img.dataset.originalSrc;
+    if (original && img.src !== original) {
+        img.onerror = null;
+        img.src = original;
+    }
+}
+
 /* =========================
    DOM
 ========================= */
@@ -1172,7 +1195,10 @@ function renderProducts(products) {
                         ?
                         `
                         <img
-                            src="${escapeAttribute(image)}"
+                            src="${escapeAttribute(optimizedImageUrl(image, 480))}"
+                            data-original-src="${escapeAttribute(image)}"
+                            loading="lazy" decoding="async"
+                            onerror="imageFallback(this)"
                             alt="${escapeAttribute(product.name)}">
                         `
                         :
@@ -1611,7 +1637,9 @@ function openProduct(id) {
                         `
                         <img
                             id="mainPhotoImage"
-                            src="${escapeAttribute(firstImage)}"
+                            src="${escapeAttribute(optimizedImageUrl(firstImage, 1100, 82))}"
+                            data-original-src="${escapeAttribute(firstImage)}"
+                            decoding="async" onerror="imageFallback(this)"
                             alt="${escapeAttribute(product.name)}">
                         `
                         :
@@ -1639,7 +1667,10 @@ function openProduct(id) {
                                     data-image="${escapeAttribute(image)}">
 
                                     <img
-                                        src="${escapeAttribute(image)}"
+                                        src="${escapeAttribute(optimizedImageUrl(image, 160))}"
+                                        data-original-src="${escapeAttribute(image)}"
+                                        loading="lazy" decoding="async"
+                                        onerror="imageFallback(this)"
                                         alt="">
 
                                 </button>
@@ -1805,8 +1836,9 @@ function openProduct(id) {
                         document.getElementById("mainPhotoImage");
 
                     if (mainImage) {
-                        mainImage.src =
-                            thumbnail.dataset.image;
+                        mainImage.dataset.originalSrc = thumbnail.dataset.image;
+                        mainImage.onerror = function(){ imageFallback(this); };
+                        mainImage.src = optimizedImageUrl(thumbnail.dataset.image, 1100, 82);
                     }
                 }
             );
